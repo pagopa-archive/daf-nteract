@@ -1,5 +1,8 @@
-// @flow
 import * as actionTypes from "./actionTypes";
+import { JSONObject, Output } from "@nteract/commutable";
+import { JupyterMessage } from "@nteract/messaging";
+import { LanguageInfoMetadata, KernelInfo } from "@nteract/types";
+import { JupyterHostRecordProps } from "@nteract/types/src";
 
 // Simple actions related to UI state.
 export const setCurrentKernelName = (payload: string) => ({
@@ -23,37 +26,37 @@ export const setSource = (payload: string) => ({
   payload
 });
 export const submitBinderForm = (payload: {
-  repo: string,
-  gitref: string
+  repo: string;
+  gitref: string;
 }) => ({
   type: actionTypes.SUBMIT_BINDER_FORM,
   payload
 });
-export const setCodeMirrorMode = (payload: string | Object) => ({
+export const setCodeMirrorMode = (payload: string | JSONObject) => ({
   type: actionTypes.SET_CODE_MIRROR_MODE,
   payload
 });
 
 // Actions related to servers.
 export const activateServer = (payload: {
-  serverId: string,
-  oldServerId: string,
-  repo: string,
-  gitref: string
+  serverId: string;
+  oldServerId: string;
+  repo: string;
+  gitref: string;
 }) => ({
   type: actionTypes.ACTIVATE_SERVER,
   payload
 });
 export const activateServerFulfilled = (payload: {
-  serverId: string,
-  config: *
+  serverId: string;
+  config: JupyterHostRecordProps;
 }) => ({
   type: actionTypes.ACTIVATE_SERVER_FULFILLED,
   payload
 });
 export const activateServerFailed = (payload: {
-  serverId: string,
-  error: *
+  serverId: string;
+  error: Error;
 }) => ({
   type: actionTypes.ACTIVATE_SERVER_FAILED,
   payload
@@ -67,7 +70,10 @@ export const killServerFulfilled = (payload: { serverId: string }) => ({
   type: actionTypes.KILL_SERVER_FULFILLED,
   payload
 });
-export const killServerFailed = (payload: { serverId: string, error: * }) => ({
+export const killServerFailed = (payload: {
+  serverId: string;
+  error: Error;
+}) => ({
   type: actionTypes.KILL_SERVER_FAILED,
   payload
 });
@@ -78,24 +84,24 @@ export const fetchKernelSpecs = (payload: { serverId: string }) => ({
 });
 
 export const fetchKernelSpecsFulfilled = (payload: {
-  serverId: string,
-  response: *
+  serverId: string;
+  response: any;
 }) => ({
   type: actionTypes.FETCH_KERNEL_SPECS_FULFILLED,
   payload
 });
 
 export const fetchKernelSpecsFailed = (payload: {
-  serverId: string,
-  error: *
+  serverId: string;
+  error: Error;
 }) => ({
   type: actionTypes.FETCH_KERNEL_SPECS_FAILED,
   payload
 });
 
 export const addServerMessage = (payload: {
-  serverId: string,
-  message: string
+  serverId: string;
+  message: string;
 }) => ({
   type: actionTypes.ADD_SERVER_MESSAGE,
   payload
@@ -103,55 +109,55 @@ export const addServerMessage = (payload: {
 
 // Actions related to kernels.
 export const activateKernel = (payload: {
-  serverId: string,
-  kernelName: string
+  serverId: string;
+  kernelName: string;
 }) => ({
   type: actionTypes.ACTIVATE_KERNEL,
   payload
 });
 export const activateKernelFulfilled = (payload: {
-  serverId: string,
-  kernelName: string,
-  kernel: *
+  serverId: string;
+  kernelName: string;
+  kernel: KernelInfo;
 }) => ({
   type: actionTypes.ACTIVATE_KERNEL_FULFILLED,
   payload
 });
 export const activateKernelFailed = (payload: {
-  serverId: string,
-  kernelName: string,
-  error: *
+  serverId: string;
+  kernelName: string;
+  error: Error;
 }) => ({
   type: actionTypes.ACTIVATE_KERNEL_FAILED,
   payload
 });
 
 export const interruptKernel = (payload: {
-  serverId: string,
-  kernelName: string
+  serverId: string;
+  kernelName: string;
 }) => ({
   type: actionTypes.INTERRUPT_KERNEL,
   payload
 });
 export const interruptKernelFulfilled = (payload: {
-  serverId: string,
-  kernelName: string
+  serverId: string;
+  kernelName: string;
 }) => ({
   type: actionTypes.INTERRUPT_KERNEL_FULFILLED,
   payload
 });
 export const interruptKernelFailed = (payload: {
-  serverId: string,
-  kernelName: string,
-  error: *
+  serverId: string;
+  kernelName: string;
+  error: Error;
 }) => ({
   type: actionTypes.INTERRUPT_KERNEL_FAILED,
   payload
 });
 
 export const killKernel = (payload: {
-  serverId: string,
-  kernelName: string
+  serverId: string;
+  kernelName: string;
 }) => ({
   type: actionTypes.KILL_KERNEL,
   payload
@@ -159,77 +165,77 @@ export const killKernel = (payload: {
 
 // NB: This appears unused. In core there's KILL_KERNEL_SUCCESSFUL, but it deals in KernelRefs rather than serverId/kernelName.
 export const killKernelFulfilled = (payload: {
-  serverId: string,
-  kernelName: string
+  serverId: string;
+  kernelName: string;
 }) => ({
   type: actionTypes.KILL_KERNEL_FULFILLED,
   payload
 });
 export const killKernelFailed = (payload: {
-  serverId: string,
-  kernelName: string,
-  error: *
+  serverId: string;
+  kernelName: string;
+  error: Error;
 }) => ({
   type: actionTypes.KILL_KERNEL_FAILED,
   payload
 });
 
 export const addKernelMessage = (payload: {
-  serverId: string,
-  kernelName: string,
-  message: *
+  serverId: string;
+  kernelName: string;
+  message: JupyterMessage;
 }) => ({
   type: actionTypes.ADD_KERNEL_MESSAGE,
   payload
 });
 export const addKernelOutput = (payload: {
-  serverId: string,
-  kernelName: string,
-  output: *
+  serverId: string;
+  kernelName: string;
+  output: Output;
 }) => ({
   type: actionTypes.ADD_KERNEL_OUTPUT,
   payload
 });
 export const clearKernelOutputs = (payload: {
-  serverId: string,
-  kernelName: string
+  serverId: string;
+  kernelName: string;
 }) => ({
   type: actionTypes.CLEAR_KERNEL_OUTPUTS,
   payload
 });
 export const restartKernel = (payload: {
-  serverId: string,
-  kernelName: string
+  serverId: string;
+  kernelName: string;
 }) => ({
   type: actionTypes.RESTART_KERNEL,
   payload
 });
 export const runSource = (payload: {
-  serverId: string,
-  kernelName: string,
-  source: string
+  serverId: string;
+  kernelName: string;
+  source: string;
 }) => ({
   type: actionTypes.RUN_SOURCE,
   payload
 });
 export const setActiveKernel = (payload: {
-  serverId: string,
-  kernelName: string
+  serverId: string;
+  kernelName: string;
 }) => ({
   type: actionTypes.SET_ACTIVE_KERNEL,
   payload
 });
 export const setActiveKernelLanguageInfo = (payload: {
-  serverId: string,
-  kernelName: string,
-  languageInfo: *
+  serverId: string;
+  kernelName: string;
+  languageInfo: LanguageInfoMetadata;
 }) => ({
   type: actionTypes.SET_ACTIVE_KERNEL_LANGUAGE_INFO,
   payload
 });
 export const setKernelStatus = (payload: {
-  serverId: string,
-  kernelName: string
+  serverId: string;
+  kernelName: string;
 }) => ({
   type: actionTypes.SET_KERNEL_STATUS,
   payload
@@ -237,8 +243,8 @@ export const setKernelStatus = (payload: {
 
 export const initalizeFromQuery = (
   payload: {
-    repo?: string,
-    gitref?: string
+    repo?: string;
+    gitref?: string;
   } = {}
 ) => ({
   type: actionTypes.INITIALIZE_FROM_QUERY,
