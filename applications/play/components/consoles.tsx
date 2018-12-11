@@ -1,7 +1,6 @@
-// @flow
-import * as React from "react";
+import React, { ChangeEvent, FormEvent } from "react";
 
-class BinderLogo extends React.Component<*, *> {
+class BinderLogo extends React.Component {
   render() {
     return (
       <React.Fragment>
@@ -28,7 +27,15 @@ class BinderLogo extends React.Component<*, *> {
   }
 }
 
-class BinderTextInput extends React.Component<*, *> {
+type BinderTextInputProps = {
+  onChange(event: ChangeEvent<HTMLInputElement>): void;
+  value: string;
+  id: string;
+  labelText: string;
+  name: string;
+};
+
+class BinderTextInput extends React.Component<BinderTextInputProps> {
   render() {
     const { onChange, value, id, labelText, name } = this.props;
 
@@ -43,7 +50,7 @@ class BinderTextInput extends React.Component<*, *> {
               type="text"
               name={name}
               value={value}
-              size="80"
+              size={80}
             />
           </label>
         </fieldset>
@@ -63,7 +70,11 @@ class BinderTextInput extends React.Component<*, *> {
   }
 }
 
-class BinderForm extends React.Component<*, *> {
+type BinderFormProps = {
+  onSubmit(event: FormEvent<HTMLFormElement>): void;
+};
+
+class BinderForm extends React.Component<BinderFormProps> {
   render() {
     const { onSubmit } = this.props;
     return (
@@ -105,7 +116,14 @@ class BinderForm extends React.Component<*, *> {
   }
 }
 
-class BinderLogs extends React.Component<*, *> {
+type BinderLogsProps = {
+  logs: Array<{
+    phase: string;
+    message: string;
+  }>;
+};
+
+class BinderLogs extends React.Component<BinderLogsProps> {
   render() {
     const { logs } = this.props;
     return (
@@ -165,9 +183,46 @@ class BinderLogs extends React.Component<*, *> {
     );
   }
 }
-// TODO: Make a generic little console for some of the styled container pieces,
-//       then make this component inject the binder specific bits
-export class BinderConsole extends React.Component<*, *> {
+
+export class Console extends React.Component {
+  render() {
+    return (
+      <div className="console">
+        {this.props.children}
+        <style jsx>{`
+          .binder-console {
+            clear: left;
+            min-height: 42px;
+            padding: 15px 0px 20px 25px;
+            color: #f1f1f1;
+            font-family: Monaco, monospace;
+            font-size: 12px;
+            line-height: 19px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            background-color: #1a1a1a;
+            counter-reset: line-numbering;
+            margin-top: 0;
+          }
+        `}</style>
+      </div>
+    );
+  }
+}
+
+type BinderConsoleProps = {
+  logs: Array<{
+    phase: string;
+    message: string;
+  }>;
+  onRepoChange(event: ChangeEvent<HTMLInputElement>): void;
+  onGitrefChange(event: ChangeEvent<HTMLInputElement>): void;
+  repo: string;
+  gitref: string;
+  onFormSubmit(event: FormEvent<HTMLFormElement>): void;
+};
+
+export class BinderConsole extends React.Component<BinderConsoleProps> {
   render() {
     const {
       logs,
@@ -178,7 +233,7 @@ export class BinderConsole extends React.Component<*, *> {
       onFormSubmit
     } = this.props;
     return (
-      <div className="binder-console">
+      <Console>
         <BinderLogo />
         <BinderForm onSubmit={onFormSubmit}>
           <BinderTextInput
@@ -197,23 +252,7 @@ export class BinderConsole extends React.Component<*, *> {
           />
         </BinderForm>
         <BinderLogs logs={logs} />
-        <style jsx>{`
-          .binder-console {
-            clear: left;
-            min-height: 42px;
-            padding: 15px 0px 20px 25px;
-            color: #f1f1f1;
-            font-family: Monaco, monospace;
-            font-size: 12px;
-            line-height: 19px;
-            white-space: pre-wrap;
-            word-wrap: break-word;
-            background-color: #1a1a1a;
-            counter-reset: line-numbering;
-            margin-top: 0;
-          }
-        `}</style>
-      </div>
+      </Console>
     );
   }
 }
