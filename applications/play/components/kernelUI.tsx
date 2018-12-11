@@ -1,14 +1,24 @@
-// @flow
-import * as React from "react";
+import React, { ChangeEvent } from "react";
+import { KernelspecRecord } from "@nteract/types";
 
-class KernelOption extends React.Component<*, *> {
+type KernelOptionProps = {
+  kernelName: string;
+};
+
+class KernelOption extends React.Component<KernelOptionProps> {
   render() {
     const { kernelName } = this.props;
     return <option value={kernelName}>{kernelName}</option>;
   }
 }
 
-class KernelSelector extends React.Component<*, *> {
+type KernelSelectorProps = {
+  currentKernel: string;
+  onChange(event: ChangeEvent<HTMLSelectElement>): void;
+  kernelspecs: { [name: string]: KernelspecRecord };
+};
+
+class KernelSelector extends React.Component<KernelSelectorProps> {
   render() {
     const { kernelspecs, currentKernel, onChange } = this.props;
     return (
@@ -37,7 +47,14 @@ class KernelSelector extends React.Component<*, *> {
   }
 }
 
-export class KernelUI extends React.Component<*, *> {
+type KernelUIProps = {
+  status: string;
+  currentKernel: string;
+  onChange(event: any): void;
+  kernelspecs: { [name: string]: KernelspecRecord };
+};
+
+export class KernelUI extends React.Component<KernelUIProps> {
   render() {
     const { status, ...otherprops } = this.props; // eslint-disable-line no-unused-vars
     return (
