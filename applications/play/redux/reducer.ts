@@ -1,4 +1,3 @@
-// @flow
 import { combineReducers } from "redux";
 import { omit } from "lodash";
 import objectPath from "object-path";

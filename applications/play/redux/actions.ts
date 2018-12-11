@@ -72,7 +72,7 @@ export const killServerFulfilled = (payload: { serverId: string }) => ({
 });
 export const killServerFailed = (payload: {
   serverId: string;
-  error: Error;
+  error: string;
 }) => ({
   type: actionTypes.KILL_SERVER_FAILED,
   payload
