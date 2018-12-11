@@ -1,4 +1,3 @@
-// @flow
 import { applyMiddleware, compose, createStore } from "redux";
 import { createEpicMiddleware } from "redux-observable";
 import merge from "deepmerge";
@@ -8,30 +7,27 @@ import reducer from "./reducer";
 import getInitialState from "./getInitialState";
 import { errorMiddleware } from "./middlewares";
 
-/**
- * Not that we need to here, but I thought I'd write it out
 type State = {
   ui: {
-    repo: string,
-    gitref: string,
-    source: string,
-    showPanel: boolean,
-    currentServerId: string,
-    currentKernelName: string,
-    platform: string
-  },
+    repo: string;
+    gitref: string;
+    source: string;
+    showPanel: boolean;
+    currentServerId: string;
+    currentKernelName: string;
+    platform: string;
+  };
   entities: {
-    serversById: *
-  }
+    serversById: any;
+  };
 };
-**/
 
-export default function(givenInitialState: Object = {}) {
+export default function(givenInitialState: Partial<State> = {}) {
   const initialState = merge(getInitialState(), givenInitialState);
   const epicMiddleware = createEpicMiddleware();
   const composeEnhancers =
     (typeof window !== "undefined" &&
-      window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) ||
+      (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) ||
     compose;
 
   const store = createStore(
