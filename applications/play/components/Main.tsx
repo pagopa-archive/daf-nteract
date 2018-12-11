@@ -1,9 +1,8 @@
-// @flow
 import * as React from "react";
 import Head from "next/head";
 import Router from "next/router";
 import CodeMirrorEditor from "@nteract/editor";
-// $FlowFixMe
+
 import { Display } from "@nteract/display-area";
 import { Outputs } from "@nteract/presentational-components";
 import { connect } from "react-redux";
@@ -20,7 +19,34 @@ const NTERACT_LOGO_URL =
 
 const emptyList = [];
 
-class Main extends React.Component<*, *> {
+type Props = {
+  gitref: string;
+  repo: string;
+  source: string;
+  activateServer(param: object): void;
+  serverId: string;
+  setActiveKernel(param: object): void;
+  killKernel(param: object): void;
+  submitBinderForm(param: object): void;
+  currentKernel: any;
+  codeMirrorMode: string;
+  currentKernelName: string;
+  currentServer: any;
+  platform: string;
+  showPanel: boolean;
+  setShowPanel(showPanel: boolean): void;
+  runSource(param: object): void;
+  restartKernel(param: object): void;
+  currentServerId: string;
+};
+
+type State = {
+  gitrefValue: string;
+  repoValue: string;
+  sourceValue: string;
+};
+
+class Main extends React.Component<Props, State> {
   constructor(props) {
     super(props);
     this.state = {
