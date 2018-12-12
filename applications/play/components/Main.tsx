@@ -213,8 +213,6 @@ class Main extends React.Component<Props, State> {
 
         <div className="play-editor">
           <CodeMirrorEditor
-            // TODO: these should have defaultProps on the codemirror editor
-            cellFocused
             editorFocused
             channels={
               currentKernel && currentKernel.channel
@@ -224,10 +222,6 @@ class Main extends React.Component<Props, State> {
             tip
             completion
             theme="light"
-            // TODO: This is the notebook implementation leaking into the editor
-            //       component. It shouldn't be here, I won't refactor it as part
-            //       of the current play PR though.
-            id="not-really-a-cell"
             onFocusChange={() => {}}
             focusAbove={() => {}}
             focusBelow={() => {}}

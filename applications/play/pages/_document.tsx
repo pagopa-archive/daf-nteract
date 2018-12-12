@@ -1,10 +1,15 @@
 import React from "react";
-import Document, { Head, Main, NextScript } from "next/document";
+import Document, {
+  Head,
+  Main,
+  NextScript,
+  NextDocumentContext
+} from "next/document";
 import flush from "styled-jsx/server";
 import PropTypes from "prop-types";
 
 class MyDocument extends Document {
-  static getInitialProps(context: Object) {
+  static getInitialProps(context: NextDocumentContext) {
     const renderPage = context.renderPage;
     const { html, head, errorHtml, chunks } = renderPage();
     const styles = flush();
