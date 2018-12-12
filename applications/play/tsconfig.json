@@ -13,6 +13,16 @@
     "noUnusedParameters": true,
     "removeComments": false,
     "preserveConstEnums": true,
-    "sourceMap": true
+    "sourceMap": true,
+    "baseUrl": ".",
+    "paths": {
+      // Attempt to allow our namespace packages to get resolved
+      "@nteract/*": ["../../packages/*/src"],
+      "@mybinder/*": ["../../packages/*/src"],
+      "rx-jupyter": ["../../packages/rx-jupyter/src"],
+      "rx-binder": ["../../packages/rx-binder/src"],
+      "enchannel-zmq-backend": ["../../packages/enchannel-zmq-backend/src"],
+      "fs-observable": ["../../packages/fs-observable/src"]
+    }
   }
 }
