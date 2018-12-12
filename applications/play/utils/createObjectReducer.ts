@@ -1,4 +1,5 @@
-// @flow
+import { Action } from "redux";
+
 /**
  * Similar to how combineReducers allows you to create a container reducer to
  * delegate actions where each key maps to a reducer to handle the key's value--
@@ -10,7 +11,14 @@
  * @param {Function} config.valueReducer A standard redux reducer function.
  * @returns {Function} A standard redux reducer function.
  */
-const createObjectReducer = (config: *) => (state: * = {}, action: *) => {
+type Config = {
+  getKey(action: Action): string;
+  valueReducer: any;
+};
+const createObjectReducer = (config: Config) => (
+  state: any = {},
+  action: Action
+) => {
   const key = config.getKey(action);
   if (typeof key !== "undefined") {
     const previousValueState = state[key];

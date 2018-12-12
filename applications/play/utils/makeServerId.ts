@@ -1,4 +1,4 @@
-// @flow
 import { formBinderURL } from "rx-binder";
 
-export default ({ repo, gitref }: *) => formBinderURL({ repo, gitref });
+export default ({ repo, gitref }: { repo: string; gitref: string }) =>
+  formBinderURL({ repo, ref: gitref });
