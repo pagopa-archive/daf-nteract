@@ -1,18 +1,19 @@
-// @flow
-
 import { combineEpics, ofType } from "redux-observable";
 import { of, from, merge } from "rxjs";
 import { filter, catchError, mergeMap, switchMap } from "rxjs/operators";
-import { binder } from "rx-binder";
+import { binder, IEventSourceConstructor } from "rx-binder";
 import { kernels, shutdown, kernelspecs } from "rx-jupyter";
 import uuid from "uuid/v4";
-import { executeRequest, kernelInfoRequest } from "@nteract/messaging";
+import {
+  executeRequest,
+  kernelInfoRequest,
+  JupyterMessage,
+  MessageType
+} from "@nteract/messaging";
 import objectPath from "object-path";
 
 import * as actions from "./actions";
 import * as actionTypes from "./actionTypes";
-
-declare var EventSource: (url: string) => *;
 
 const activateServerEpic = action$ =>
   action$.pipe(
@@ -20,11 +21,15 @@ const activateServerEpic = action$ =>
     // Definitely do not run this on the server side
     filter(() => typeof window !== "undefined"),
     switchMap(({ payload: { serverId, oldServerId, repo, gitref } }) => {
-      return binder({ repo, gitref }, EventSource).pipe(
+      return binder({ repo, ref: gitref }, IEventSourceConstructor).pipe(
         mergeMap(message => {
-          const actionsArray = [
-            actions.addServerMessage({ serverId, message })
-          ];
+          const actionsArray: Array<{
+            type: string;
+            payload: {
+              serverId: string;
+              message?: string;
+            };
+          }> = [actions.addServerMessage({ serverId, message })];
           if (message.phase === "ready") {
             const config = {
               endpoint: message.url.replace(/\/\s*$/, ""),
@@ -110,11 +115,14 @@ const setActiveKernelEpic = (action$, state$) =>
         "channel"
       ];
       const channel = objectPath.get(state$.value, channelPath);
-      const actionsArray = [actions.setCurrentKernelName(kernelName)];
+      const actionsArray: Array<{
+        type: string;
+        payload: string | { serverId: string; kernelName: string };
+      }> = [actions.setCurrentKernelName(kernelName)];
       if (!channel) {
         actionsArray.push(actions.activateKernel({ serverId, kernelName }));
       }
-      // $FlowFixMe
+
       return of(...actionsArray);
     })
   );
@@ -141,10 +149,16 @@ const initializeKernelMessaging = action$ =>
       // Side effect! Get that Kernel Info!
       kernel.channel.next(kernelInfoRequest());
       return kernel.channel.pipe(
-        mergeMap(message => {
-          const actionsArray = [
-            actions.addKernelMessage({ serverId, kernelName, message })
-          ];
+        mergeMap((message: JupyterMessage<MessageType, any>) => {
+          const actionsArray: Array<{
+            type: string;
+            payload: {
+              serverId: string;
+              kernelName: string;
+              message?: JupyterMessage;
+              status?: string;
+            };
+          }> = [actions.addKernelMessage({ serverId, kernelName, message })];
           switch (message.header.msg_type) {
             case "status":
               actionsArray.push(

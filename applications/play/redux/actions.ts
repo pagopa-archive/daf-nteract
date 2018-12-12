@@ -1,8 +1,7 @@
 import * as actionTypes from "./actionTypes";
 import { JSONObject, Output } from "@nteract/commutable";
-import { JupyterMessage } from "@nteract/messaging";
+import { JupyterMessage, MessageType } from "@nteract/messaging";
 import { LanguageInfoMetadata, KernelInfo } from "@nteract/types";
-import { JupyterHostRecordProps } from "@nteract/types/src";
 
 // Simple actions related to UI state.
 export const setCurrentKernelName = (payload: string) => ({
@@ -49,7 +48,12 @@ export const activateServer = (payload: {
 });
 export const activateServerFulfilled = (payload: {
   serverId: string;
-  config: JupyterHostRecordProps;
+  config: {
+    endpoint: string;
+    uri: string;
+    token: string;
+    crossDomain: boolean;
+  };
 }) => ({
   type: actionTypes.ACTIVATE_SERVER_FULFILLED,
   payload
@@ -183,7 +187,7 @@ export const killKernelFailed = (payload: {
 export const addKernelMessage = (payload: {
   serverId: string;
   kernelName: string;
-  message: JupyterMessage;
+  message: JupyterMessage<MessageType, any>;
 }) => ({
   type: actionTypes.ADD_KERNEL_MESSAGE,
   payload
@@ -236,6 +240,7 @@ export const setActiveKernelLanguageInfo = (payload: {
 export const setKernelStatus = (payload: {
   serverId: string;
   kernelName: string;
+  status: string;
 }) => ({
   type: actionTypes.SET_KERNEL_STATUS,
   payload

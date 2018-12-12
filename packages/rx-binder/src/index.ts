@@ -46,7 +46,7 @@ interface IEventSource {
   onerror?: (reason: any) => void;
   close(): void;
 }
-type IEventSourceConstructor = new (url: string) => IEventSource;
+export type IEventSourceConstructor = new (url: string) => IEventSource;
 
 const defaultEventSource: IEventSourceConstructor =
   typeof window !== "undefined" &&
