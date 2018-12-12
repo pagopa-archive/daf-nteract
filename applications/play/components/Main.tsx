@@ -8,7 +8,7 @@ import { Outputs } from "@nteract/presentational-components";
 import { connect } from "react-redux";
 import objectPath from "object-path";
 
-import { actions } from "../redux";
+import { actions } from "../app-redux";
 import * as utils from "../utils";
 
 import { KernelUI } from "./kernelUI";
