@@ -1,7 +1,7 @@
 import { combineEpics, ofType } from "redux-observable";
 import { of, from, merge } from "rxjs";
 import { filter, catchError, mergeMap, switchMap } from "rxjs/operators";
-import { binder, IEventSourceConstructor } from "rx-binder";
+import { binder, IEventSource } from "rx-binder";
 import { kernels, shutdown, kernelspecs } from "rx-jupyter";
 import uuid from "uuid/v4";
 import {
@@ -15,13 +15,15 @@ import objectPath from "object-path";
 import * as actions from "./actions";
 import * as actionTypes from "./actionTypes";
 
+type EventSource = new (url: string) => IEventSource;
+
 const activateServerEpic = action$ =>
   action$.pipe(
     ofType(actionTypes.ACTIVATE_SERVER),
     // Definitely do not run this on the server side
     filter(() => typeof window !== "undefined"),
     switchMap(({ payload: { serverId, oldServerId, repo, gitref } }) => {
-      return binder({ repo, ref: gitref }, IEventSourceConstructor).pipe(
+      return binder({ repo, ref: gitref }, EventSource).pipe(
         mergeMap(message => {
           const actionsArray: Array<{
             type: string;
