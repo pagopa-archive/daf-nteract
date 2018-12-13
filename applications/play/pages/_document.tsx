@@ -3,17 +3,23 @@ import Document, {
   Head,
   Main,
   NextScript,
-  NextDocumentContext
+  NextDocumentContext,
+  DefaultDocumentIProps
 } from "next/document";
 import flush from "styled-jsx/server";
-import PropTypes from "prop-types";
+
+interface DocumentProps extends DefaultDocumentIProps {
+  html?: string;
+  head?: Array<React.ReactElement<any>>;
+  styles?: React.ReactNode;
+}
 
 class MyDocument extends Document {
-  static getInitialProps(context: NextDocumentContext) {
+  static getInitialProps(context: NextDocumentContext): DocumentProps {
     const renderPage = context.renderPage;
-    const { html, head, errorHtml, chunks } = renderPage();
+    const { html, head, buildManifest } = renderPage();
     const styles = flush();
-    return { html, head, errorHtml, chunks, styles };
+    return { html, head, styles, buildManifest };
   }
 
   getChildContext() {
@@ -32,9 +38,5 @@ class MyDocument extends Document {
     );
   }
 }
-
-MyDocument.childContextTypes = {
-  _documentProps: PropTypes.any
-};
 
 export default MyDocument;
