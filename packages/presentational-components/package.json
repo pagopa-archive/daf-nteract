@@ -18,7 +18,7 @@
     "@blueprintjs/core": "^3.7.0",
     "@blueprintjs/select": "^3.2.0",
     "@nteract/styled-blueprintjsx": "^1.1.1",
-    "react-syntax-highlighter": "^9.0.0",
+    "react-syntax-highlighter": "^10.0.0",
     "styled-jsx": "^3.1.0"
   },
   "peerDependencies": {
