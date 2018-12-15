@@ -19,22 +19,39 @@ interface CellProps {
 
 // Note: no happy syntax highlighting if I include the generic
 //
-//   export const Cell2 = styled.div<{isSelected: boolean}>`
+//   export const Cell2 = styled.div<CellProps>`
 //
-// See https://github.com/styled-components/vscode-styled-components/issues/114
-export const Cell2 = styled.div`
-  position: relative;
-  background: var(--theme-cell-bg, white);
-  transition: all 0.1s ease-in-out;
 
-  :hover {
-    box-shadow: var(
-      --theme-cell-shadow-hover,
-      1px 1px 3px rgba(0, 0, 0, 0.12),
-      -1px -1px 3px rgba(0, 0, 0, 0.12)
-    );
+const levels = {
+  FLAT: "none",
+  HOVERED:
+    "var(--theme-cell-shadow-hover, 1px 1px 3px rgba(0, 0, 0, 0.12), -1px -1px 3px rgba(0, 0, 0, 0.12) )",
+  SELECTED:
+    "var(--theme-cell-shadow-focus, 3px 3px 9px rgba(0, 0, 0, 0.12), -3px -3px 9px rgba(0, 0, 0, 0.12) )"
+};
+
+/** @component */
+export const Cell = styled.div`
+  & {
+    position: relative;
+    background: var(--theme-cell-bg, white);
+    transition: all 0.1s ease-in-out;
+
+    box-shadow: ${(props: CellProps) =>
+      props.isSelected
+        ? levels.SELECTED
+        : props._hovered
+        ? levels.HOVERED
+        : levels.FLAT};
+  }
+
+  &:hover {
+    box-shadow: ${(props: CellProps) =>
+      props.isSelected ? levels.SELECTED : levels.HOVERED};
   }
 `;
+
+Cell.displayName = "Cell";
 
 /**
  * 
@@ -66,8 +83,7 @@ export const Cell2 = styled.div`
  * 
  */
 
-/** @component */
-export const Cell = (props: CellProps) => {
+export const OriginalCell = (props: CellProps) => {
   const children = props.children;
 
   return (
