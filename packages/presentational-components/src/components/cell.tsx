@@ -1,5 +1,7 @@
 import * as React from "react";
 
+import styled from "styled-components";
+
 interface CellProps {
   /**
    * Indicates if a cell is selected
@@ -14,6 +16,55 @@ interface CellProps {
    */
   children?: React.ReactNode;
 }
+
+// Note: no happy syntax highlighting if I include the generic
+//
+//   export const Cell2 = styled.div<{isSelected: boolean}>`
+//
+// See https://github.com/styled-components/vscode-styled-components/issues/114
+export const Cell2 = styled.div`
+  position: relative;
+  background: var(--theme-cell-bg, white);
+  transition: all 0.1s ease-in-out;
+
+  :hover {
+    box-shadow: var(
+      --theme-cell-shadow-hover,
+      1px 1px 3px rgba(0, 0, 0, 0.12),
+      -1px -1px 3px rgba(0, 0, 0, 0.12)
+    );
+  }
+`;
+
+/**
+ * 
+ * 
+ // The following needs to be done using https://www.styled-components.com/docs/advanced#referring-to-other-components
+
+ // These styles need to be done in <Prompt />
+
+        .cell.overrideHover :global(.prompt),
+        .cell:hover :global(.prompt),
+        .cell:active :global(.prompt) {
+          background-color: var(--theme-cell-prompt-bg-hover, hsl(0, 0%, 94%));
+          color: var(--theme-cell-prompt-fg-hover, hsl(0, 0%, 15%));
+        }
+
+        .cell:focus :global(.prompt),
+        .cell.focused :global(.prompt) {
+          background-color: var(--theme-cell-prompt-bg-focus, hsl(0, 0%, 90%));
+          color: var(--theme-cell-prompt-fg-focus, hsl(0, 0%, 51%));
+        }
+
+// These styles need to be done in outputs
+
+        .cell.focused :global(.outputs) {
+          overflow-y: auto;
+        }
+
+ * 
+ * 
+ */
 
 /** @component */
 export const Cell = (props: CellProps) => {
