@@ -1,5 +1,7 @@
 import * as React from "react";
 
+import styled from "styled-components";
+
 interface PromptProps {
   /**
    * Typically used to show what execution count the user is on. When working at
@@ -46,38 +48,40 @@ export function promptText(props: PromptProps): string {
   return "[ ]";
 }
 
-export class Prompt extends React.Component<PromptProps, {}> {
-  static defaultProps = {
-    counter: null,
-    running: false,
-    queued: false,
-    blank: false
-  };
+/** @component */
+export const Prompt = styled.div<PromptProps>`
+  & {
+    font-family: monospace;
+    font-size: 12px;
+    line-height: 22px;
+    /* For creating a buffer area for <Prompt blank /> */
+    min-height: 22px;
 
-  render() {
-    return (
-      <React.Fragment>
-        <div className="prompt">
-          {this.props.blank ? null : promptText(this.props)}
-        </div>
-        <style jsx>{`
-          .prompt {
-            font-family: monospace;
-            font-size: 12px;
-            line-height: 22px;
+    color: black;
 
-            width: var(--prompt-width, 50px);
-            padding: 9px 0;
+    width: var(--prompt-width, 50px);
+    padding: 9px 0;
 
-            text-align: center;
+    text-align: center;
 
-            color: var(--theme-cell-prompt-fg, black);
-            background-color: var(--theme-cell-prompt-bg, #fafafa);
-          }
-        `}</style>
-      </React.Fragment>
-    );
+    color: var(--theme-cell-prompt-fg, black);
+    background-color: var(--theme-cell-prompt-bg, #fafafa);
   }
-}
 
-export const PromptBuffer = () => <Prompt blank />;
+  &:after {
+    content: ${(props: PromptProps) =>
+      props.blank ? null : `"${promptText(props)}"`};
+  }
+`;
+
+Prompt.defaultProps = {
+  counter: null,
+  running: false,
+  queued: false,
+  blank: false
+};
+
+export const PromptBuffer = styled(Prompt)``;
+PromptBuffer.defaultProps = {
+  blank: true
+};

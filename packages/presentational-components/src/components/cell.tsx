@@ -47,6 +47,7 @@ export const Cell = styled.div`
 
   &:hover {
     box-shadow: ${(props: CellProps) =>
+      // When selected, let that take precedence over hovered
       props.isSelected ? levels.SELECTED : levels.HOVERED};
   }
 `;
