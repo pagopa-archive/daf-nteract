@@ -81,6 +81,8 @@ Prompt.defaultProps = {
   blank: false
 };
 
+Prompt.displayName = "Prompt";
+
 export const PromptBuffer = styled(Prompt)``;
 PromptBuffer.defaultProps = {
   blank: true
