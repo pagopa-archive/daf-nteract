@@ -2,6 +2,8 @@ import * as React from "react";
 
 import styled from "styled-components";
 
+import { Prompt } from "./prompt";
+
 interface CellProps {
   /**
    * Indicates if a cell is selected
@@ -49,6 +51,33 @@ export const Cell = styled.div`
     box-shadow: ${(props: CellProps) =>
       // When selected, let that take precedence over hovered
       props.isSelected ? levels.SELECTED : levels.HOVERED};
+  }
+
+  & ${Prompt} {
+    ${props =>
+      props.isSelected
+        ? `
+        background-color: var(--theme-cell-prompt-bg-focus, hsl(0, 0%, 90%));
+        color: var(--theme-cell-prompt-fg-focus, hsl(0, 0%, 51%));
+        `
+        : props._hovered
+        ? `
+        background-color: var(--theme-cell-prompt-bg-hover, hsl(0, 0%, 94%));
+        color: var(--theme-cell-prompt-fg-hover, hsl(0, 0%, 15%));
+        `
+        : ``}
+  }
+
+  /** Left off needing to allow isSelected to take precedence over hover */
+
+  &:hover ${Prompt}, &:active ${Prompt} {
+    background-color: var(--theme-cell-prompt-bg-hover, hsl(0, 0%, 94%));
+    color: var(--theme-cell-prompt-fg-hover, hsl(0, 0%, 15%));
+  }
+
+  &:focus ${Prompt} {
+    background-color: var(--theme-cell-prompt-bg-focus, hsl(0, 0%, 90%));
+    color: var(--theme-cell-prompt-fg-focus, hsl(0, 0%, 51%));
   }
 `;
 
