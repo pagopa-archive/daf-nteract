@@ -32,6 +32,7 @@ export default `
   --theme-primary-shadow-focus: 3px  3px 9px rgba(0, 0, 0, 0.12), -3px -3px 9px rgba(0, 0, 0, 0.12);
 
   --theme-title-bar-bg: var(--theme-primary-bg-hover);
+  --theme-title-bar-fg: #334866;
 
   --theme-menu-bg: var(--theme-primary-bg);
   --theme-menu-bg-hover: var(--theme-primary-bg-hover);
