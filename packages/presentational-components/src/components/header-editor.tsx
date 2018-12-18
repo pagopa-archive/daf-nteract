@@ -52,7 +52,7 @@ export type HeaderEditorProps = {
   /**
    * The theme of the header.
    */
-  theme: "light" | "dark";
+  theme: "light" | "dark" | "daf";
 };
 
 export type HeaderEditorState = {
@@ -75,7 +75,7 @@ export class HeaderEditor extends React.Component<
   }
   static defaultProps = {
     editable: true,
-    theme: "light",
+    theme: "daf",
     headerData: {
       authors: [],
       title: "",
