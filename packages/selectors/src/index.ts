@@ -45,7 +45,7 @@ export const serverConfig = (host: JupyterHostRecord): ServerConfig => {
  * @returns         The theme of the nteract application
  */
 export const userTheme = (state: AppState): string =>
-  state.config.get("theme", "light");
+  state.config.get("theme", "daf");
 
 /**
  * Returns the version of the nteract application.
@@ -337,8 +337,8 @@ export const modalType = createSelector(
  */
 export const currentTheme: (
   state: AppState
-) => "light" | "dark" = createSelector(
-  (state: AppState) => state.config.get("theme", "light"),
+) => "light" | "dark" | "daf" = createSelector(
+  (state: AppState) => state.config.get("theme", "daf"),
   identity
 );
 

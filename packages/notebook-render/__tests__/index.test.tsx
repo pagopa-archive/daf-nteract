@@ -19,7 +19,7 @@ describe("Test NotebokRender snapshots", () => {
     const component = shallow(
       <NotebookRender
         notebook={fixtureCommutable}
-        theme="light"
+        theme="daf"
         tip
         displayOrder={displayOrder}
         transforms={transforms}
@@ -32,7 +32,7 @@ describe("Test NotebokRender snapshots", () => {
     const component = shallow(
       <NotebookRender
         notebook={fixtureJSON}
-        theme="light"
+        theme="daf"
         tip
         displayOrder={displayOrder}
         transforms={transforms}
@@ -47,7 +47,7 @@ describe("Render server-side with renderToStaticMarkup", () => {
     const component = shallow(
       <NotebookRender
         notebook={fixtureJSON}
-        theme="light"
+        theme="daf"
         tip
         displayOrder={displayOrder}
         transforms={transforms}
