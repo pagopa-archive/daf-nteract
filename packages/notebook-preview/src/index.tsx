@@ -29,7 +29,7 @@ type Props = {
   displayOrder: Array<string>;
   notebook: any;
   transforms: Transforms;
-  theme: "light" | "dark" | "daf";
+  theme: "light" | "dark";
 };
 
 type State = {
@@ -44,7 +44,7 @@ export class NotebookPreview extends React.PureComponent<Props, State> {
       emptyNotebook,
       createCodeCell().set("source", "# where's the content?")
     ),
-    theme: "daf"
+    theme: "light"
   };
 
   constructor(props: Props) {

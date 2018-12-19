@@ -1,20 +1,19 @@
 /* @flow strict */
 import * as React from "react";
 import { WideLogo } from "@nteract/logos";
-import { DAFWideLogo } from "../../../../../packages/daf-packages/daf-logo/daf-wide"
 
 type ThemedLogoProps = {
   height: number,
-  theme: "light" | "dark" | "daf"
+  theme: "light" | "dark"
 };
 
-const ThemedLogo = (props: ThemedLogoProps) => props.theme === "daf"
-  ? <DAFWideLogo {...props} />
-  : <WideLogo {...props} />
+const ThemedLogo = (props: ThemedLogoProps) => (
+  <WideLogo height={props.height} theme={props.theme} />
+);
 
 ThemedLogo.defaultProps = {
   height: 20,
-  theme: "daf"
+  theme: "light"
 };
 
 export { ThemedLogo };

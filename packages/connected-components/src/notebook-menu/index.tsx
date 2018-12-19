@@ -187,11 +187,6 @@ class PureNotebookMenu extends React.Component<Props, State> {
           setTheme("light");
         }
         break;
-      case MENU_ITEM_ACTIONS.SET_THEME_DAF:
-        if (setTheme) {
-          setTheme("daf");
-        }
-        break;
       case MENU_ITEM_ACTIONS.OPEN_ABOUT:
         if (openAboutModal) {
           openAboutModal();
@@ -326,11 +321,6 @@ class PureNotebookMenu extends React.Component<Props, State> {
           </SubMenu>
           <SubMenu key={MENUS.VIEW} title="View">
             <SubMenu key={MENUS.VIEW_THEMES} title="themes">
-              <MenuItem
-                key={createActionKey(MENU_ITEM_ACTIONS.SET_THEME_DAF)}
-              >
-                daf
-              </MenuItem>
               <MenuItem
                 key={createActionKey(MENU_ITEM_ACTIONS.SET_THEME_LIGHT)}
               >

@@ -18,7 +18,7 @@ describe("Notebook", () => {
     const component = shallow(
       <NotebookPreview
         notebook={fixtureCommutable}
-        theme="daf"
+        theme="light"
         tip
         displayOrder={displayOrder}
         transforms={transforms}
@@ -31,7 +31,7 @@ describe("Notebook", () => {
     const component = shallow(
       <NotebookPreview
         notebook={fixtureJSON}
-        theme="daf"
+        theme="light"
         tip
         displayOrder={displayOrder}
         transforms={transforms}

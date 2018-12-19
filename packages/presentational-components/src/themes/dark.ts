@@ -25,7 +25,6 @@ export default `
   --theme-primary-shadow-focus: 3px  3px 9px rgba(255, 255, 255, 0.12), -3px -3px 9px rgba(255, 255, 255, 0.12);
 
   --theme-title-bar-bg: var(--nt-color-midnight-darkest);
-  --theme-title-bar-fg: #edf1f7;
 
   --theme-menu-bg: var(--theme-primary-bg);
   --theme-menu-bg-hover: var(--theme-primary-bg-hover);
