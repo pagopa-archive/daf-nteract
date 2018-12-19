@@ -10,9 +10,9 @@ describe("setKey", () => {
     const state = reducers(initialState, {
       type: actionTypes.SET_CONFIG_AT_KEY,
       key: "theme",
-      value: "daf"
+      value: "light"
     });
-    expect(state.get("theme")).toBe("daf");
+    expect(state.get("theme")).toBe("light");
   });
 });
 

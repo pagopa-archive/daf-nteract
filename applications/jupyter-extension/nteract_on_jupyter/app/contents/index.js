@@ -43,7 +43,6 @@ const mapStateToProps = (
   }
 
   return {
-    theme: selectors.currentTheme(state),
     contentType: content.type,
     contentRef,
     appBase: urljoin(host.basePath, "/nteract/edit")
@@ -69,7 +68,7 @@ class Contents extends React.Component<ContentsProps, null> {
             <Nav contentRef={this.props.contentRef}>
               <NavSection>
                 <a href={urljoin(this.props.appBase)} title="Home">
-                  <ThemedLogo theme={this.props.theme}/>
+                  <ThemedLogo />
                 </a>
               </NavSection>
             </Nav>

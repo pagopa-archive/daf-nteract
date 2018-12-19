@@ -498,7 +498,7 @@ const mapDispatchToProps = (dispatch: Dispatch): NotebookDispatchProps => ({
 
 export class NotebookApp extends React.PureComponent<NotebookProps> {
   static defaultProps = {
-    theme: "daf",
+    theme: "light",
     displayOrder: defaultTransforms,
     transforms: defaultDisplayOrder
   };
