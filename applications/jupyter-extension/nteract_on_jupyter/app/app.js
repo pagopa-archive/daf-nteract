@@ -23,7 +23,7 @@ class App extends React.Component<{ contentRef: ContentRef }, null> {
         />
         <style jsx global>{`
           :root {
-            ${themes.light};
+            ${themes.daf};
           }
 
           html {

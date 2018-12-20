@@ -1,33 +1,40 @@
 // @flow
+/*
+ * App level declarations that do not have static/hover/focus states.
+ * Primary content that lives in the app and can potentially be interactive.
+ * Secondary (possibly interactive) content that lives inside primary content.
+ * Every thing below is more component specific. They should attempt to reuse
+ * the general styles above as much as possible.
+ */
 export default `
 
-  --theme-app-bg: #2b2b2b;
-  --theme-app-fg: var(--nt-color-midnight-lightest);
-  --theme-app-border: var(--nt-color-midnight-light);
+  --theme-app-bg: white;
+  --theme-app-fg: var(--nt-color-midnight);
+  --theme-app-border: var(--nt-color-grey-light);
 
-  --theme-primary-bg: var(--nt-color-midnight);
-  --theme-primary-bg-hover: var(--nt-color-midnight);
-  --theme-primary-bg-focus: var(--nt-color-midnight-light);
+  --theme-primary-bg: var(--nt-color-grey-lightest);
+  --theme-primary-bg-hover: var(--nt-color-grey-lighter);
+  --theme-primary-bg-focus: var(--nt-color-grey-light);
 
   --theme-primary-fg: var(--nt-color-midnight-light);
-  --theme-primary-fg-hover: var(--nt-color-midnight-lighter);
+  --theme-primary-fg-hover: var(--nt-color-midnight);
   --theme-primary-fg-focus: var(--theme-app-fg);
 
   --theme-secondary-bg: var(--theme-primary-bg);
   --theme-secondary-bg-hover: var(--theme-primary-bg-hover);
   --theme-secondary-bg-focus: var(--theme-primary-bg-focus);
 
-  --theme-secondary-fg: var(--nt-color-midnight-light);
-  --theme-secondary-fg-hover: var(--nt-color-midnight-lighter);
+  --theme-secondary-fg: var(--nt-color-midnight-lighter);
+  --theme-secondary-fg-hover: var(--nt-color-midnight-light);
   --theme-secondary-fg-focus: var(--theme-primary-fg);
 
-  --theme-primary-shadow-hover: 1px  1px 3px rgba(255, 255, 255, 0.12), -1px -1px 3px rgba(255, 255, 255, 0.12);
-  --theme-primary-shadow-focus: 3px  3px 9px rgba(255, 255, 255, 0.12), -3px -3px 9px rgba(255, 255, 255, 0.12);
+  --theme-primary-shadow-hover: 1px  1px 3px rgba(0, 0, 0, 0.12), -1px -1px 3px rgba(0, 0, 0, 0.12);
+  --theme-primary-shadow-focus: 3px  3px 9px rgba(0, 0, 0, 0.12), -3px -3px 9px rgba(0, 0, 0, 0.12);
 
-  --theme-title-bar-bg: var(--nt-color-midnight-darkest);
+  --theme-title-bar-bg: hsl(210, 100%, 40%);
   --theme-title-bar-fg: #edf1f7;
 
-  --theme-menu-bg: var(--theme-primary-bg);
+  --theme-menu-bg: #0bd9d3;
   --theme-menu-bg-hover: var(--theme-primary-bg-hover);
   --theme-menu-bg-focus: var(--theme-primary-bg-focus);
   --theme-menu-shadow: var(--theme-primary-shadow-hover);
@@ -41,12 +48,12 @@ export default `
   --theme-cell-shadow-focus: var(--theme-primary-shadow-focus);
 
   --theme-cell-prompt-bg: var(--theme-primary-bg);
-  --theme-cell-prompt-bg-hover: var(--theme-primary-bg);
-  --theme-cell-prompt-bg-focus: var(--theme-primary-bg);
+  --theme-cell-prompt-bg-hover: var(--theme-primary-bg-hover);
+  --theme-cell-prompt-bg-focus: var(--theme-primary-bg-focus);
 
-  --theme-cell-prompt-fg: var(--theme-primary-fg);
-  --theme-cell-prompt-fg-hover: var(--theme-primary-fg-hover);
-  --theme-cell-prompt-fg-focus: var(--theme-primary-fg-focus);
+  --theme-cell-prompt-fg: var(--theme-secondary-fg);
+  --theme-cell-prompt-fg-hover: var(--theme-secondary-fg-hover);
+  --theme-cell-prompt-fg-focus: var(--theme-secondary-fg-focus);
 
   --theme-cell-toolbar-bg: var(--theme-primary-bg);
   --theme-cell-toolbar-bg-hover: var(--theme-primary-bg-hover);
@@ -76,33 +83,33 @@ export default `
   --theme-cell-creator-fg-hover: var(--theme-secondary-fg-hover);
   --theme-cell-creator-fg-focus: var(--theme-secondary-fg-focus);
 
-  --theme-pager-bg: #111;
+  --theme-pager-bg: #fafafa;
 
-  --cm-background: #111;
-  --cm-color: #ecf0f1;
+  --cm-background: #fafafa;
+  --cm-color: black;
 
-  --cm-gutter-bg: #777;
+  --cm-gutter-bg: white;
 
-  --cm-comment: #777;
-  --cm-keyword: #3498db;
-  --cm-string: #f1c40f;
-  --cm-builtin: #16a085;
-  --cm-special: #1abc9c;
-  --cm-variable: #ecf0f1;
-  --cm-number: #2ecc71;
-  --cm-meta: #95a5a6;
-  --cm-link: #2ecc71;
-  --cm-operator: #ecf0f1;
-  --cm-def: #ecf0f1;
+  --cm-comment: #a86;
+  --cm-keyword: blue;
+  --cm-string: #a22;
+  --cm-builtin: #077;
+  --cm-special: #0aa;
+  --cm-variable: black;
+  --cm-number: #3a3;
+  --cm-meta: #555;
+  --cm-link: #3a3;
+  --cm-operator: black;
+  --cm-def: black;
 
   --cm-activeline-bg: #e8f2ff;
   --cm-matchingbracket-outline: grey;
-  --cm-matchingbracket-color: white;
+  --cm-matchingbracket-color: black;
 
-  --cm-hint-color: var(--theme-app-fg);
+  --cm-hint-color: var(--cm-color);
   --cm-hint-color-active: var(--cm-color);
   --cm-hint-bg: var(--theme-app-bg);
-  --cm-hint-bg-active: #111;
+  --cm-hint-bg-active: #abd1ff;
 
-  --status-bar: #111;
+  --status-bar: #eeedee;
 `;
