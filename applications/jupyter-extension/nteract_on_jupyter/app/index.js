@@ -89,7 +89,7 @@ function main(rootEl: Element, dataEl: Node | null) {
     }),
     comms: makeCommsRecord(),
     config: Immutable.Map({
-      theme: "light"
+      theme: "daf"
     }),
     core: makeStateRecord({
       entities: makeEntitiesRecord({

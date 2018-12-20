@@ -44,7 +44,7 @@ export class Nav extends React.Component<NavProps, null> {
   render() {
     return (
       <div>
-        <div className="nteract-nav">
+        <div className="nteract-nav" style={{ color: "var(--theme-title-bar-fg)", backgroundColor: "var(--theme-title-bar-bg)" }}>
           <ul>
             {React.Children.map(this.props.children, child => {
               return <li className="top-nav-item">{child}</li>;

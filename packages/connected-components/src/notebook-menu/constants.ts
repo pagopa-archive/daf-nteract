@@ -22,6 +22,7 @@ export const MENU_ITEM_ACTIONS = {
   PASTE_CELL: "paste-cell",
   SET_THEME_DARK: "set-theme-dark",
   SET_THEME_LIGHT: "set-theme-light",
+  SET_THEME_DAF: "set-theme-daf",
   OPEN_ABOUT: "open-about",
   KILL_KERNEL: "kill-kernel",
   INTERRUPT_KERNEL: "interrupt-kernel"
