@@ -35,7 +35,7 @@ interface Props {
   displayOrder: string[];
   notebook: ImmutableNotebook;
   transforms: object;
-  theme: "light" | "dark";
+  theme: "light" | "dark" | "daf";
 }
 
 interface State {
@@ -50,7 +50,7 @@ export default class NotebookRender extends React.PureComponent<Props, State> {
       emptyNotebook,
       createCodeCell().set("source", "# where's the content?")
     ),
-    theme: "light"
+    theme: "daf"
   };
 
   constructor(props: Props) {

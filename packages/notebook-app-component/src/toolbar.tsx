@@ -20,6 +20,7 @@ import {
   ChevronDownOcticon,
   TriangleRightOcticon
 } from "@nteract/octicons";
+import DAFDatasetSearch from "../../daf-packages/daf-dataset-search"
 
 export type PureToolbarProps = {
   type: "markdown" | "code" | "raw";
@@ -57,6 +58,7 @@ export class PureToolbar extends React.Component<PureToolbarProps> {
               </span>
             </button>
           )}
+          <DAFDatasetSearch />
           <DropdownMenu>
             <DropdownTrigger>
               <button title="show additional actions">
