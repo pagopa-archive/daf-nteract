@@ -1,0 +1,9 @@
+{
+  "name": "@daf-nteract-packages/daf-reducers",
+  "version": "0.1.0",
+  "main": "index.ts",
+  "author": "and0111",
+  "license": "BSD-3-Clause",
+  "private": true,
+  "dependencies": {}
+}
