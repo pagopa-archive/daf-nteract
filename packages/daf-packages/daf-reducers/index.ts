@@ -1,4 +1,4 @@
-// import { combineReducers } from 'redux';
-import datasetReducer from "../daf-dataset-search/ducks";
+import { combineReducers } from "redux";
+import datasetListReducer from "../daf-dataset-list/duck"
 
-export default { datasetReducer }
+export default combineReducers({ datasetListReducer })
