@@ -5,6 +5,7 @@ import { toArray } from "rxjs/operators";
 
 import * as actions from "@nteract/actions";
 import * as stateModule from "@nteract/types";
+import { DafAppState } from "../../daf-packages/daf-core";
 
 import * as coreEpics from "../src";
 
@@ -45,7 +46,7 @@ describe("launchWebSocketKernelEpic", () => {
       })
     };
     const state$ = new StateObservable(
-      new Subject<stateModule.AppState>(),
+      new Subject<DafAppState>(),
       value
     );
     const action$ = ActionsObservable.of(
@@ -87,7 +88,7 @@ describe("launchWebSocketKernelEpic", () => {
 
 describe("interruptKernelEpic", () => {
   test("", async function() {
-    const state$ = new StateObservable(new Subject<stateModule.AppState>(), {
+    const state$ = new StateObservable(new Subject<DafAppState>(), {
       core: stateModule.makeStateRecord({
         kernelRef: "fake",
         entities: stateModule.makeEntitiesRecord({

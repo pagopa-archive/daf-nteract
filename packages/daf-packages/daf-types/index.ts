@@ -1,26 +1,33 @@
+import { Map, List } from 'immutable';
+import { AppRecord, CommsRecord, ConfigState, CoreRecord } from "../../types/src";
+
 // import datasetListReducer from './duck'
-// import { Map, List } from 'immutable'
 
 // type DatasetsListMetaProps =
 //   Map<string, { isLoading: boolean, hasLoaded: boolean, error: boolean }>
 
 // type DatasetsList = Map<string, { data: List<any>, meta: DatasetListMetaProps }>
 
-// export type DafState = { datasetList: DatasetList }
+type DatasetList = Map<string, any>
 
-// export const makeEmptyDafState = (): DafState => ({
-//   datasetList: {
-//     data: List<any>,
-//     meta: DatasetListMeta
-//   }
-// })
+export type DafState = { datasetList: DatasetList, selectedDataset: string }
 
-// export type EmptyHost = {
-//   type: "empty";
-// };
-// export type EmptyHostRecord = Immutable.RecordOf<EmptyHost>;
-// export const makeEmptyHostRecord = Immutable.Record<EmptyHost>({
-//   type: "empty"
-// });
+export const makeDafState = (): DafState => ({
+  'datasetList': Map({
+    data: List(),
+    meta: Map({
+      isLoading: false,
+      hasLoaded: false,
+      error: false
+    })
+  }),
+  'selectedDataset': ""
+})
 
-// export default datasetListReducer
+export type DafAppState = {
+  app: AppRecord;
+  comms: CommsRecord;
+  config: ConfigState;
+  core: CoreRecord;
+  daf: DafState;
+}

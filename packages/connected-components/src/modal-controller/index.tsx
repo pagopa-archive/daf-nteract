@@ -1,6 +1,7 @@
 import * as React from "react";
 import { connect } from "react-redux";
 import { AppState, selectors } from "@nteract/core";
+import { DafAppState } from "../../../daf-packages/daf-core";
 
 import { MODAL_TYPES } from "./constants";
 import AboutModal from "./about-modal";
@@ -26,7 +27,7 @@ class ModalController extends React.Component<Props> {
   }
 }
 
-const mapStateToProps = (state: AppState) => ({
+const mapStateToProps = (state: DafAppState) => ({
   modalType: selectors.modalType(state)
 });
 

@@ -1,37 +1,28 @@
-import React, { Fragment, PureComponent } from "react";
+import React, { Fragment, PureComponent, MouseEvent, SyntheticEvent } from "react";
 import { Button, Dialog, Intent, Classes } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 import "./styles.css"
+import DafDatasetListSelect from "../daf-dataset-list";
 
-export interface IDAFDatasetSearchState {
-  isOverlayOpen: boolean;
+export interface IDafDatasetSearchState {
+  isOverlayOpen: boolean
 }
 
-export class DAFDatasetSearch extends PureComponent<any, IDAFDatasetSearchState> {
-  constructor(props: any) {
-    super(props)
+export type DafDatasetSearchProps = any
 
+export class DafDatasetSearch extends PureComponent<
+  DafDatasetSearchProps,
+  IDafDatasetSearchState
+> {
+  constructor(props: DafDatasetSearchProps) {
+    super(props)
     this.toggleOverlay = this.toggleOverlay.bind(this)
   }
 
-  componentWillMount() {
-    // this.props.fetchDatasetSearch()
-  }
+  public state: IDafDatasetSearchState = { isOverlayOpen: false }
 
-  // render() {
-  //   return this.props.hasFetched ? (
-  //     createOntologies(this.props.data)
-  //   ) : this.props.error ? (
-  //     <Error msg={ontologiesError} />
-  //   ) : (
-  //         <Loading />
-  //       )
-  // }
-
-  public state: IDAFDatasetSearchState = { isOverlayOpen: false }
-
-  private toggleOverlay(e: any): void {
-    const { state: { isOverlayOpen } } = this
+  private toggleOverlay(e: SyntheticEvent): void {
+    const { isOverlayOpen } = this.state
     this.setState({ isOverlayOpen: !isOverlayOpen })
   }
 
@@ -54,6 +45,7 @@ export class DAFDatasetSearch extends PureComponent<any, IDAFDatasetSearchState>
         >
           <div className={Classes.DIALOG_BODY}>
             <p>Hello World DAF!</p>
+            <DafDatasetListSelect />
           </div>
           <div className={Classes.DIALOG_FOOTER}>
             <div className={Classes.DIALOG_FOOTER_ACTIONS}>
@@ -71,4 +63,4 @@ export class DAFDatasetSearch extends PureComponent<any, IDAFDatasetSearchState>
   }
 }
 
-export default DAFDatasetSearch
+export default DafDatasetSearch

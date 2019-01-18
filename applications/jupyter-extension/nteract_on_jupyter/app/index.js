@@ -22,6 +22,10 @@ import {
   makeJupyterHostRecord
 } from "@nteract/core";
 import type { AppState } from "@nteract/core";
+import {
+  DafAppState,
+  makeDafState
+} from "../../../../packages/daf-packages/daf-core"
 
 import configureStore from "./store";
 import App from "./app";
@@ -81,7 +85,7 @@ function main(rootEl: Element, dataEl: Node | null) {
   const hostRef = createHostRef();
   const contentRef = createContentRef();
 
-  const initialState: AppState = {
+  const initialState: DafAppState = {
     app: makeAppRecord({
       version: `nteract-on-jupyter@${config.appVersion}`,
       // TODO: Move into core as a "current" host
@@ -105,7 +109,8 @@ function main(rootEl: Element, dataEl: Node | null) {
           )
         })
       })
-    })
+    }),
+    daf: makeDafState()
   };
 
   const kernelRef = createKernelRef();

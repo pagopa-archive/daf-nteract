@@ -15,6 +15,7 @@ import { Notebook } from "@nteract/commutable";
 import * as actions from "@nteract/actions";
 import * as selectors from "@nteract/selectors";
 import { ContentRef, AppState } from "@nteract/types";
+import { DafAppState } from "../../daf-packages/daf-core";
 import { AjaxResponse } from "rxjs/ajax";
 
 export function fetchContentEpic(
@@ -23,7 +24,7 @@ export function fetchContentEpic(
     | actions.FetchContentFailed
     | actions.FetchContentFulfilled
   >,
-  state$: StateObservable<AppState>
+  state$: StateObservable<DafAppState>
 ) {
   return action$.pipe(
     ofType(actions.FETCH_CONTENT),
@@ -132,7 +133,7 @@ const someArbitraryPrimesAround30k = [
 
 export function autoSaveCurrentContentEpic(
   action$: ActionsObservable<Action>,
-  state$: StateObservable<AppState>
+  state$: StateObservable<DafAppState>
 ) {
   // Pick an autosave duration that won't have the exact same cycle as another open tab
   const duration = sample(someArbitraryPrimesAround30k);
@@ -196,7 +197,7 @@ export function autoSaveCurrentContentEpic(
 
 export function saveContentEpic(
   action$: ActionsObservable<actions.Save | actions.DownloadContent>,
-  state$: StateObservable<AppState>
+  state$: StateObservable<DafAppState>
 ) {
   return action$.pipe(
     ofType(actions.SAVE, actions.DOWNLOAD_CONTENT),

@@ -15,6 +15,7 @@
 import * as React from "react";
 import { connect } from "react-redux";
 import { AppState, KernelspecRecord, KernelspecProps } from "@nteract/types";
+import { DafAppState } from "../../../daf-packages/daf-core";
 import * as Immutable from "immutable";
 
 import { default as Logo } from "./logos";
@@ -195,7 +196,7 @@ export const PureNewNotebookNavigation = (props: {
   </React.Fragment>
 );
 
-const mapStateToProps = (state: AppState) => {
+const mapStateToProps = (state: DafAppState) => {
   const availableKernels = state.core.entities.kernelspecs.byRef
     .flatMap(kss => {
       return kss.byName.map(ks => {

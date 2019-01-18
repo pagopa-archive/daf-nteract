@@ -10,6 +10,7 @@ import {
   KernelRef,
   KernelspecsByRefRecord
 } from "@nteract/types";
+import { DafAppState } from "../../daf-packages/daf-core";
 
 import { ServerConfig } from "rx-jupyter";
 
@@ -44,14 +45,14 @@ export const serverConfig = (host: JupyterHostRecord): ServerConfig => {
  *
  * @returns         The theme of the nteract application
  */
-export const userTheme = (state: AppState): string =>
+export const userTheme = (state: DafAppState): string =>
   state.config.get("theme", "daf");
 
 /**
  * Returns the version of the nteract application.
  */
 export const appVersion = createSelector(
-  (state: AppState) => state.app.version,
+  (state: DafAppState) => state.app.version,
   identity
 );
 
@@ -63,7 +64,7 @@ export const appVersion = createSelector(
  * Returns the host the nteract application is connected to.
  */
 export const currentHost = createSelector(
-  (state: AppState) => state.app.host,
+  (state: DafAppState) => state.app.host,
   identity
 );
 
@@ -75,7 +76,7 @@ export const currentHost = createSelector(
  *
  * @returns         The contents in scope by the nteract application by ID
  */
-export const contentByRef = (state: AppState) =>
+export const contentByRef = (state: DafAppState) =>
   state.core.entities.contents.byRef;
 
 /**
@@ -86,7 +87,7 @@ export const contentByRef = (state: AppState) =>
  * @returns                             The ContentRecord for the given ref
  */
 export const content = (
-  state: AppState,
+  state: DafAppState,
   { contentRef }: { contentRef: ContentRef }
 ) => contentByRef(state).get(contentRef);
 
@@ -101,7 +102,7 @@ export const content = (
  * @returns                             The model of the content under the current ref
  */
 export const model = (
-  state: AppState,
+  state: DafAppState,
   { contentRef }: { contentRef: ContentRef }
 ) => {
   const content = contentByRef(state).get(contentRef);
@@ -123,7 +124,7 @@ export const model = (
  * @returns                             The kernel associated with a notebook
  */
 export const kernelRefByContentRef = (
-  state: AppState,
+  state: DafAppState,
   ownProps: { contentRef: ContentRef }
 ): KernelRef | null | undefined => {
   const c = content(state, ownProps);
@@ -146,7 +147,7 @@ export const kernelRefByContentRef = (
  *
  * @returns         A ref to the kernelspec
  */
-export const currentKernelspecsRef = (state: AppState) =>
+export const currentKernelspecsRef = (state: DafAppState) =>
   state.core.currentKernelspecsRef;
 
 /**
@@ -156,7 +157,7 @@ export const currentKernelspecsRef = (state: AppState) =>
  *
  * @returns        An association between a kernelspec ref and the kernelspec
  */
-export const kernelspecsByRef = (state: AppState) =>
+export const kernelspecsByRef = (state: DafAppState) =>
   state.core.entities.kernelspecs.byRef;
 
 /**
@@ -164,7 +165,7 @@ export const kernelspecsByRef = (state: AppState) =>
  * currently connected to.
  */
 export const currentKernelspecs: (
-  state: AppState
+  state: DafAppState
 ) => KernelspecsByRefRecord | null | undefined = createSelector(
   currentKernelspecsRef,
   kernelspecsByRef,
@@ -179,7 +180,7 @@ export const currentKernelspecs: (
  *
  * @returns         The kernels by ref
  */
-export const kernelsByRef = (state: AppState) =>
+export const kernelsByRef = (state: DafAppState) =>
   state.core.entities.kernels.byRef;
 
 /**
@@ -191,7 +192,7 @@ export const kernelsByRef = (state: AppState) =>
  * @returns                         The kernel for the KernelRef
  */
 export const kernel = (
-  state: AppState,
+  state: DafAppState,
   { kernelRef }: { kernelRef?: KernelRef | null }
 ) => (kernelRef ? kernelsByRef(state).get(kernelRef) : null);
 
@@ -203,7 +204,7 @@ export const kernel = (
  *
  * @returns         The KernelRef for the kernel
  */
-export const currentKernelRef = (state: AppState) => state.core.kernelRef;
+export const currentKernelRef = (state: DafAppState) => state.core.kernelRef;
 
 /**
  * Returns the kernelspec of the kernel that we are currently connected to.
@@ -292,7 +293,7 @@ export const isCurrentKernelJupyterWebsocket = createSelector(
  * Returns the Jupyter comms data for a given nteract application.
  */
 export const comms = createSelector(
-  (state: AppState) => state.comms,
+  (state: DafAppState) => state.comms,
   identity
 );
 
@@ -313,7 +314,7 @@ export const models = createSelector(
  * @returns           The filepath for the content
  */
 export const filepath = (
-  state: AppState,
+  state: DafAppState,
   ownProps: { contentRef: ContentRef }
 ): string | null => {
   const c = content(state, ownProps);
@@ -328,7 +329,7 @@ export const filepath = (
  * in the nteract application.
  */
 export const modalType = createSelector(
-  (state: AppState) => state.core.entities.modals.modalType,
+  (state: DafAppState) => state.core.entities.modals.modalType,
   identity
 );
 
@@ -336,9 +337,9 @@ export const modalType = createSelector(
  * Returns the current theme of the notebook application. Defaults to "light."
  */
 export const currentTheme: (
-  state: AppState
+  state: DafAppState
 ) => "light" | "dark" | "daf" = createSelector(
-  (state: AppState) => state.config.get("theme", "daf"),
+  (state: DafAppState) => state.config.get("theme", "daf"),
   identity
 );
 
@@ -347,7 +348,7 @@ export const currentTheme: (
  * This can be used to display informational or error-related alerts to the user.
  */
 export const notificationSystem = createSelector(
-  (state: AppState) => state.app.get("notificationSystem"),
+  (state: DafAppState) => state.app.get("notificationSystem"),
   identity
 );
 
@@ -359,7 +360,7 @@ export const notificationSystem = createSelector(
  *
  * @returns          Comms data keyed by content refs
  */
-export const communicationByRef = (state: AppState) =>
+export const communicationByRef = (state: DafAppState) =>
   state.core.communication.contents.byRef;
 
 /**
@@ -372,6 +373,6 @@ export const communicationByRef = (state: AppState) =>
  * @returns         The comms data associated with a content
  */
 export const communication = (
-  state: AppState,
+  state: DafAppState,
   { contentRef }: { contentRef: ContentRef }
 ) => communicationByRef(state).get(contentRef);
