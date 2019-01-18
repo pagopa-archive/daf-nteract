@@ -10,6 +10,7 @@ import {
   JSONObject
 } from "@nteract/commutable";
 import { AppState, ContentRef, KernelRef } from "@nteract/types";
+import { DafAppState } from "../../daf-packages/daf-core";
 import {
   Input,
   Prompt,
@@ -90,7 +91,7 @@ const rawEditorOptions = {
 };
 
 const mapStateToCellProps = (
-  state: AppState,
+  state: DafAppState,
   { id, contentRef }: { id: string; contentRef: ContentRef }
 ) => {
   const model = selectors.model(state, { contentRef });
@@ -413,7 +414,7 @@ type NotebookDispatchProps = {
 };
 
 const mapStateToProps = (
-  state: AppState,
+  state: DafAppState,
   ownProps: PureNotebookProps
 ): NotebookStateProps => {
   const contentRef = ownProps.contentRef;

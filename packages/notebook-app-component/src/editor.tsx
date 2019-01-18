@@ -3,6 +3,7 @@ import { Dispatch } from "redux";
 import * as actions from "@nteract/actions";
 import * as selectors from "@nteract/selectors";
 import { ContentRef, AppState } from "@nteract/types";
+import { DafAppState } from "../../daf-packages/daf-core";
 import { omit } from "lodash";
 import EditorView from "@nteract/editor";
 
@@ -13,7 +14,7 @@ type Props = {
   options: Object;
 };
 
-function mapStateToProps(state: AppState, ownProps: Props) {
+function mapStateToProps(state: DafAppState, ownProps: Props) {
   const kernel = selectors.currentKernel(state);
   const cursorBlinkRate = state.config.get("cursorBlinkRate", 530);
   return {

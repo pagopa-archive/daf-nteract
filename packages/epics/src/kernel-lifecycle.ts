@@ -23,6 +23,7 @@ import { createKernelRef } from "@nteract/types";
 import * as selectors from "@nteract/selectors";
 import * as actions from "@nteract/actions";
 import { AppState, KernelInfo } from "@nteract/types";
+import { DafAppState } from "../../daf-packages/daf-core";
 
 const path = require("path");
 
@@ -160,7 +161,7 @@ export const launchKernelWhenNotebookSetEpic = (
   action$.pipe(
     ofType(actions.FETCH_CONTENT_FULFILLED),
     mergeMap((action: actions.FetchContentFulfilled) => {
-      const state: AppState = state$.value;
+      const state: DafAppState = state$.value;
 
       const contentRef = action.payload.contentRef;
 

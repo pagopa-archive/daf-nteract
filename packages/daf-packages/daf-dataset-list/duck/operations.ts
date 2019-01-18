@@ -33,7 +33,7 @@ const datasetListEpic = action$ => {
             response.map(({ type, match, source }) =>
               ({
                 type,
-                match/* : JSON.parse(match) */,
+                match, // : JSON.parse(match),
                 source: JSON.parse(source)
               })
             )

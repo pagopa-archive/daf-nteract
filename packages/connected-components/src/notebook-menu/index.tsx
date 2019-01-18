@@ -10,6 +10,7 @@ import {
   KernelspecsRef,
   KernelspecsByRefRecord
 } from "@nteract/types";
+import { DafAppState } from "../../../daf-packages/daf-core";
 import { connect } from "react-redux";
 
 import { MODAL_TYPES } from "../modal-controller";
@@ -449,7 +450,7 @@ class PureNotebookMenu extends React.Component<Props, State> {
 }
 
 const mapStateToProps = (
-  state: AppState,
+  state: DafAppState,
   { contentRef }: { contentRef: ContentRef }
 ) => {
   return {

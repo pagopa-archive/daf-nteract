@@ -9,6 +9,7 @@ import React from "react";
 import { connect } from "react-redux";
 import { actions, selectors } from "@nteract/core";
 import { AppState } from "@nteract/types";
+import { DafAppState } from "../../../daf-packages/daf-core";
 
 import { modalCss } from "./styles";
 
@@ -76,7 +77,7 @@ class PureAboutModal extends React.Component<Props> {
   }
 }
 
-const mapStateToProps = (state: AppState) => ({
+const mapStateToProps = (state: DafAppState) => ({
   appVersion: selectors.appVersion(state),
   hostType: selectors.currentHostType(state)
 });
