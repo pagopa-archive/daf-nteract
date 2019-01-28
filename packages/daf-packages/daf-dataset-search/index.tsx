@@ -1,4 +1,3 @@
-import { connect } from "react-redux"
-import DAFDatasetSearch from "./DAFDatasetSearch";
+import DafDatasetSearch from "./DafDatasetSearch";
 
-export default DAFDatasetSearch
+export default DafDatasetSearch

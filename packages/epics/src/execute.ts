@@ -32,6 +32,7 @@ import { ActionsObservable, StateObservable } from "redux-observable";
 
 import { ContentRef, PayloadMessage } from "@nteract/types";
 import { AppState } from "@nteract/types";
+import { DafAppState } from "../../daf-packages/daf-core";
 import * as actions from "@nteract/actions";
 import * as selectors from "@nteract/selectors";
 import {
@@ -198,7 +199,7 @@ export function createExecuteCellStream(
 
 export function executeAllCellsEpic(
   action$: ActionsObservable<ExecuteAllCells | ExecuteAllCellsBelow>,
-  state$: StateObservable<AppState>
+  state$: StateObservable<DafAppState>
 ) {
   return action$.pipe(
     ofType(actions.EXECUTE_ALL_CELLS, actions.EXECUTE_ALL_CELLS_BELOW),

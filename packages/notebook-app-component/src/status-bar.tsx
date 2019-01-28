@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import distanceInWordsToNow from "date-fns/distance_in_words_to_now";
 import * as selectors from "@nteract/selectors";
 import { ContentRef, AppState, KernelRef } from "@nteract/types";
+import { DafAppState } from "../../daf-packages/daf-core";
 
 type Props = {
   lastSaved?: Date | null;
@@ -68,7 +69,7 @@ export class StatusBar extends React.Component<Props> {
 }
 
 const mapStateToProps = (
-  state: AppState,
+  state: DafAppState,
   ownProps: { contentRef: ContentRef; kernelRef?: KernelRef | null }
 ): Props => {
   const { contentRef, kernelRef } = ownProps;

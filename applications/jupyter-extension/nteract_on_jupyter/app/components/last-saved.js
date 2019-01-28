@@ -16,6 +16,7 @@
 import * as React from "react";
 import { selectors } from "@nteract/core";
 import type { ContentRef, AppState } from "@nteract/core";
+import { DafAppState } from "../../../../../packages/daf-packages/daf-core";
 import moment from "moment";
 import { connect } from "react-redux";
 
@@ -87,7 +88,7 @@ class LastSaved extends React.Component<LastSavedProps, null> {
 
 const ConnectedLastSaved = connect(
   (
-    state: AppState,
+    state: DafAppState,
     ownProps: { contentRef: ContentRef }
   ): { date: string | number | Date | null } => {
     const content = selectors.content(state, ownProps);

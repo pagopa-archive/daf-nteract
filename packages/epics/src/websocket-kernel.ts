@@ -20,13 +20,14 @@ import * as selectors from "@nteract/selectors";
 import { castToSessionId } from "@nteract/types";
 import { createKernelRef } from "@nteract/types";
 import { AppState } from "@nteract/types";
+import { DafAppState } from "../../daf-packages/daf-core";
 import { RemoteKernelProps } from "@nteract/types";
 
 import { extractNewKernel } from "./kernel-lifecycle";
 
 export const launchWebSocketKernelEpic = (
   action$: ActionsObservable<actions.LaunchKernelByNameAction>,
-  state$: StateObservable<AppState>
+  state$: StateObservable<DafAppState>
 ) =>
   action$.pipe(
     ofType(actions.LAUNCH_KERNEL_BY_NAME),
@@ -105,7 +106,7 @@ export const launchWebSocketKernelEpic = (
 
 export const changeWebSocketKernelEpic = (
   action$: ActionsObservable<actions.ChangeKernelByName>,
-  state$: StateObservable<AppState>
+  state$: StateObservable<DafAppState>
 ) =>
   action$.pipe(
     ofType(actions.CHANGE_KERNEL_BY_NAME),
@@ -202,7 +203,7 @@ export const changeWebSocketKernelEpic = (
 
 export const interruptKernelEpic = (
   action$: ActionsObservable<actions.InterruptKernel>,
-  state$: StateObservable<AppState>
+  state$: StateObservable<DafAppState>
 ) =>
   action$.pipe(
     ofType(actions.INTERRUPT_KERNEL),
@@ -262,7 +263,7 @@ export const interruptKernelEpic = (
 // NB: This epic kills the *current* kernel. ZMQ killKernelEpic kills a *specified* kernel.
 export const killKernelEpic = (
   action$: ActionsObservable<actions.KillKernelAction>,
-  state$: StateObservable<AppState>
+  state$: StateObservable<DafAppState>
 ) =>
   // TODO: Use the sessions API for this
   action$.pipe(

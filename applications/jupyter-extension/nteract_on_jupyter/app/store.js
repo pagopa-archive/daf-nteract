@@ -1,10 +1,13 @@
 /* @flow strict */
 import { combineReducers, createStore, applyMiddleware, compose } from "redux";
 import { createEpicMiddleware, combineEpics } from "redux-observable";
-import { createLogger } from "redux-logger";
 import type { AppState } from "@nteract/core";
 import { reducers, epics as coreEpics, middlewares as coreMiddlewares } from "@nteract/core";
-import { datasetReducer } from "../../../../packages/daf-packages/daf-reducers"
+import {
+  DafAppState,
+  reducers as dafReducers,
+  epics as dafEpics
+} from "../../../../packages/daf-packages/daf-core";
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
@@ -13,18 +16,19 @@ const rootReducer = combineReducers({
   comms: reducers.comms,
   config: reducers.config,
   core: reducers.core,
-  // datasetSearch: datasetReducer
+  daf: combineReducers(dafReducers)
 });
 
-export default function configureStore(initialState: AppState) {
-  const rootEpic = combineEpics<AppState, redux$AnyAction, *>(
-    ...coreEpics.allEpics
+export default function configureStore(initialState: DafAppState) {
+  const rootEpic = combineEpics<DafAppState, redux$AnyAction, *>(
+    ...coreEpics.allEpics,
+    ...dafEpics.allDafEpics
   );
   const epicMiddleware = createEpicMiddleware();
   const middlewares = [
     epicMiddleware,
     coreMiddlewares.errorMiddleware,
-    createLogger()
+    coreMiddlewares.logger()
   ];
 
   const store = createStore(

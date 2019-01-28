@@ -7,6 +7,7 @@ import { hot } from "react-hot-loader";
 import * as React from "react";
 import { selectors } from "@nteract/core";
 import type { AppState, ContentRef } from "@nteract/core";
+import { DafAppState } from "../../../../../packages/daf-packages/daf-core"
 import { connect } from "react-redux";
 
 import { ThemedLogo } from "../components/themed-logo";
@@ -24,7 +25,7 @@ type ContentsProps = {
 };
 
 const mapStateToProps = (
-  state: AppState,
+  state: DafAppState,
   ownProps: { contentRef: ContentRef }
 ): ContentsProps => {
   const contentRef = ownProps.contentRef;

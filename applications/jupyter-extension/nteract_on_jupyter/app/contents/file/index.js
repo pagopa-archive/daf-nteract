@@ -5,6 +5,7 @@ import { dirname } from "path";
 import * as React from "react";
 import { selectors } from "@nteract/core";
 import type { ContentRef, AppState } from "@nteract/core";
+import { DafAppState } from "../../../../../../packages/daf-packages/daf-core";
 import { LoadingIcon, SavingIcon, ErrorIcon } from "@nteract/iron-icons";
 import { connect } from "react-redux";
 import { EditableText } from "@blueprintjs/core";
@@ -125,7 +126,7 @@ export class File extends React.PureComponent<FileProps, *> {
 }
 
 const mapStateToProps = (
-  state: AppState,
+  state: DafAppState,
   ownProps: { contentRef: ContentRef, appBase: string }
 ): FileProps => {
   const content = selectors.content(state, ownProps);

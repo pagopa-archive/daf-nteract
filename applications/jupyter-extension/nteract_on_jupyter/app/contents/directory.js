@@ -18,6 +18,7 @@ import type {
   ContentRef,
   DirectoryContentRecord
 } from "@nteract/core";
+import { DafAppState } from "../../../../../packages/daf-packages/daf-core";
 import { connect } from "react-redux";
 
 import { Nav, NavSection } from "../components/nav";
@@ -116,7 +117,7 @@ export class DirectoryApp extends React.PureComponent<DirectoryProps, null> {
 }
 
 const mapStateToDirectoryProps = (
-  state: AppState,
+  state: DafAppState,
   ownProps: { contentRef: ContentRef }
 ): DirectoryProps => {
   const host = selectors.currentHost(state);

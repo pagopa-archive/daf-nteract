@@ -1,6 +1,7 @@
 /* @flow strict */
 import * as React from "react";
 import type { AppState, ContentRef } from "@nteract/core";
+import { DafAppState } from "../../../../../../packages/daf-packages/daf-core";
 import { selectors, actions } from "@nteract/core";
 import { connect } from "react-redux";
 
@@ -84,7 +85,7 @@ export class TextFile extends React.PureComponent<
 }
 
 function mapStateToTextFileProps(
-  state: AppState,
+  state: DafAppState,
   ownProps: { contentRef: ContentRef }
 ): MappedStateProps {
   const content = selectors.content(state, ownProps);

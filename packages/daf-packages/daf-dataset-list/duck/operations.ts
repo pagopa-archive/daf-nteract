@@ -16,7 +16,7 @@ const datasetListEpic = action$ => {
           source,
           JSON.stringify({
             'text': payload,
-            'index': ['catalog_test', 'ext_opendata'],
+            'index': ['catalog_test'],
             'org': [],
             'theme': [],
             'date': "",
@@ -33,7 +33,7 @@ const datasetListEpic = action$ => {
             response.map(({ type, match, source }) =>
               ({
                 type,
-                match/* : JSON.parse(match) */,
+                match, // : JSON.parse(match),
                 source: JSON.parse(source)
               })
             )
