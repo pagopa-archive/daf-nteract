@@ -16,7 +16,7 @@ const datasetListEpic = action$ => {
           source,
           JSON.stringify({
             'text': payload,
-            'index': ['catalog_test', 'ext_opendata'],
+            'index': ['catalog_test'],
             'org': [],
             'theme': [],
             'date': "",

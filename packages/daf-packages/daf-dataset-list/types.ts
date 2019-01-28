@@ -3,7 +3,8 @@ interface IDatasetItem {
   modified?: string
   name?: string
   notes?: string
-  organization?: { name: string }
+  owner_org?: { name: string }
+  privatex?: boolean 
   theme?: string
   title?: string
 }
