@@ -10,7 +10,7 @@ const { datasetListSelector } = selectors
 class DafDatasetListSelect extends PureComponent {
   constructor(props: any) {
     super(props)
-    props.requestDatasetList("ricette")
+    props.requestDatasetList("")
   }
 
   render() {
