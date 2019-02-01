@@ -2,15 +2,26 @@ import { createSelector } from "reselect";
 
 import { reducerName } from "./utils";
 
-const datasetListSelector = createSelector(
+const datasetListDataSelector = createSelector(
   state => state["daf"][reducerName],
   datasetList =>
     datasetList
       .get("data")
-      .filter(datasetEntry => datasetEntry.get("type") === "catalog_test")
-      .map(datasetEntry => datasetEntry.get("source").get("dcatapit"))
-      // .map(datasetEntry => ImmutableMap({ ...JSON.parse(datasetEntry.get('source')) }))
+      .map(datasetEntry => datasetEntry.get("dcatapit"))
       .toJS()
 );
 
-export { datasetListSelector };
+const datasetListMetaSelector = createSelector(
+  state => state["daf"][reducerName],
+  datasetList =>
+    datasetList
+      .get("meta")
+      .toJS()
+);
+
+const datasetListSelector = createSelector(
+ [datasetListDataSelector, datasetListMetaSelector],
+  (datasetList, meta) => ({ datasetList, ...meta })
+);
+
+export { datasetListDataSelector, datasetListMetaSelector, datasetListSelector };

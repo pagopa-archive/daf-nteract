@@ -9,7 +9,6 @@ import {
 } from "@blueprintjs/select";
 
 import { IDatasetItem } from "../types";
-import { selectDataset } from "../../daf-actions";
 
 const escapeRegExpChars = (value: string) =>
   value.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
@@ -56,7 +55,7 @@ const renderDatasetItem: ItemRenderer<IDatasetItem> = (
   return modifiers.matchesPredicate ? (
     <MenuItem
       // active={true}
-      label={theme}
+      // label={theme}
       onClick={handleClick}
       text={highlightText(title, query)}
     />
@@ -83,7 +82,7 @@ const datasetValueRender = ({ title }: IDatasetItem) => title;
 
 const DatasetSuggest = Suggest.ofType<IDatasetItem>();
 
-const DatasetListSuggest = ({ datasetList, selectDataset }) => (
+const DatasetListSuggest = ({ datasetList, requestDataset }) => (
   <>
     <H5 style={{ color: "hsl(210, 100%, 40%)" }}>Select Dataset</H5>
     <DatasetSuggest
@@ -91,7 +90,7 @@ const DatasetListSuggest = ({ datasetList, selectDataset }) => (
       itemRenderer={renderDatasetItem}
       itemPredicate={filterDatasetItem}
       inputValueRenderer={datasetValueRender}
-      onItemSelect={(dataset: IDatasetItem) => selectDataset(dataset)}
+      onItemSelect={(dataset: IDatasetItem) => requestDataset(dataset.name)}
     />
   </>
 );

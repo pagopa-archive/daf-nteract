@@ -4,7 +4,7 @@ import {
   DATASETLIST_REJECT
 } from './types'
 
-const requestDatasetList = payload => ({
+const requestDatasetList = (payload = "") => ({
   type: DATASETLIST_REQUEST,
   payload: payload,
   meta: { isLoading: true, hasLoaded: false }

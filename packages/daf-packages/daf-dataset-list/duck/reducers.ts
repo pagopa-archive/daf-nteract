@@ -20,13 +20,7 @@ const datasetList = (state = initialState, { type, payload, error, meta }) => ({
   [DATASETLIST_REQUEST]: initialState,
 
   [DATASETLIST_FULFILL]: ImmutableMap({
-    data: fromJS(payload)
-        /* .filter(({ type }) => type === 'ext_opendata' && type === 'catalog_test')
-        .map(({ type, match, source }) => ({
-          type,
-          match: JSON.parse(match),
-          source: JSON.parse(source)
-        })) */,
+    data: fromJS(payload),
     meta: ImmutableMap({ ...meta , error: false })
   }),
 

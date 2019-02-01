@@ -8,9 +8,8 @@ import { AppRecord, CommsRecord, ConfigState, CoreRecord } from "../../types/src
 
 // type DatasetsList = Map<string, { data: List<any>, meta: DatasetListMetaProps }>
 
-type DatasetList = Map<string, any>
 
-export type DafState = { datasetList: DatasetList, selectedDataset: string }
+export type DafState = { datasetList: Map<string, any>, selectedDataset: Map<string, any> }
 
 export const makeDafState = (): DafState => ({
   'datasetList': Map({
@@ -21,7 +20,15 @@ export const makeDafState = (): DafState => ({
       error: false
     })
   }),
-  'selectedDataset': ""
+  'selectedDataset': Map({
+    data: Map(),
+    meta: Map({
+      datasetName: "",
+      isLoading: false,
+      hasLoaded: false,
+      error: false
+    })
+  })
 })
 
 export type DafAppState = {

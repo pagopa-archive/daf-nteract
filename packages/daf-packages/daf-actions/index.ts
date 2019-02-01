@@ -10,6 +10,7 @@ export const {
 } = datasetListActions
 
 export const {
-  selectDataset,
-  setDataset
+  requestDataset,
+  fulfillDataset,
+  rejectDataset
 } = selectedDatasetActions
