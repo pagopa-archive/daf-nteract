@@ -1,10 +1,18 @@
-import { duckSelectors as datasetListSelectors } from "../daf-dataset-list/duck"
-import {
-  duckSelectors as selectedDatasetSelectors
-} from "../daf-selected-dataset/duck"
+import { duckSelectors as datasetListSelectors } from "../daf-dataset-list/duck";
+import { duckSelectors as datasetSelectors } from "../daf-selected-dataset/duck";
 
-const { datasetListSelector } = datasetListSelectors
+const {
+  datasetListDataSelector,
+  datasetListMetaSelector,
+  datasetListSelector
+} = datasetListSelectors;
 
-const { selectedDatasetSelector } = selectedDatasetSelectors
+const { datasetSelector, datasetMetaSelector } = datasetSelectors;
 
-export { datasetListSelector, selectedDatasetSelector }
+export {
+  datasetListDataSelector,
+  datasetListMetaSelector,
+  datasetListSelector,
+  datasetSelector,
+  datasetMetaSelector
+};

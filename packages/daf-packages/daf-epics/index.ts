@@ -5,11 +5,11 @@ import {
   duckOperations as selectedDatasetOperations
 } from "../daf-selected-dataset/duck"
 
-const { datasetListEpic } = datasetListOperations
+const { datasetListEpic, requestDatasetListEpic } = datasetListOperations
 
-const { datasetEpic } = selectedDatasetOperations
+const { datasetEpic, requestDatasetEpic } = selectedDatasetOperations
 
-const allDafEpics = [ datasetListEpic, datasetEpic ]
+const allDafEpics = [ datasetListEpic, requestDatasetListEpic, datasetEpic, requestDatasetEpic ]
 
-export { allDafEpics, datasetListEpic, datasetEpic }
+export { allDafEpics, datasetListEpic, requestDatasetListEpic, datasetEpic, requestDatasetEpic }
  

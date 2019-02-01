@@ -1,24 +1,39 @@
-import React, { PureComponent } from 'react'
-import { connect } from 'react-redux'
+import React, { PureComponent } from "react";
+import { connect } from "react-redux";
 
-import DatasetListSelect  from './components/DatasetListSelect'
-import { selectors, actions } from "../daf-core"
+import DatasetListSelect from "./components/DatasetListSelect";
+import { selectors, actions } from "../daf-core";
+import { Spinner, Intent } from "@blueprintjs/core";
 
-const { requestDatasetList, selectDataset } = actions
-const { datasetListSelector } = selectors
+const { requestDataset } = actions;
+const { datasetListSelector } = selectors;
 
 class DafDatasetListSelect extends PureComponent {
   constructor(props: any) {
-    super(props)
-    props.requestDatasetList("")
+    super(props);
   }
 
   render() {
-    return <DatasetListSelect { ...this.props } />
+    console.log(this.props);
+    const {
+      datasetList,
+      requestDataset,
+      isLoading,
+      hasLoaded,
+      error
+    } = this.props;
+    return hasLoaded ? (
+      <DatasetListSelect
+        datasetList={datasetList}
+        requestDataset={requestDataset}
+      />
+    ) : (
+      <Spinner />
+    );
   }
 }
 
 export default connect(
-  state => ({ datasetList: datasetListSelector(state) }), //mapStateToProps
-  { requestDatasetList, selectDataset } //mapDispatchToProps
-)(DafDatasetListSelect)
+  state => ({ ...datasetListSelector(state) }), //mapStateToProps
+  { requestDataset } //mapDispatchToProps
+)(DafDatasetListSelect);
