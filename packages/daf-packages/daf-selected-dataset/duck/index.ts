@@ -52,10 +52,10 @@ const datasetMetaSelector = createSelector(
 
 const duckSelectors = { datasetSelector, datasetMetaSelector };
 
-const basicSecret = "";
+const basicSecret = "";;
 
 const encodeDatasetURI = datasetURI =>
-  encodeURIComponent("daf://" + datasetURI.substring(4));
+  encodeURIComponent(datasetURI);
 
 const makeDatasetSnippet = datasetURI => `
 url = "https://api.daf.teamdigitale.it/dataset-manager/v1/dataset/${encodeDatasetURI(
@@ -107,7 +107,7 @@ const requestDatasetEpic = action$ => {
           Authorization: "Basic " + basicSecret
         })
         .pipe(
-          map(({ response }) => response.operational.physical_uri),
+          map(({ response }) => response.operational.logical_uri),
           map(mappedResponse => fulfillDataset(mappedResponse)),
           catchError(error => of(rejectDataset(error)))
         )
