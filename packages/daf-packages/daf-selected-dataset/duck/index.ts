@@ -91,8 +91,7 @@ const datasetEpic = (action$, state$) =>
 
         return updateCellSource({ id, value, contentRef });
       }
-    ),
-    concatMap(action => action$.pipe(map(value => resetDatasetList())))
+    )
   );
 
 const requestDatasetEpic = action$ => {
