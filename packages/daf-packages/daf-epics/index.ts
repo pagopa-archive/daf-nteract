@@ -9,7 +9,7 @@ const { datasetListEpic, requestDatasetListEpic } = datasetListOperations
 
 const { datasetEpic, requestDatasetEpic } = selectedDatasetOperations
 
-const allDafEpics = [ datasetListEpic, requestDatasetListEpic, datasetEpic, requestDatasetEpic ]
+const allDafEpics = [ datasetListEpic, /* requestDatasetListEpic, */ datasetEpic, requestDatasetEpic ]
 
 export { allDafEpics, datasetListEpic, requestDatasetListEpic, datasetEpic, requestDatasetEpic }
  

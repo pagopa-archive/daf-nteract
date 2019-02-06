@@ -1,6 +1,21 @@
-import React from "react";
+import React, { SyntheticEvent, Fragment } from "react";
 
-import { MenuItem, H5 } from "@blueprintjs/core";
+import {
+  MenuItem,
+  H5,
+  InputGroup,
+  Spinner,
+  NonIdealState,
+  Card,
+  Classes,
+  FormGroup,
+  Tag,
+  H4,
+  Button,
+  Intent,
+  H3,
+  Icon
+} from "@blueprintjs/core";
 import {
   Select,
   Suggest,
@@ -9,6 +24,8 @@ import {
 } from "@blueprintjs/select";
 
 import { IDatasetItem } from "../types";
+import { INPUT, INTENT_DANGER } from "@blueprintjs/core/lib/esm/common/classes";
+import { IconNames } from "@blueprintjs/icons";
 
 const escapeRegExpChars = (value: string) =>
   value.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
@@ -82,17 +99,145 @@ const datasetValueRender = ({ title }: IDatasetItem) => title;
 
 const DatasetSuggest = Suggest.ofType<IDatasetItem>();
 
-const DatasetListSuggest = ({ datasetList, requestDataset }) => (
-  <>
-    <H5 style={{ color: "hsl(210, 100%, 40%)" }}>Select Dataset</H5>
-    <DatasetSuggest
-      items={datasetList}
-      itemRenderer={renderDatasetItem}
-      itemPredicate={filterDatasetItem}
-      inputValueRenderer={datasetValueRender}
-      onItemSelect={(dataset: IDatasetItem) => requestDataset(dataset.name)}
-    />
-  </>
-);
+// const DatasetListSuggest = ({
+//   datasetList,
+//   requestDataset,
+//   requestDatasetList,
+//   isLoading,
+//   hasLoaded
+// }) => (
+//   <>
+//     <H4 style={{ color: "hsl(210, 100%, 40%)" }}>DAF Dataset Loader</H4>
+//     <FormGroup
+//       helperText="Please enter a value"
+//       label="Search Dataset"
+//       labelFor="search-dataset"
+//       labelInfo="*"
+//     >
+//       <InputGroup
+//         id="search-dataset"
+//         // className={Classes.FILL}
+//         large={true}
+//         placeholder="turismo"
+//         leftIcon={IconNames.SEARCH}
+//         // rightElement={
+//         //   isLoading ? (
+//         //     <Spinner />
+//         //   ) : (
+//         //     hasLoaded && (
+//         //       <Tag
+//         //         intent={datasetList.length > 0 ? "success" : "danger"}
+//         //         minimal={true}
+//         //       >
+//         //         {datasetList.length}
+//         //       </Tag>
+//         //     )
+//         //   )
+//         // }
+//         onChange={(e: SyntheticEvent) => requestDatasetList(e.target.value)}
+//       />
+//     </FormGroup>
+
+//     {isLoading ? (
+//       <Spinner />
+//     ) : datasetList.length < 1 ? (
+//       <NonIdealState
+//         icon="search"
+//         title="No search results"
+//         description={
+//           "Your search did not match any dataset.\n Try searching for something else."
+//         }
+//       />
+//     ) : (
+//       <DatasetSuggest
+//         inputProps={{
+//           id: "filter-dataset-list",
+//           placeholder: "turismo",
+//           leftIcon: IconNames.FILTER_LIST,
+//           large: true,
+//           className: Classes.FILL
+//         }}
+//         items={datasetList}
+//         itemRenderer={renderDatasetItem}
+//         itemPredicate={filterDatasetItem}
+//         inputValueRenderer={datasetValueRender}
+//         onItemSelect={({ name }: IDatasetItem) => requestDataset(name)}
+//       />
+//     )}
+//   </>
+// );
+
+const DatasetListSuggest = ({
+  datasetList,
+  requestDataset,
+  requestDatasetList,
+  isLoading,
+  hasLoaded,
+  error
+}) => {
+  return (
+    <Fragment>
+      <H3 style={{ color: "hsl(210, 100%, 40%)" }}>DAF Dataset Loader</H3>
+      <FormGroup
+        // helperText="Please enter a value"
+        label="Search Dataset"
+        labelFor="search-dataset"
+        // labelInfo="*"
+      >
+        <InputGroup
+          onChange={(e: SyntheticEvent) => requestDatasetList(e.target.value)}
+          id="search-dataset"
+          // className={Classes.FILL}
+          intent={
+            hasLoaded || isLoading || error
+              ? datasetList.length > 0
+                ? Intent.SUCCESS
+                : Intent.DANGER
+              : Intent.NONE
+          }
+          large={true}
+          placeholder="turismo"
+          leftIcon={IconNames.SEARCH}
+          rightElement={
+            hasLoaded || isLoading || error ? (
+              <Tag minimal>
+                {datasetList.length < 1 ? (
+                  <Icon intent={Intent.DANGER} icon={IconNames.CROSS} />
+                ) : hasLoaded ? (
+                  <Icon intent={Intent.SUCCESS} icon={IconNames.TICK} />
+                ) : (
+                  <Spinner intent={Intent.PRIMARY} size={Spinner.SIZE_SMALL} />
+                )}
+              </Tag>
+            ) : (
+              undefined
+            )
+          }
+        />
+      </FormGroup>
+      <FormGroup
+        // helperText="Please enter a value"
+        label="Filter and Select Dataset"
+        labelFor="select-dataset-list"
+      >
+        <DatasetSuggest
+          inputProps={{
+            id: "select-dataset-list",
+            className: Classes.FILL,
+            large: true,
+            placeholder: "turismo",
+            leftIcon: IconNames.FILTER_LIST,
+            disabled: !hasLoaded || error || datasetList.length < 1
+          }}
+          items={datasetList}
+          itemRenderer={renderDatasetItem}
+          itemPredicate={filterDatasetItem}
+          inputValueRenderer={datasetValueRender}
+          onItemSelect={({ name }: IDatasetItem) => requestDataset(name)}
+        />
+      </FormGroup>
+    </Fragment>
+  );
+};
 
 export default DatasetListSuggest;

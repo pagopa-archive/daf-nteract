@@ -1,5 +1,5 @@
 import { of } from "rxjs";
-import { take, map, switchMap, mergeMap, catchError } from "rxjs/operators";
+import { take, map, switchMap, mergeMap, catchError, tap, concatMap } from "rxjs/operators";
 import { ajax } from "rxjs/ajax";
 import { ofType } from "redux-observable";
 import { createSelector } from "reselect";
@@ -8,6 +8,7 @@ import { Map as ImmutableMap, List as ImmutableList, fromJS } from "immutable";
 import { FOCUS_CELL, updateCellSource } from "@nteract/actions/src";
 import { cellById as cellByIdSelector } from "@nteract/selectors/src/notebook";
 import { model as modelSelector } from "@nteract/selectors/src";
+import { resetDatasetList, requestDatasetList } from "../../daf-dataset-list/duck/actions";
 
 const appName = "nteract-daf";
 const reducerName = "selectedDataset";
@@ -90,7 +91,8 @@ const datasetEpic = (action$, state$) =>
 
         return updateCellSource({ id, value, contentRef });
       }
-    )
+    ),
+    concatMap(action => action$.pipe(map(value => resetDatasetList())))
   );
 
 const requestDatasetEpic = action$ => {
@@ -111,7 +113,7 @@ const requestDatasetEpic = action$ => {
           map(mappedResponse => fulfillDataset(mappedResponse)),
           catchError(error => of(rejectDataset(error)))
         )
-    )
+    ),
   );
 };
 

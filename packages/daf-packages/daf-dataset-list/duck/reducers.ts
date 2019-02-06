@@ -8,7 +8,8 @@ import {
 import {
   DATASETLIST_REQUEST,
   DATASETLIST_FULFILL,
-  DATASETLIST_REJECT
+  DATASETLIST_REJECT,
+  DATASETLIST_RESET
 } from './types'
 
 const initialState = ImmutableMap({ //Suggested fromJS()
@@ -27,7 +28,9 @@ const datasetList = (state = initialState, { type, payload, error, meta }) => ({
   [DATASETLIST_REJECT]: ImmutableMap({
     data: fromJS(payload),
     meta: ImmutableMap({ ...meta , error })
-  })
+  }),
+  
+  [DATASETLIST_RESET]: initialState
 
 }[type] || state)
 

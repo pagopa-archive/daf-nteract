@@ -1,7 +1,8 @@
 import {
   DATASETLIST_REQUEST,
   DATASETLIST_FULFILL,
-  DATASETLIST_REJECT
+  DATASETLIST_REJECT,
+  DATASETLIST_RESET
 } from './types'
 
 const requestDatasetList = (payload = "") => ({
@@ -23,8 +24,13 @@ const rejectDatasetList = error => ({
   meta: { isLoading: false, hasLoaded: false }
 })
 
+const resetDatasetList = () => ({
+  type: DATASETLIST_RESET
+})
+
 export {
   requestDatasetList,
   fulfillDatasetList,
-  rejectDatasetList
+  rejectDatasetList,
+  resetDatasetList
 }

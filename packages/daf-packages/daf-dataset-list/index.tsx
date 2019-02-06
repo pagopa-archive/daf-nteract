@@ -3,9 +3,8 @@ import { connect } from "react-redux";
 
 import DatasetListSelect from "./components/DatasetListSelect";
 import { selectors, actions } from "../daf-core";
-import { Spinner, Intent } from "@blueprintjs/core";
 
-const { requestDataset } = actions;
+const { requestDataset, requestDatasetList } = actions;
 const { datasetListSelector } = selectors;
 
 class DafDatasetListSelect extends PureComponent {
@@ -15,25 +14,11 @@ class DafDatasetListSelect extends PureComponent {
 
   render() {
     console.log(this.props);
-    const {
-      datasetList,
-      requestDataset,
-      isLoading,
-      hasLoaded,
-      error
-    } = this.props;
-    return hasLoaded ? (
-      <DatasetListSelect
-        datasetList={datasetList}
-        requestDataset={requestDataset}
-      />
-    ) : (
-      <Spinner />
-    );
+    return <DatasetListSelect {...this.props} />
   }
 }
 
 export default connect(
   state => ({ ...datasetListSelector(state) }), //mapStateToProps
-  { requestDataset } //mapDispatchToProps
+  { requestDataset, requestDatasetList } //mapDispatchToProps
 )(DafDatasetListSelect);

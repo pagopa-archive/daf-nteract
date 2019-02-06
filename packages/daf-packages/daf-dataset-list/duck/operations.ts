@@ -1,5 +1,5 @@
 import { of } from "rxjs";
-import {  map, take, switchMap, catchError } from "rxjs/operators";
+import { map, take, debounceTime, switchMap, catchError } from "rxjs/operators";
 import { ajax } from "rxjs/ajax";
 import { ofType } from "redux-observable";
 
@@ -23,6 +23,7 @@ const datasetListEpic = action$ => {
     "https://api.daf.teamdigitale.it/dati-gov/v1/public/elasticsearch/search";
 
   return action$.pipe(
+    debounceTime(900),
     ofType(DATASETLIST_REQUEST),
     switchMap(({ payload }) =>
       ajax
