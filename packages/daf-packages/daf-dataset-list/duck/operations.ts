@@ -1,22 +1,25 @@
 import { of } from "rxjs";
-import { map, take, debounceTime, switchMap, catchError } from "rxjs/operators";
+import {
+  map,
+  take,
+  debounceTime,
+  switchMap,
+  concatMap,
+  catchError
+} from "rxjs/operators";
 import { ajax } from "rxjs/ajax";
 import { ofType } from "redux-observable";
+import { SET_IN_CELL } from "@nteract/actions/src";
 
 import { DATASETLIST_REQUEST } from "./types";
 import {
-  requestDatasetList,
   fulfillDatasetList,
-  rejectDatasetList
+  rejectDatasetList,
+  resetDatasetList
 } from "./actions";
-import { FETCH_KERNELSPECS_FULFILLED } from "@nteract/actions/src";
+import { duckTypes } from "../../daf-selected-dataset/duck";
 
-const requestDatasetListEpic = action$ =>
-  action$.pipe(
-    ofType(FETCH_KERNELSPECS_FULFILLED),
-    map(() => requestDatasetList()),
-    take(1)
-  );
+const { DATASET_FULFILL } = duckTypes;
 
 const datasetListEpic = action$ => {
   const endpoint =
@@ -59,4 +62,17 @@ const datasetListEpic = action$ => {
   );
 };
 
-export { datasetListEpic, requestDatasetListEpic };
+const resetDatasetListEpic = action$ =>
+  action$.pipe(
+    ofType(DATASET_FULFILL),
+    concatMap(
+      action =>
+        action$.pipe(
+          ofType(SET_IN_CELL),
+          take(1)
+        ),
+      (outerVal, innerVal) => resetDatasetList()
+    )
+  );
+
+export { datasetListEpic, resetDatasetListEpic };

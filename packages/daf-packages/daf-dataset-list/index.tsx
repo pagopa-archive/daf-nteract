@@ -13,8 +13,7 @@ class DafDatasetListSelect extends PureComponent {
   }
 
   render() {
-    console.log(this.props);
-    return <DatasetListSelect {...this.props} />
+    return <DatasetListSelect {...this.props} />;
   }
 }
 

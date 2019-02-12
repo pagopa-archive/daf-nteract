@@ -2,15 +2,11 @@ import React, { SyntheticEvent, Fragment } from "react";
 
 import {
   MenuItem,
-  H5,
   InputGroup,
   Spinner,
-  NonIdealState,
-  Card,
   Classes,
   FormGroup,
   Tag,
-  H4,
   Button,
   Intent,
   H3,
@@ -71,8 +67,19 @@ const renderDatasetItem: ItemRenderer<IDatasetItem> = (
 ) => {
   return modifiers.matchesPredicate ? (
     <MenuItem
-      // active={true}
-      // label={theme}
+      labelElement={
+        <a
+          target="_blank"
+          href={"https://dataportal.daf.teamdigitale.it/#/dataset/" + name}
+        >
+          <Button
+            small
+            minimal
+            intent={Intent.PRIMARY}
+            rightIcon={IconNames.LINK}
+          />
+        </a>
+      }
       onClick={handleClick}
       text={highlightText(title, query)}
     />

@@ -1,5 +1,5 @@
 import { of } from "rxjs";
-import { take, map, switchMap, mergeMap, catchError, tap, concatMap } from "rxjs/operators";
+import { take, map, switchMap, catchError } from "rxjs/operators";
 import { ajax } from "rxjs/ajax";
 import { ofType } from "redux-observable";
 import { createSelector } from "reselect";
@@ -8,7 +8,6 @@ import { Map as ImmutableMap, List as ImmutableList, fromJS } from "immutable";
 import { FOCUS_CELL, updateCellSource } from "@nteract/actions/src";
 import { cellById as cellByIdSelector } from "@nteract/selectors/src/notebook";
 import { model as modelSelector } from "@nteract/selectors/src";
-import { resetDatasetList, requestDatasetList } from "../../daf-dataset-list/duck/actions";
 
 const appName = "nteract-daf";
 const reducerName = "selectedDataset";
@@ -53,10 +52,9 @@ const datasetMetaSelector = createSelector(
 
 const duckSelectors = { datasetSelector, datasetMetaSelector };
 
-const basicSecret = "";;
+const basicSecret = "";
 
-const encodeDatasetURI = datasetURI =>
-  encodeURIComponent(datasetURI);
+const encodeDatasetURI = datasetURI => encodeURIComponent(datasetURI);
 
 const makeDatasetSnippet = datasetURI => `
 url = "https://api.daf.teamdigitale.it/dataset-manager/v1/dataset/${encodeDatasetURI(
@@ -82,10 +80,9 @@ const datasetEpic = (action$, state$) =>
 
         //getFocusedCellValue
         const value =
-          cellByIdSelector(modelSelector(state$.value, { contentRef }), { id }).get(
-            "source",
-            ""
-          ) +
+          cellByIdSelector(modelSelector(state$.value, { contentRef }), {
+            id
+          }).get("source", "") +
           "\n" +
           makeDatasetSnippet(selectedDataset.payload);
 
@@ -112,11 +109,14 @@ const requestDatasetEpic = action$ => {
           map(mappedResponse => fulfillDataset(mappedResponse)),
           catchError(error => of(rejectDataset(error)))
         )
-    ),
+    )
   );
 };
 
-const duckOperations = { datasetEpic, requestDatasetEpic };
+const duckOperations = {
+  datasetEpic,
+  requestDatasetEpic
+};
 
 const initialState = ImmutableMap({
   //Suggested fromJS()
