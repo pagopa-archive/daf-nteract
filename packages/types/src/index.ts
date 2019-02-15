@@ -12,6 +12,7 @@ import {
 } from "./entities";
 import { HostRecord } from "./entities/hosts";
 import { KernelRef, KernelspecsRef } from "./refs";
+import { DafState, makeDafState } from "../../daf-nteract-packages/types";
 
 export * from "./entities";
 export * from "./ids";
@@ -170,6 +171,7 @@ export interface AppState {
   comms: CommsRecord;
   config: ConfigState;
   core: CoreRecord;
+  daf: DafState;
 }
 
 export type AppStateRecord = Immutable.RecordOf<AppState>;
@@ -178,5 +180,6 @@ export const makeAppStateRecord = Immutable.Record<AppState>({
   app: makeAppRecord(),
   comms: makeCommsRecord(),
   config: Immutable.Map<string, any>(),
-  core: makeStateRecord()
+  core: makeStateRecord(),
+  daf: makeDafState()
 });
