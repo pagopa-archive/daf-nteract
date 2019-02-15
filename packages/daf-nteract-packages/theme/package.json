@@ -1,0 +1,8 @@
+{
+  "name": "@daf-nteract-packages/theme",
+  "version": "0.1.0",
+  "main": "dafTheme.tsx",
+  "author": "and0111",
+  "license": "BSD-3-Clause",
+  "private": true
+}

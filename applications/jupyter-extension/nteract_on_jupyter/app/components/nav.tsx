@@ -1,5 +1,6 @@
 import * as React from "react";
 import styled, { StyledComponent } from "styled-components";
+import { WrapperDiv } from "../../../../../packages/daf-nteract-packages/theme";
 
 const NavUl: StyledComponent<"ul", any, {}, never> = styled.ul`
   display: flex;
@@ -36,10 +37,10 @@ const NavSectionLi: StyledComponent<"li", any, {}, never> = styled.li`
   margin: 0px var(--nt-spacing-xl) 0px 0px;
 `;
 
-const WrapperDiv: StyledComponent<"div", any, {}, never> = styled.div`
-  background-color: hsl(0, 0%, 94%);
-  box-sizing: border-box;
-`;
+// const WrapperDiv: StyledComponent<"div", any, {}, never> = styled.div`
+//   background-color: hsl(0, 0%, 94%);
+//   box-sizing: border-box;
+// `;
 
 interface NavSectionProps {
   children: React.ReactNode;
