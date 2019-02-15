@@ -1,4 +1,4 @@
-import { H4 } from "@blueprintjs/core";
+// import { H4 } from "@blueprintjs/core";
 import * as actions from "@nteract/actions";
 
 import { ContentRef } from "@nteract/core";
@@ -11,7 +11,9 @@ import urljoin from "url-join";
 import { EditableTitleOverlay } from "../components/editable-title-overlay";
 import LastSaved from "../components/last-saved";
 import { Nav, NavSection } from "../components/nav";
-import { ThemedLogo } from "../components/themed-logo";
+// import { ThemedLogo } from "../components/themed-logo";
+import { H4 } from "../../../../../packages/daf-nteract-packages/theme";
+import { ThemedLogo } from "../../../../../packages/daf-nteract-packages/theme";
 
 /* Returns a header for the Directory view, which only consists of the Nav. */
 export interface DirectoryHeaderProps {

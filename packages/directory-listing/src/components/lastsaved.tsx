@@ -1,16 +1,17 @@
 import * as React from "react";
 import TimeAgo from "react-timeago";
 import styled from "styled-components";
+import { TimeAgoTD } from "../../../../packages/daf-nteract-packages/theme";
 
 interface LastSavedProps {
   lastModified?: Date | null;
 }
 
-const TimeAgoTD = styled.td`
-  text-align: right;
-  color: #6a737d;
-  padding-right: 10px;
-`;
+// const TimeAgoTD = styled.td`
+//   text-align: right;
+//   color: #6a737d;
+//   padding-right: 10px;
+// `;
 
 TimeAgoTD.displayName = "TimeAgoTD";
 
