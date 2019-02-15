@@ -1,0 +1,8 @@
+{
+  "name": "@daf-nteract-packages/ducks",
+  "version": "0.1.0",
+  "main": "dafDucks.ts",
+  "author": "and0111",
+  "license": "BSD-3-Clause",
+  "private": true
+}
