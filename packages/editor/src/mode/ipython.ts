@@ -1,15 +1,16 @@
 // https://github.com/nteract/nteract/issues/389
-import CodeMirror from "codemirror";
+import CodeMirror, { EditorConfiguration, Mode } from "codemirror";
 
 import "codemirror/mode/meta";
 import "codemirror/mode/python/python";
 
+// The TypeScript definitions are missing these versions
+// of the codemirror define* functions that IPython uses for
+// highlighting magics
+// @ts-ignore
 CodeMirror.defineMode(
   "ipython",
-  (
-    conf: CodeMirror.EditorConfiguration,
-    parserConf: any
-  ): CodeMirror.Mode<any> => {
+  (conf: EditorConfiguration, parserConf: any): Mode<any> => {
     const ipythonConf = Object.assign({}, parserConf, {
       name: "python",
       singleOperators: new RegExp("^[\\+\\-\\*/%&|@\\^~<>!\\?]"),
@@ -22,4 +23,5 @@ CodeMirror.defineMode(
   "python"
 );
 
+// @ts-ignore
 CodeMirror.defineMIME("text/x-ipython", "ipython");

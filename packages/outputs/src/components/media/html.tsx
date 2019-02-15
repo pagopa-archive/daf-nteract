@@ -1,6 +1,9 @@
 import * as React from "react";
+import styled from "styled-components";
 
-type Props = {
+import outputStyle from "../outputStyle";
+
+interface Props {
   /**
    * The HTML string that will be rendered.
    */
@@ -10,7 +13,7 @@ type Props = {
    * string. This defaults to text/html.
    */
   mediaType: "text/html";
-};
+}
 
 // Note: createRange and Range must be polyfilled on older browsers with
 //       https://github.com/timdown/rangy
@@ -26,13 +29,17 @@ export function createFragment(html: string): Node {
   return fragment;
 }
 
-export class HTML extends React.PureComponent<Props> {
-  el?: HTMLElement | null;
+const StyledDiv = styled.div`
+  ${outputStyle}
+`;
 
+export class HTML extends React.PureComponent<Props> {
   static defaultProps = {
     data: "",
     mediaType: "text/html"
   };
+
+  el?: HTMLElement | null;
 
   componentDidMount(): void {
     // clear out all DOM element children
@@ -40,7 +47,9 @@ export class HTML extends React.PureComponent<Props> {
     // version + the fragment version right after each other
     // In the desktop app (and successive loads with tools like commuter) this
     // will be a no-op
-    if (!this.el) return;
+    if (!this.el) {
+      return;
+    }
     while (this.el.firstChild) {
       this.el.removeChild(this.el.firstChild);
     }
@@ -49,7 +58,9 @@ export class HTML extends React.PureComponent<Props> {
   }
 
   componentDidUpdate(): void {
-    if (!this.el) return;
+    if (!this.el) {
+      return;
+    }
     // clear out all DOM element children
     while (this.el.firstChild) {
       this.el.removeChild(this.el.firstChild);
@@ -59,7 +70,7 @@ export class HTML extends React.PureComponent<Props> {
 
   render() {
     return (
-      <div
+      <StyledDiv
         dangerouslySetInnerHTML={{ __html: this.props.data }}
         ref={el => {
           this.el = el;

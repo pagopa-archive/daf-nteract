@@ -1,29 +1,32 @@
 import * as React from "react";
 import TimeAgo from "react-timeago";
+import styled from "styled-components";
+import { TimeAgoTD } from "../../../../packages/daf-nteract-packages/theme";
 
-type LastSavedProps = {
+interface LastSavedProps {
   lastModified?: Date | null;
-};
+}
 
-export class LastSaved extends React.Component<LastSavedProps> {
+// const TimeAgoTD = styled.td`
+//   text-align: right;
+//   color: #6a737d;
+//   padding-right: 10px;
+// `;
+
+TimeAgoTD.displayName = "TimeAgoTD";
+
+export class LastSaved extends React.PureComponent<LastSavedProps> {
   static defaultProps = {
     lastModified: null
   };
 
   render() {
     return (
-      <td className="timeago">
+      <TimeAgoTD>
         {this.props.lastModified != null && (
           <TimeAgo date={this.props.lastModified} />
         )}
-        <style jsx>{`
-          .timeago {
-            text-align: right;
-            color: #6a737d;
-            padding-right: 10px;
-          }
-        `}</style>
-      </td>
+      </TimeAgoTD>
     );
   }
 }

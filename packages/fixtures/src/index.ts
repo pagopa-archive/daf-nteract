@@ -1,31 +1,32 @@
 /* eslint-disable no-plusplus */
 
-import * as Immutable from "immutable";
-import { Subject } from "rxjs";
 import {
-  monocellNotebook,
-  emptyCodeCell,
   appendCellToNotebook,
-  emptyNotebook,
+  emptyCodeCell,
   emptyMarkdownCell,
+  emptyNotebook,
   ImmutableNotebook,
-  JSONObject
+  JSONObject,
+  monocellNotebook
 } from "@nteract/commutable";
+import * as Immutable from "immutable";
 import { combineReducers, createStore } from "redux";
+import { Subject } from "rxjs";
 
 import { comms, config, core } from "@nteract/reducers";
 import {
-  makeNotebookContentRecord,
-  makeRemoteKernelRecord,
+  AppState,
+  createContentRef,
+  createKernelRef,
   makeAppRecord,
   makeCommsRecord,
-  makeKernelsRecord,
-  makeDocumentRecord,
   makeContentsRecord,
+  makeDocumentRecord,
   makeEntitiesRecord,
-  makeStateRecord,
-  createContentRef,
-  createKernelRef
+  makeKernelsRecord,
+  makeNotebookContentRecord,
+  makeRemoteKernelRecord,
+  makeStateRecord
 } from "@nteract/types";
 
 export { fixtureCommutable, fixture, fixtureJSON } from "./fixture-nb";
@@ -99,7 +100,7 @@ export function fixtureStore(config: JSONObject) {
   const kernelRef = createKernelRef();
   const contentRef = createContentRef();
 
-  return createStore(rootReducer, {
+  const initialAppState: AppState = {
     core: makeStateRecord({
       kernelRef,
       entities: makeEntitiesRecord({
@@ -125,7 +126,6 @@ export function fixtureStore(config: JSONObject) {
         }),
         kernels: makeKernelsRecord({
           byRef: Immutable.Map({
-            // $FlowFixMe: This really is a kernel ref, Flow can't handle typing it though
             [kernelRef]: makeRemoteKernelRecord({
               channels,
               status: "not connected"
@@ -133,7 +133,7 @@ export function fixtureStore(config: JSONObject) {
           })
         })
       })
-    }) as any,
+    }),
     app: makeAppRecord({
       notificationSystem: {
         addNotification: () => {} // most of the time you'll want to mock this
@@ -144,5 +144,7 @@ export function fixtureStore(config: JSONObject) {
       theme: "light"
     }),
     comms: makeCommsRecord()
-  });
+  };
+
+  return createStore(rootReducer, initialAppState as any);
 }

@@ -1,6 +1,6 @@
+import { EventEmitter } from "events";
 import { Subject } from "rxjs";
 import { first } from "rxjs/operators";
-import { EventEmitter } from "events";
 import { MakePostMessageSubject } from "../../src/communication/message-subject";
 
 /**
@@ -42,7 +42,7 @@ describe("MakeMessageSubject", () => {
   });
 
   it("communicates closure", async () => {
-    const completionPromise = new Promise<Boolean>(resolve => {
+    const completionPromise = new Promise<boolean>(resolve => {
       messageSubject2.subscribe({ complete: () => resolve(true) });
     });
     messageSubject1.complete();

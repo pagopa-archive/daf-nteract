@@ -1,24 +1,17 @@
 {
   "name": "@nteract/presentational-components",
-  "version": "2.0.0-alpha.0",
+  "version": "3.0.1",
   "description": "pure presentational components for nteract",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "nteractDesktop": "src/index.ts",
-  "scripts": {
-    "prepare": "npm run build",
-    "prepublishOnly": "npm run build",
-    "build": "npm run build:clean && npm run build:lib",
-    "build:clean": "tsc -b --clean",    
-    "build:lib": "tsc -b",
-    "build:lib:watch": "tsc -b --watch",
-    "build:watch": "npm run build:clean && npm run build:lib:watch"
-  },
+  "scripts": {},
   "dependencies": {
     "@blueprintjs/core": "^3.7.0",
     "@blueprintjs/select": "^3.2.0",
-    "@nteract/styled-blueprintjsx": "^1.1.1",
+    "@nteract/styled-blueprintjsx": "^2.0.0",
     "react-syntax-highlighter": "^9.0.0",
+    "styled-components": "^4.1.3",
     "styled-jsx": "^3.1.0"
   },
   "peerDependencies": {
@@ -34,5 +27,6 @@
   "author": "Kyle Kelley <rgbkrk@gmail.com>",
   "license": "BSD-3-Clause",
   "devDependencies": {
+    "@types/styled-components": "^4.1.4"
   }
 }

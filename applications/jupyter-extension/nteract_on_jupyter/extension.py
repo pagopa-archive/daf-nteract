@@ -15,7 +15,6 @@ from .config import NteractConfig
 from .handlers import add_handlers
 
 
-
 def load_jupyter_server_extension(nbapp):
     """Load the server extension.
     """

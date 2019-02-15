@@ -1,7 +1,8 @@
+import { Channels, createMessage } from "@nteract/messaging";
+import { Doc } from "codemirror";
 import { Subject } from "rxjs";
-import { createMessage } from "@nteract/messaging";
 
-const complete = require("../src/jupyter/complete");
+import * as complete from "../src/jupyter/complete";
 
 describe("completionRequest", () => {
   it("creates a valid v5 message for complete_request", () => {
@@ -31,14 +32,14 @@ describe("codeCompleteObservable", () => {
     const sent = new Subject();
     const received = new Subject();
     const mockSocket = Subject.create(sent, received);
-    const channels = mockSocket;
+    const channels: Channels = mockSocket;
 
-    const cm = {
+    const cm: Doc = ({
       getCursor: () => ({ line: 2 }),
       getValue: () => "\n\nimport thi",
       indexFromPos: () => 12,
       posFromIndex: x => ({ ch: x, line: 3 })
-    };
+    } as unknown) as Doc;
 
     const message = createMessage("complete_request");
     const observable = complete.codeCompleteObservable(channels, cm, message);

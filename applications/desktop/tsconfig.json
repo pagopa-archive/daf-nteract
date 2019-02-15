@@ -1,0 +1,24 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "noEmit": true
+  },
+  "include": ["src"],
+  "references": [
+    { "path": "../../packages/core" },
+    { "path": "../../packages/types" },
+    { "path": "../../packages/editor" },
+    { "path": "../../packages/notebook-app-component" },
+    { "path": "../../packages/presentational-components" },
+    { "path": "../../packages/fs-observable" },
+    { "path": "../../packages/jupyter-widgets" },
+    { "path": "../../packages/data-explorer" },
+    { "path": "../../packages/styles" },
+    { "path": "../../packages/transform-geojson" },
+    { "path": "../../packages/transform-model-debug" },
+    { "path": "../../packages/transform-plotly" },
+    { "path": "../../packages/transform-vdom" },
+    { "path": "../../packages/transform-vega" },
+    { "path": "../../packages/outputs" }
+  ]
+}

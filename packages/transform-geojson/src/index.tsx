@@ -1,6 +1,7 @@
-import * as React from "react";
-import L from "leaflet";
 import { GeoJsonObject } from "geojson";
+import L from "leaflet";
+import * as React from "react";
+import LeafletCSS from "./leafletCss";
 
 interface Metadata {
   url_template: string;
@@ -8,14 +9,17 @@ interface Metadata {
 }
 
 interface Props {
-  data: GeoJsonObject;
-  metadata: Metadata;
+  data?: GeoJsonObject;
+  metadata?: Metadata;
   mediaType: "application/geo+json";
-  theme: string;
+  theme?: string;
 }
 
 type TileTheme = "dark" | "light";
-type TileLayer = { urlTemplate: string; layerOptions: object };
+interface TileLayer {
+  urlTemplate: string;
+  layerOptions: object;
+}
 
 const MIMETYPE = "application/geo+json";
 
@@ -49,17 +53,17 @@ export function getTheme(theme: string = "light", el: HTMLElement): TileTheme {
 }
 
 export class GeoJSONTransform extends React.Component<Props> {
-  MIMETYPE!: string;
-  map!: L.Map;
-  el!: HTMLDivElement | null;
-  geoJSONLayer!: L.GeoJSON;
-  tileLayer!: L.TileLayer;
-
   static defaultProps = {
     theme: "light",
     mediaType: MIMETYPE
   };
   static MIMETYPE = MIMETYPE;
+
+  MIMETYPE!: string;
+  map!: L.Map;
+  el!: HTMLDivElement | null;
+  geoJSONLayer!: L.GeoJSON;
+  tileLayer!: L.TileLayer;
 
   componentDidMount(): void {
     this.map = L.map(this.el!);
@@ -102,7 +106,9 @@ export class GeoJSONTransform extends React.Component<Props> {
   }
 
   getTileLayer = (): TileLayer | undefined => {
-    if (!this.el) return;
+    if (!this.el) {
+      return;
+    }
     const theme = getTheme(this.props.theme, this.el);
     // const urlTemplate = (this.props.metadata && this.props.metadata.url_template) ||
     //   'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
@@ -126,16 +132,13 @@ export class GeoJSONTransform extends React.Component<Props> {
   render(): React.ReactElement<any> {
     return (
       <React.Fragment>
-        <link
-          rel="stylesheet"
-          href="../node_modules/leaflet/dist/leaflet.css"
-        />
         <div
           ref={el => {
             this.el = el;
           }}
           style={{ height: 600, width: "100%" }}
         />
+        <LeafletCSS />
       </React.Fragment>
     );
   }

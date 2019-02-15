@@ -1,22 +1,45 @@
 import * as React from "react";
+// react-hot-loader uses proxies to the original elements so we need to use
+// their comparison function in case a consumer of these components is
+// using hot module reloading
 import { areComponentsEqual } from "react-hot-loader";
+import styled from "styled-components";
 
 import { Icon } from "./icon";
-import { Name } from "./name";
 import { LastSaved } from "./lastsaved";
+import { Name } from "./name";
 
-type EntryProps = {
+interface EntryProps {
   children: React.ReactNode;
-};
+}
 
-export class Entry extends React.Component<EntryProps> {
+const DirectoryEntry = styled.tr`
+  border-top: 1px solid #eaecef;
+
+  :hover {
+    background-color: #f6f8fa;
+    transition: background-color 0.1s ease-out;
+  }
+
+  :first-child {
+    border-top: none;
+  }
+
+  :last-child {
+    border-bottom: none;
+  }
+`;
+
+DirectoryEntry.displayName = "DirectoryEntry";
+
+export class Entry extends React.PureComponent<EntryProps> {
   static defaultProps = {
     children: null
   };
 
   render() {
     return (
-      <tr className="directory-entry">
+      <DirectoryEntry>
         {React.Children.map(this.props.children, child => {
           const childElement = child as React.ReactElement<any>;
           if (
@@ -37,32 +60,14 @@ export class Entry extends React.Component<EntryProps> {
               className:
                 typeof childElement.props.className === "string" &&
                 childElement.props.className !== ""
-                  ? childElement.props.className + " directory-entry-field"
+                  ? `${childElement.props.className} directory-entry-field`
                   : "directory-entry-field"
             });
           } else {
             return <td className="directory-entry-field">{child}</td>;
           }
         })}
-        <style jsx>{`
-          tr {
-            border-top: 1px solid #eaecef;
-          }
-
-          tr:hover {
-            background-color: #f6f8fa;
-            transition: background-color 0.1s ease-out;
-          }
-
-          tr:first-child {
-            border-top: none;
-          }
-
-          tr:last-child {
-            border-bottom: none;
-          }
-        `}</style>
-      </tr>
+      </DirectoryEntry>
     );
   }
 }

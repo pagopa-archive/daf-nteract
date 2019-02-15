@@ -1,17 +1,19 @@
 import * as React from "react";
-import { MediaBundle } from "@nteract/records";
+import styled from "styled-components";
+
+import { JSONObject, MediaBundle } from "@nteract/commutable";
 
 /** Error handling types */
-type ReactErrorInfo = {
+interface ReactErrorInfo {
   componentStack: string;
-};
+}
 
-type Caught = {
+interface Caught {
   error: Error;
   info: ReactErrorInfo;
-};
+}
 
-type RichMediaProps = {
+interface RichMediaProps {
   /**
    * Object of media type → data
    *
@@ -27,13 +29,13 @@ type RichMediaProps = {
    * for more detail.
    *
    */
-  data: MediaBundle;
+  data: Readonly<MediaBundle>;
   /**
    * custom settings, typically keyed by media type
    */
-  metadata: { [mediaType: string]: object };
+  metadata: Readonly<JSONObject>;
   /**
-   * React elements that accept mimebundle data, will get passed data[mimetype]
+   * React elements that accept media bundle data, will get passed data[mimetype]
    */
   children: React.ReactNode;
 
@@ -44,33 +46,33 @@ type RichMediaProps = {
     metadata: object;
     children: React.ReactNode;
   }): React.ReactElement<any>;
-};
+}
 
 /* We make the RichMedia component an error boundary in case of any <Media /> component erroring */
-type State = {
+interface State {
   caughtError?: Caught | null;
-};
+}
+
+const ErrorFallbackDiv = styled.div`
+  backgroundcolor: ghostwhite;
+  color: black;
+  font-weight: 600;
+  display: block;
+  padding: 10px;
+  margin-bottom: 20px;
+`;
 
 const ErrorFallback = (caught: Caught) => (
-  <div
-    style={{
-      backgroundColor: "ghostwhite",
-      color: "black",
-      fontWeight: 600,
-      display: "block",
-      padding: "10px",
-      marginBottom: "20px"
-    }}
-  >
+  <ErrorFallbackDiv>
     <h3>{caught.error.toString()}</h3>
     <details>
       <summary>stack trace</summary>
       <pre>{caught.info.componentStack}</pre>
     </details>
-  </div>
+  </ErrorFallbackDiv>
 );
 
-export class RichMedia extends React.Component<RichMediaProps, State> {
+export class RichMedia extends React.PureComponent<RichMediaProps, State> {
   static defaultProps: Partial<RichMediaProps> = {
     data: {},
     metadata: {},

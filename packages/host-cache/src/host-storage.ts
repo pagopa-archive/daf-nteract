@@ -1,7 +1,7 @@
 import { binder } from "rx-binder";
 import { kernels } from "rx-jupyter";
 import { of } from "rxjs";
-import { tap, map, catchError, filter } from "rxjs/operators";
+import { catchError, filter, map, tap } from "rxjs/operators";
 
 // NOTE: The old flow type for BinderKey was an opaque type so that you couldn't use _any_ string,
 // it had to use our special Binder key type from this module.
@@ -11,34 +11,34 @@ import { tap, map, catchError, filter } from "rxjs/operators";
 // For TypeScript we can get the same behavior with the unknown type
 type BinderKey = string;
 
-type BinderOptions = {
+interface BinderOptions {
   repo: string;
   ref?: string;
   binderURL?: string;
-};
+}
 
-export type ServerConfig = {
+export interface ServerConfig {
   endpoint: string;
   token: string;
   // Assume always cross domain
   crossDomain: true;
-};
+}
 
 export const PROVISIONING = "PROVISIONING";
-type IsItUpHost = {
+interface IsItUpHost {
   type: "PROVISIONING";
-};
+}
 
 export const UP = "HOST_UP";
-type UpHost = {
+interface UpHost {
   type: "HOST_UP";
   config: ServerConfig;
-};
+}
 
 export const NOHOST = "NOHOST";
-type NoHost = {
+interface NoHost {
   type: "NOHOST";
-};
+}
 
 function makeHost({
   endpoint,

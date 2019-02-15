@@ -5,15 +5,16 @@
 [![codecov.io](https://codecov.io/github/nteract/nteract/coverage.svg?branch=master)](https://codecov.io/github/nteract/nteract?branch=master)
 [![slack in](https://slack.nteract.io/badge.svg)](https://slack.nteract.io)
 [![lerna](https://img.shields.io/badge/maintained%20with-lerna-cc00ff.svg)](https://lernajs.io/)
+[![node@lts](https://img.shields.io/npm/v/node/lts.svg?label=node@lts&colorB=cc00ff)](https://nodejs.org/)
 [![Azure Pipelines CI status](https://dev.azure.com/nteract/nteract/_apis/build/status/nteract.nteract?branch=master)](https://dev.azure.com/nteract/nteract/_build/latest?definitionId=1&branch=master)
-[![Circle CI Status Shield](https://circleci.com/gh/nteract/nteract/tree/master.svg?style=shield)](https://circleci.com/gh/nteract/nteract/tree/master)
+[![Circle CI status](https://circleci.com/gh/nteract/nteract/tree/master.svg?style=shield)](https://circleci.com/gh/nteract/nteract/tree/master)
 
 || [**Basics**](#basics) • [**Users**](#users) || [**Contributors**](#contributors) • [**Development**](#development) • [**Maintainers**](#maintainers) || [**Sponsors**](#sponsors) • [**Made possible by**](#made-possible-by) ||
 
 ## Basics
 
 **nteract** is first and foremost a dynamic tool to give you flexibility when
-writing code, [exploring data](https://github.com/nteract/nteract/tree/master/packages/transform-dataresource), and authoring text to share insights about the
+writing code, [exploring data](https://github.com/nteract/nteract/tree/master/packages/data-explorer), and authoring text to share insights about the
 data.
 
 **Edit code, write prose, and visualize.**
@@ -76,11 +77,11 @@ case, we have two main directories:
 
 ```
 packages/ -- components used as an individual library
-applications/ -- all the user facing applications (i.e. desktop, play)
+applications/ -- all the user facing applications (i.e. desktop)
 ```
 
 The `packages` directory has the components needed to build new applications,
-and the `applications` has the desktop app, the play app, and a few more.
+and the `applications` has the desktop app and the Jupyter extension.
 
 _Why have a monorepo?_ The monorepo contains many components and packages that
 can be mixed and remixed to create new applications. The monorepo keeps these
@@ -169,20 +170,6 @@ regular Dev Tools console (accessible from the View menu). Set
 ELECTRON_ENABLE_LOGGING=1 to pipe renderer `console.log` to the launching
 terminal as well. This is useful for debugging crashes and notebook closing
 behaviors.
-
-### Hacking on `play`
-
-Run:
-
-```
-yarn app:play
-```
-
-Then open `127.0.0.1:3000` in your browser. You'll be able to make changes to
-`play` and see the changes update live.
-
-If you make changes to any `packages/` while hacking on `play`, you'll want to
-rebuild those using [the instructions for building specific packages](#building-a-specific-package).
 
 ### Troubleshooting
 

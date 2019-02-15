@@ -1,6 +1,6 @@
-import React from "react";
-import { shallow, mount } from "enzyme";
 import { emptyMarkdownCell } from "@nteract/commutable";
+import { mount, shallow } from "enzyme";
+import React from "react";
 
 import MarkdownPreview from "../src/markdown-preview";
 

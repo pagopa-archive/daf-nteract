@@ -6,23 +6,13 @@ const ignored = new Set([
   // we don't reuse the desktop app as a library
   "nteract",
 
-  // commuter is a next app -- if people need modules from it, they should be
-  // made into new packages
-  "@nteract/commuter",
-
   // It's this package, the one you're currently looking at! We must skip it.
   "@nteract/webpack-configurator",
-
-  // Play is a next.js app
-  "@nteract/play",
 
   // The jupyter extension will rely on this package
   "nteract-on-jupyter",
   // The nbextension is the metapackage (python bits) and isn't used by anything
-  "@nteract/nbextension",
-
-  // TODO: Build @nteract/styles using webpack or some other means
-  "@nteract/styles"
+  "@nteract/nbextension"
 ]);
 
 const aliases = lernaModules

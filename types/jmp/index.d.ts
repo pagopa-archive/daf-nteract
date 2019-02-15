@@ -44,5 +44,7 @@ declare module "jmp" {
     unmonitor(): this;
 
     removeAllListeners(): this;
+
+    close(): this;
   }
 }

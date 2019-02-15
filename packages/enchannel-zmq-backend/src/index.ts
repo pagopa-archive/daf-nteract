@@ -1,12 +1,12 @@
 /**
  * @module enchannel-zmq-backend
  */
-import { Subject, Subscriber, fromEvent, merge, Observable } from "rxjs";
-import { map, publish, refCount } from "rxjs/operators";
-import * as moduleJMP from "jmp";
-import uuid from "uuid/v4";
 import { Channels, JupyterMessage } from "@nteract/messaging";
+import * as moduleJMP from "jmp";
+import { fromEvent, merge, Observable, Subject, Subscriber } from "rxjs";
 import { FromEventTarget } from "rxjs/internal/observable/fromEvent";
+import { map, publish, refCount } from "rxjs/operators";
+import uuid from "uuid/v4";
 
 export const ZMQType = {
   frontend: {
@@ -20,6 +20,7 @@ export const ZMQType = {
 type ChannelName = "iopub" | "stdin" | "shell" | "control";
 
 export interface JupyterConnectionInfo {
+  version: number;
   iopub_port: number;
   shell_port: number;
   stdin_port: number;
@@ -51,7 +52,7 @@ export const formConnectionString = (
   channel: ChannelName
 ) => {
   const portDelimiter = config.transport === "tcp" ? ":" : "-";
-  const port = config[(channel + "_port") as keyof JupyterConnectionInfo];
+  const port = config[`${channel}_port` as keyof JupyterConnectionInfo];
   if (!port) {
     throw new Error(`Port not found for channel "${channel}"`);
   }
@@ -212,15 +213,19 @@ export const createMainChannelFromSockets = (
         console.warn("channel not understood for message", message);
         return;
       }
-      const jMessage = new jmp.Message({
-        // Fold in the setup header to ease usage of messages on channels
-        header: { ...message.header, ...header },
-        parent_header: message.parent_header,
-        content: message.content,
-        metadata: message.metadata,
-        buffers: message.buffers
-      });
-      socket.send(jMessage);
+      try {
+        const jMessage = new jmp.Message({
+          // Fold in the setup header to ease usage of messages on channels
+          header: { ...message.header, ...header },
+          parent_header: message.parent_header,
+          content: message.content,
+          metadata: message.metadata,
+          buffers: message.buffers
+        });
+        socket.send(jMessage);
+      } catch (err) {
+        console.error("Error sending message", err, message);
+      }
     },
     undefined, // not bothering with sending errors on
     () =>
@@ -229,7 +234,7 @@ export const createMainChannelFromSockets = (
       Object.keys(sockets).forEach(name => {
         const socket = sockets[name];
         socket.removeAllListeners();
-        socket.close();
+        if (socket.close) socket.close();
       })
   );
 

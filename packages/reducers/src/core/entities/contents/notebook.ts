@@ -1,36 +1,37 @@
-import uuid from "uuid/v4";
-import * as Immutable from "immutable";
 import {
+  CellId,
   ImmutableCell,
   ImmutableCodeCell,
+  ImmutableMarkdownCell,
   ImmutableNotebook,
-  CellId,
-  Output,
-  StreamOutput,
-  ImmutableMarkdownCell
+  ImmutableOutput,
+  OnDiskOutput,
+  OnDiskStreamOutput
 } from "@nteract/commutable";
 import {
-  makeCodeCell,
-  makeRawCell,
-  makeMarkdownCell,
+  createFrozenMediaBundle,
+  createImmutableOutput,
+  deleteCell,
   emptyCodeCell,
   emptyMarkdownCell,
-  insertCellAt,
-  insertCellAfter,
-  deleteCell,
   emptyNotebook,
-  createImmutableOutput,
-  createImmutableMimeBundle
+  insertCellAfter,
+  insertCellAt,
+  makeCodeCell,
+  makeMarkdownCell,
+  makeRawCell
 } from "@nteract/commutable";
-import { has } from "lodash";
 import { escapeCarriageReturnSafe } from "escape-carriage";
+import { fromJS, List, Map, Set } from "immutable";
+import { has } from "lodash";
+import uuid from "uuid/v4";
 
 import * as actionTypes from "@nteract/actions";
 import { makeDocumentRecord, PayloadMessage } from "@nteract/types";
 import { NotebookModel } from "@nteract/types";
 
-type KeyPath = Immutable.List<string | number>;
-type KeyPaths = Immutable.List<KeyPath>;
+type KeyPath = List<string | number>;
+type KeyPaths = List<KeyPath>;
 
 /**
  * An output can be a stream of data that does not arrive at a single time. This
@@ -39,24 +40,32 @@ type KeyPaths = Immutable.List<KeyPath>;
  *
  * @param {Object} outputs - Kernel output messages
  * @param {Object} output - Outputted to be reduced into list of outputs
- * @return {Immutable.List<Object>} updated-outputs - Outputs + Output
+ * @return {List<Object>} updated-outputs - Outputs + Output
  */
 export function reduceOutputs(
-  outputs: Immutable.List<any> = Immutable.List(),
-  output: Output
+  outputs: List<ImmutableOutput> = List(),
+  output: OnDiskOutput
 ) {
-  const last = outputs.last();
+  // Find the last output to see if it's a stream type
+  // If we don't find one, default to null
+  const last = outputs.last(null);
 
-  if (
-    output.output_type !== "stream" ||
-    !last ||
-    (outputs.size > 0 && last.get("output_type") !== "stream")
-  ) {
-    // If it's not a stream type, we just fold in the output
+  if (!last || !last.output_type) {
     return outputs.push(createImmutableOutput(output));
   }
 
-  const streamOutput: StreamOutput = output;
+  if (output.output_type !== "stream" || last.output_type !== "stream") {
+    // If the last output type or the incoming output type isn't a stream
+    // we just add it to the outputs
+    // This is kind of like a "break" between streams if we get error, display_data, execute_result, etc.
+    return outputs.push(createImmutableOutput(output));
+  }
+
+  const streamOutput = output;
+
+  if (typeof streamOutput.name === "undefined") {
+    return outputs.push(createImmutableOutput(streamOutput));
+  }
 
   function appendText(text: string): string {
     if (typeof streamOutput.text === "string") {
@@ -65,43 +74,37 @@ export function reduceOutputs(
     return text;
   }
 
-  if (
-    last &&
-    outputs.size > 0 &&
-    typeof streamOutput.name !== "undefined" &&
-    last.get("output_type") === "stream"
-  ) {
-    // Invariant: size > 0, outputs.last() exists
-    if (last.get("name") === streamOutput.name) {
-      return outputs.updateIn([outputs.size - 1, "text"], appendText);
-    }
-    const nextToLast:
-      | Immutable.Map<string, any>
-      | undefined = outputs.butLast().last();
-    if (
-      nextToLast &&
-      nextToLast.get("output_type") === "stream" &&
-      nextToLast.get("name") === streamOutput.name
-    ) {
-      return outputs.updateIn([outputs.size - 2, "text"], appendText);
-    }
+  // Invariant: size > 0, outputs.last() exists
+  if (last.name === streamOutput.name) {
+    return outputs.updateIn([outputs.size - 1, "text"], appendText);
   }
 
+  // Check if there's a separate stream to merge with
+  const nextToLast = outputs.butLast().last(null);
+
+  if (
+    nextToLast &&
+    nextToLast.output_type === "stream" &&
+    nextToLast.name === streamOutput.name
+  ) {
+    return outputs.updateIn([outputs.size - 2, "text"], appendText);
+  }
+  // If nothing else matched, just append it
   return outputs.push(createImmutableOutput(streamOutput));
 }
 
 export function cleanCellTransient(state: NotebookModel, id: string) {
   // Clear out key paths that should no longer be referenced
   return state
-    .setIn(["cellPagers", id], Immutable.List())
+    .setIn(["cellPagers", id], List())
     .updateIn(
       ["transient", "keyPathsForDisplays"],
-      (kpfd: Immutable.Map<string, KeyPaths>) =>
-        (kpfd || Immutable.Map()).map((keyPaths: KeyPaths) =>
+      (kpfd: Map<string, KeyPaths>) =>
+        (kpfd || Map()).map((keyPaths: KeyPaths) =>
           keyPaths.filter((keyPath: KeyPath) => keyPath.get(2) !== id)
         )
     )
-    .setIn(["transient", "cellMap", id], Immutable.Map());
+    .setIn(["transient", "cellMap", id], Map());
 }
 
 function setNotebookCheckpoint(state: NotebookModel) {
@@ -125,7 +128,7 @@ function clearOutputs(state: NotebookModel, action: actionTypes.ClearOutputs) {
 
   if (type === "code") {
     return cleanedState
-      .setIn(["notebook", "cellMap", id, "outputs"], Immutable.List())
+      .setIn(["notebook", "cellMap", id, "outputs"], List())
       .setIn(["notebook", "cellMap", id, "execution_count"], null);
   }
   return cleanedState;
@@ -137,8 +140,15 @@ function toggleTagInCell(
 ): NotebookModel {
   const { id, tag } = action.payload;
 
-  return state.updateIn(["notebook", "cellMap", id, "metadata", "tags"], tags =>
-    tags.has(tag) ? tags.remove(tag) : tags.add(tag)
+  return state.updateIn(
+    ["notebook", "cellMap", id, "metadata", "tags"],
+    tags => {
+      if (tags) {
+        return tags.has(tag) ? tags.remove(tag) : tags.add(tag);
+      } else {
+        return Set([tag]);
+      }
+    }
   );
 }
 
@@ -162,7 +172,7 @@ function clearAllOutputs(
     .map((cell: ImmutableCell) => {
       if ((cell as any).get("cell_type") === "code") {
         return (cell as ImmutableCodeCell).merge({
-          outputs: Immutable.List(),
+          outputs: List(),
           execution_count: null
         });
       }
@@ -170,9 +180,9 @@ function clearAllOutputs(
     });
 
   // Clear all the transient data too
-  const transient = Immutable.Map({
-    keyPathsForDisplays: Immutable.Map(),
-    cellMap: cellMap.map(() => Immutable.Map())
+  const transient = Map({
+    keyPathsForDisplays: Map(),
+    cellMap: cellMap.map(() => Map())
   });
 
   return state
@@ -192,9 +202,7 @@ function appendOutput(state: NotebookModel, action: actionTypes.AppendOutput) {
   ) {
     return state.updateIn(
       ["notebook", "cellMap", cellId, "outputs"],
-      (
-        outputs: Immutable.List<Immutable.Map<string, any>>
-      ): Immutable.List<Immutable.Map<string, any>> =>
+      (outputs: List<ImmutableOutput>): List<ImmutableOutput> =>
         reduceOutputs(outputs, output)
     );
   }
@@ -218,7 +226,7 @@ function appendOutput(state: NotebookModel, action: actionTypes.AppendOutput) {
     .count();
 
   // Construct the path to the output for updating later
-  const keyPath: KeyPath = Immutable.List([
+  const keyPath: KeyPath = List([
     "notebook",
     "cellMap",
     cellId,
@@ -229,8 +237,7 @@ function appendOutput(state: NotebookModel, action: actionTypes.AppendOutput) {
   const keyPaths: KeyPaths = (
     state
       // Extract the current list of keypaths for this displayID
-      .getIn(["transient", "keyPathsForDisplays", displayID]) ||
-    Immutable.List()
+      .getIn(["transient", "keyPathsForDisplays", displayID]) || List()
   )
     // Append our current output's keyPath
     .push(keyPath);
@@ -241,7 +248,6 @@ function appendOutput(state: NotebookModel, action: actionTypes.AppendOutput) {
   return keyPaths
     .reduce(
       (currState: NotebookModel, kp: KeyPath) =>
-        // $FlowFixMe
         currState.setIn(kp, immutableOutput),
       state
     )
@@ -265,13 +271,12 @@ function updateDisplay(
   ]);
 
   const updatedContent = {
-    data: createImmutableMimeBundle(content.data),
-    metadata: Immutable.fromJS(content.metadata || {})
+    data: createFrozenMediaBundle(content.data),
+    metadata: fromJS(content.metadata || {})
   };
 
   return keyPaths.reduce(
     (currState: NotebookModel, kp: KeyPath) =>
-      // $FlowFixMe: gnarly one we need to FIXME
       currState.updateIn(kp, output => {
         return output.merge(updatedContent);
       }),
@@ -341,10 +346,7 @@ function focusNextCellEditor(
   state: NotebookModel,
   action: actionTypes.FocusNextCellEditor
 ) {
-  const cellOrder: Immutable.List<CellId> = state.getIn([
-    "notebook",
-    "cellOrder"
-  ]);
+  const cellOrder: List<CellId> = state.getIn(["notebook", "cellOrder"]);
 
   const id = action.payload.id ? action.payload.id : state.get("editorFocused");
 
@@ -364,10 +366,7 @@ function focusPreviousCellEditor(
   state: NotebookModel,
   action: actionTypes.FocusPreviousCellEditor
 ) {
-  const cellOrder: Immutable.List<CellId> = state.getIn([
-    "notebook",
-    "cellOrder"
-  ]);
+  const cellOrder: List<CellId> = state.getIn(["notebook", "cellOrder"]);
   const curIndex = cellOrder.findIndex(
     (id: CellId) => id === action.payload.id
   );
@@ -379,7 +378,7 @@ function focusPreviousCellEditor(
 function moveCell(state: NotebookModel, action: actionTypes.MoveCell) {
   return state.updateIn(
     ["notebook", "cellOrder"],
-    (cellOrder: Immutable.List<CellId>) => {
+    (cellOrder: List<CellId>) => {
       const oldIndex = cellOrder.findIndex(
         (id: string) => id === action.payload.id
       );
@@ -427,7 +426,7 @@ function createCellBelow(
   const cell = cellType === "markdown" ? emptyMarkdownCell : emptyCodeCell;
   const cellId = uuid();
   return state.update("notebook", (notebook: ImmutableNotebook) => {
-    const index = notebook.get("cellOrder", Immutable.List()).indexOf(id) + 1;
+    const index = notebook.get("cellOrder", List()).indexOf(id) + 1;
     return insertCellAt(
       notebook,
       (cell as ImmutableMarkdownCell).set("source", source),
@@ -450,10 +449,7 @@ function createCellAbove(
   const cell = cellType === "markdown" ? emptyMarkdownCell : emptyCodeCell;
   const cellId = uuid();
   return state.update("notebook", (notebook: ImmutableNotebook) => {
-    const cellOrder: Immutable.List<CellId> = notebook.get(
-      "cellOrder",
-      Immutable.List()
-    );
+    const cellOrder: List<CellId> = notebook.get("cellOrder", List());
     const index = cellOrder.indexOf(id);
     return insertCellAt(notebook, cell, cellId, index);
   });
@@ -475,7 +471,7 @@ function createCellAfter(
   const cell = cellType === "markdown" ? emptyMarkdownCell : emptyCodeCell;
   const cellId = uuid();
   return state.update("notebook", (notebook: ImmutableNotebook) => {
-    const index = notebook.get("cellOrder", Immutable.List()).indexOf(id) + 1;
+    const index = notebook.get("cellOrder", List()).indexOf(id) + 1;
     return insertCellAt(
       notebook,
       (cell as ImmutableMarkdownCell).set("source", source),
@@ -501,10 +497,7 @@ function createCellBefore(
   const cell = cellType === "markdown" ? emptyMarkdownCell : emptyCodeCell;
   const cellId = uuid();
   return state.update("notebook", (notebook: ImmutableNotebook) => {
-    const cellOrder: Immutable.List<CellId> = notebook.get(
-      "cellOrder",
-      Immutable.List()
-    );
+    const cellOrder: List<CellId> = notebook.get("cellOrder", List());
     const index = cellOrder.indexOf(id);
     return insertCellAt(notebook, cell, cellId, index);
   });
@@ -516,10 +509,7 @@ function createCellAppend(
 ) {
   const { cellType } = action.payload;
   const notebook: ImmutableNotebook = state.get("notebook");
-  const cellOrder: Immutable.List<CellId> = notebook.get(
-    "cellOrder",
-    Immutable.List()
-  );
+  const cellOrder: List<CellId> = notebook.get("cellOrder", List());
   const cell: ImmutableCell =
     cellType === "markdown" ? emptyMarkdownCell : emptyCodeCell;
   const index = cellOrder.count();
@@ -532,12 +522,12 @@ function acceptPayloadMessage(
   action: actionTypes.AcceptPayloadMessage
 ): NotebookModel {
   const id: string = action.payload.id;
-  const payload = action.payload.payload as PayloadMessage;
+  const payload: PayloadMessage = action.payload.payload;
 
   if (payload.source === "page") {
     // append pager
     return state.updateIn(["cellPagers", id], l =>
-      (l || Immutable.List()).push(payload.data)
+      (l || List()).push(payload.data)
     );
   } else if (payload.source === "set_next_input") {
     if (payload.replace) {
@@ -551,7 +541,6 @@ function acceptPayloadMessage(
       // these reducers should just handle the original action.
       return createCellBelow(state, {
         type: actionTypes.CREATE_CELL_BELOW,
-        // $FlowFixMe: Switch this over to creating a cell after without having to take an action
         payload: {
           cellType: "code",
           // TODO: is payload.text guaranteed to be defined?
@@ -585,7 +574,6 @@ function sendExecuteRequest(
   // these reducers should just handle the original action.
   return clearOutputs(state, {
     type: "CLEAR_OUTPUTS",
-    // $FlowFixMe: Switch this over to clearing outputs without having to take an action
     payload: {
       id,
       contentRef
@@ -597,7 +585,6 @@ function setInCell(
   state: NotebookModel,
   action: actionTypes.SetInCell<string>
 ) {
-  // $FlowFixMe: Flow is complaining because the first arg has unknown length?
   return state.setIn(
     ["notebook", "cellMap", action.payload.id].concat(action.payload.path),
     action.payload.value
@@ -656,11 +643,31 @@ function updateCellStatus(
   const { id, status } = action.payload;
   return state.setIn(["transient", "cellMap", id, "status"], status);
 }
+
+function updateOutputMetadata(
+  state: NotebookModel,
+  action: actionTypes.UpdateOutputMetadata
+) {
+  const { id, metadata, index, mediaType } = action.payload;
+  const currentOutputs = state.getIn(["notebook", "cellMap", id, "outputs"]);
+
+  const updatedOutputs = currentOutputs.update(index, (item: any) =>
+    item.set(
+      "metadata",
+      fromJS({
+        [mediaType]: metadata
+      })
+    )
+  );
+
+  return state.setIn(["notebook", "cellMap", id, "outputs"], updatedOutputs);
+}
+
 function setLanguageInfo(
   state: NotebookModel,
   action: actionTypes.SetLanguageInfo
 ) {
-  const langInfo = Immutable.fromJS(action.payload.langInfo);
+  const langInfo = fromJS(action.payload.langInfo);
   return state.setIn(["notebook", "metadata", "language_info"], langInfo);
 }
 
@@ -672,7 +679,7 @@ function setKernelspecInfo(
   return state
     .setIn(
       ["notebook", "metadata", "kernelspec"],
-      Immutable.fromJS({
+      fromJS({
         name: kernelInfo.name,
         language: kernelInfo.spec.language,
         display_name: kernelInfo.spec.display_name
@@ -686,7 +693,7 @@ function overwriteMetadataField(
   action: actionTypes.OverwriteMetadataField
 ) {
   const { field, value } = action.payload;
-  return state.setIn(["notebook", "metadata", field], Immutable.fromJS(value));
+  return state.setIn(["notebook", "metadata", field], fromJS(value));
 }
 function deleteMetadataField(
   state: NotebookModel,
@@ -697,7 +704,7 @@ function deleteMetadataField(
 }
 
 function copyCell(state: NotebookModel, action: actionTypes.CopyCell) {
-  let id = action.payload.id || state.cellFocused;
+  const id = action.payload.id || state.cellFocused;
 
   const cell = state.getIn(["notebook", "cellMap", id]);
   if (!cell) {
@@ -755,7 +762,6 @@ function changeCellType(
 
   const { to } = action.payload;
 
-  // $FlowFixMe: flow types in immutable need to be updated
   const cell = state.getIn(["notebook", "cellMap", id]);
 
   const from = cell.cell_type;
@@ -817,7 +823,7 @@ function toggleOutputExpansion(
 
   return state.updateIn(
     ["notebook", "cellMap"],
-    (cells: Immutable.Map<CellId, ImmutableCell>) =>
+    (cells: Map<CellId, ImmutableCell>) =>
       cells.setIn(
         [id, "metadata", "outputExpanded"],
         !cells.getIn([id, "metadata", "outputExpanded"])
@@ -848,6 +854,7 @@ type DocumentAction =
   | actionTypes.ToggleCellOutputVisibility
   | actionTypes.ToggleCellInputVisibility
   | actionTypes.UpdateCellStatus
+  | actionTypes.UpdateOutputMetadata
   | actionTypes.SetLanguageInfo
   | actionTypes.SetKernelspecInfo
   | actionTypes.OverwriteMetadataField
@@ -936,6 +943,8 @@ export function notebook(
       return acceptPayloadMessage(state, action);
     case actionTypes.UPDATE_CELL_STATUS:
       return updateCellStatus(state, action);
+    case actionTypes.UPDATE_OUTPUT_METADATA:
+      return updateOutputMetadata(state, action);
     case actionTypes.SET_LANGUAGE_INFO:
       return setLanguageInfo(state, action);
     case actionTypes.SET_KERNELSPEC_INFO:

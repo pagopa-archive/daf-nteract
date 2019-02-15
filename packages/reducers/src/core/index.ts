@@ -1,11 +1,10 @@
-import { combineReducers } from "redux-immutable";
 import { Action } from "redux";
+import { combineReducers } from "redux-immutable";
 
 import * as actions from "@nteract/actions";
 
 import { makeStateRecord } from "@nteract/types";
 
-import { communication } from "./communication";
 import { entities } from "./entities";
 
 // TODO: #2618: This should at a minimum be moved into a contents entry.
@@ -44,7 +43,6 @@ const currentKernelspecsRef = (state = "", action: Action) => {
 
 const core = combineReducers(
   {
-    communication,
     currentKernelspecsRef,
     entities,
     kernelRef

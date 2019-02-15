@@ -1,5 +1,5 @@
-import { Subject, fromEvent } from "rxjs";
-import { filter, first, tap, takeUntil, map } from "rxjs/operators";
+import { fromEvent, Subject } from "rxjs";
+import { filter, first, map, takeUntil, tap } from "rxjs/operators";
 import { Message, POST_MESSAGE_IDENTIFIER, PostMessageType } from "./message";
 
 /**

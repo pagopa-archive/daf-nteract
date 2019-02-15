@@ -1,16 +1,9 @@
-// @flow
-
 // Since this has to be loaded at the stage of use by webpack and won't be
-// transpiled, all flow in this file uses the "comment style".
+// transpiled, all types use flow's "comment style".
 
-/*::
-opaque type Aliases = {[string]: string }
-*/
+// From https://github.com/ReactiveX/rxjs/blob/01a09789a0a9484c368b7bd6ed37f94d25490a00/doc/pipeable-operators.md#build-and-treeshaking
+const rxAliases = require("rxjs/_esm5/path-mapping")();
 
-const rxAliases /* : Aliases */ = require("rxjs/_esm5/path-mapping")();
-
-const babelFlowConfig = require("./config/babel.flow.config");
-const babelTypescriptConfig = require("./config/babel.typescript.config");
 const { aliases } = require("./aliases");
 
 // We don't transpile packages in node_modules, unless it's _our_ package
@@ -29,41 +22,18 @@ function mergeDefaultAliases(originalAlias /*: ?Aliases */) /*: Aliases */ {
   };
 }
 
-// We will follow the next.js universal webpack configuration signature
-// https://zeit.co/blog/next5#universal-webpack-and-next-plugins
-
-/*::
-type NextWebPackOptions = {
-  dev: boolean,
-  isServer: boolean,
-  defaultLoaders: {
-  // the babel-loader configuration for Next.js.
-    babel: Object,
-    // the hot-self-accept-loader configuration.
-    // This loader should only be used for advanced use cases.
-    // For example @zeit/next-typescript adds it for top-level typescript pages.
-    hotSelfAccept: Object
-}
-}
-
-// Semi-hokey webpack type just to have some localized semi-sanity
-type WebpackConfig = {
-  externals: Array<string>,
-  resolve?: {
-    mainFields?: Array<string>,
-    extensions?: Array<string>,
-    alias?: { [string]: string }
-  },
-  module: {
-    rules: Array<{
-      test: RegExp,
-      exclude?: RegExp,
-      loader?: string,
-      use?: { loader?: string, options?: Object } | "string" | Array<*>
-    }>
+const tsLoaderConfig = {
+  loader: "ts-loader",
+  options: {
+    transpileOnly: true,
+    compilerOptions: {
+      noEmit: false
+    }
   }
 };
-*/
+
+// We will follow the next.js universal webpack configuration signature
+// https://zeit.co/blog/next5#universal-webpack-and-next-plugins
 
 function nextWebpack(config /*: WebpackConfig */) /*: WebpackConfig */ {
   config.externals = ["canvas", ...config.externals];
@@ -78,20 +48,9 @@ function nextWebpack(config /*: WebpackConfig */) /*: WebpackConfig */ {
     return rule;
   });
 
-  config.module.rules.push(
-    {
-      test: /\.js$/,
-      exclude: exclude,
-      loader: "babel-loader",
-      options: babelFlowConfig()
-    },
-    {
-      test: /\.tsx?$/,
-      exclude: exclude,
-      loader: "babel-loader",
-      options: babelTypescriptConfig()
-    }
-  );
+  config.module.rules.push({
+    tsLoaderConfig
+  });
 
   config.resolve = Object.assign({}, config.resolve, {
     mainFields: ["nteractDesktop", "jsnext:main", "module", "main"],
@@ -107,5 +66,6 @@ module.exports = {
   exclude,
   aliases,
   mergeDefaultAliases,
-  nextWebpack
+  nextWebpack,
+  tsLoaderConfig
 };

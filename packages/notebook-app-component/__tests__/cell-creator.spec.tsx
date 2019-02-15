@@ -1,10 +1,13 @@
-import React from "react";
-import { mount, shallow } from "enzyme";
-import { Provider } from "react-redux";
 import { actions } from "@nteract/core";
 import { fixtureStore } from "@nteract/fixtures";
+import { mount, shallow } from "enzyme";
+import React from "react";
+import { Provider } from "react-redux";
 
-import CellCreator, { PureCellCreator } from "../src/cell-creator";
+import CellCreator, {
+  CellCreatorMenu,
+  PureCellCreator
+} from "../src/cell-creator";
 
 describe("CellCreatorView", () => {
   const createCell = jest.fn();
@@ -18,7 +21,7 @@ describe("CellCreatorView", () => {
   });
   test("creates cell creator buttons if no cells exist", () => {
     const component = setup(null);
-    const buttons = component.find(".cell-creator");
+    const buttons = component.find(CellCreatorMenu);
     expect(buttons).toHaveLength(1);
   });
   test("has create text cell button", () => {

@@ -1,24 +1,22 @@
 {
   "name": "@nteract/actions",
-  "version": "1.0.0",
+  "version": "2.1.0",
   "description": "A collection of actions",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
-  "scripts": {
-    "prepare": "npm run build",
-    "prepublishOnly": "npm run build",
-    "build": "npm run build:clean && npm run build:lib",
-    "build:clean": "tsc -b --clean",
-    "build:lib": "tsc -b",
-    "build:lib:watch": "tsc -b --watch",
-    "build:watch": "npm run build:clean && npm run build:lib:watch"
-  },
+  "nteractDesktop": "src/index.ts",
+  "scripts": {},
   "keywords": [],
   "author": "Safia Abdalla <safia@safia.rocks>",
   "license": "BSD-3-Clause",
+  "publishConfig": {
+    "access": "public"
+  },
   "dependencies": {
-    "@nteract/commutable": "6.0.0-alpha.0",
-    "@nteract/types": "^3.1.0",
-    "immutable": "^4.0.0-rc.12"
+    "@nteract/commutable": "^7.0.1",
+    "@nteract/messaging": "^6.0.1",
+    "@nteract/types": "^4.0.1",
+    "immutable": "^4.0.0-rc.12",
+    "rx-jupyter": "^5.0.1"
   }
 }

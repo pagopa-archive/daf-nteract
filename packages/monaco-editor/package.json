@@ -1,19 +1,11 @@
 {
   "name": "@nteract/monaco-editor",
-  "version": "2.0.0-alpha.0",
+  "version": "3.0.0",
   "description": "A React component for the monaco editor, tailored for nteract",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "nteractDesktop": "src/index.ts",
-  "scripts": {
-    "prepare": "npm run build",
-    "prepublishOnly": "npm run build",
-    "build": "npm run build:clean && npm run build:lib",
-    "build:clean": "tsc -b --clean",
-    "build:lib": "tsc -b",
-    "build:lib:watch": "tsc -b --watch",
-    "build:watch": "npm run build:clean && npm run build:lib:watch"
-  },
+  "scripts": {},
   "repository": "https://github.com/nteract/nteract/tree/master/packages/monaco-editor",
   "keywords": [
     "nteract",
@@ -29,21 +21,14 @@
     "@types/lodash": "^4.14.117"
   },
   "dependencies": {
-    "@babel/runtime-corejs2": "^7.0.0",
-    "@nteract/display-area": "^5.0.0-alpha.0",
-    "@nteract/messaging": "^5.0.0-alpha.0",
-    "@nteract/transforms": "^5.0.0-alpha.0",
-    "babel-runtime": "^6.26.0",
     "lodash": "^4.17.4",
     "monaco-editor": "^0.15.0",
-    "monaco-editor-webpack-plugin": "^1.5.1",
-    "rxjs": "^6.3.3"
+    "monaco-editor-webpack-plugin": "^1.5.1"
   },
   "peerDependencies": {
     "immutable": "^4.0.0-rc.12",
     "react": "^16.3.2",
-    "react-dom": "^16.3.2",
-    "styled-jsx": "^3.1.0"
+    "react-dom": "^16.3.2"
   },
   "author": "Kyle Kelley <rgbkrk@gmail.com>",
   "license": "BSD-3-Clause"

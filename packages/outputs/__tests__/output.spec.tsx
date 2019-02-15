@@ -1,30 +1,30 @@
-import * as React from "react";
 import { shallow } from "enzyme";
+import * as React from "react";
 
 import {
-  Output,
-  StreamText,
-  KernelOutputError,
   DisplayData,
-  ExecuteResult
+  ExecuteResult,
+  KernelOutputError,
+  Output,
+  StreamText
 } from "../src";
 
 describe("Output", () => {
   it("handles stream data", () => {
-    const output = { outputType: "stream", name: "stdout", text: "hey" };
+    const output = { output_type: "stream", name: "stdout", text: "hey" };
 
     const component = shallow(
       <Output output={output}>
         <StreamText />
       </Output>
     );
-    console.log(component);
+
     expect(component.type()).toEqual(StreamText);
   });
 
   it("handles errors/tracebacks", () => {
     const output = {
-      outputType: "error",
+      output_type: "error",
       traceback: ["Yikes, Will is in the upsidedown again!"],
       ename: "NameError",
       evalue: "Yikes!"
@@ -35,10 +35,11 @@ describe("Output", () => {
         <KernelOutputError />
       </Output>
     );
-    expect(component.type()).toEqual(KernelOutputError);
+
+    expect(component.find("KernelOutputError")).not.toBeNull();
 
     const outputNoTraceback = {
-      outputType: "error",
+      output_type: "error",
       ename: "NameError",
       evalue: "Yikes!"
     };
@@ -48,11 +49,11 @@ describe("Output", () => {
         <KernelOutputError />
       </Output>
     );
-    expect(component2.type()).toEqual(KernelOutputError);
+    expect(component2.find("KernelOutputError")).not.toBeNull();
   });
   it("handles display_data messages", () => {
     const output = {
-      outputType: "display_data",
+      output_type: "display_data",
       data: { "text/plain": "Cheese is the best food." }
     };
 
@@ -73,7 +74,7 @@ describe("Output", () => {
   });
   it("handles an execute result message", () => {
     const output = {
-      outputType: "pyout",
+      output_type: "execute_result",
       data: {
         "text/plain": "42 is the answer to life, the universe, and everything."
       }

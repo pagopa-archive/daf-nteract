@@ -1,16 +1,15 @@
-import { makeAppRecord } from "@nteract/types";
-import { AppRecord } from "@nteract/types";
 import * as actions from "@nteract/actions";
 import {
-  SetNotificationSystemAction,
-  SetGithubTokenAction,
   Save,
   SaveFailed,
-  SaveFulfilled
+  SaveFulfilled,
+  SetGithubTokenAction,
+  SetNotificationSystemAction
 } from "@nteract/actions";
+import { AppRecord, makeAppRecord } from "@nteract/types";
 
 function setGithubToken(state: AppRecord, action: SetGithubTokenAction) {
-  return state.set("githubToken", action.githubToken);
+  return state.set("githubToken", action.payload.githubToken);
 }
 
 function save(state: AppRecord) {
@@ -29,7 +28,10 @@ function setNotificationsSystem(
   state: AppRecord,
   action: SetNotificationSystemAction
 ) {
-  return state.set("notificationSystem", action.notificationSystem);
+  if (!action.payload || !action.payload.notificationSystem) {
+    return state;
+  }
+  return state.set("notificationSystem", action.payload.notificationSystem);
 }
 
 export default function handleApp(

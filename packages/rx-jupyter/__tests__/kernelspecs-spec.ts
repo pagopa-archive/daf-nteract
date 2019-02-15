@@ -12,7 +12,9 @@ describe("kernelspecs", () => {
     test("creates an AjaxObservable for listing the kernelspecs", () => {
       const kernelSpec$ = kernelspecs.list(serverConfig) as AjaxObservable;
       const request = kernelSpec$.request;
-      expect(request.url).toBe("http://localhost:8888/api/kernelspecs");
+      expect(request.url).toEqual(
+        expect.stringContaining("http://localhost:8888/api/kernelspecs?_=")
+      );
       expect(request.method).toBe("GET");
     });
   });
@@ -24,8 +26,10 @@ describe("kernelspecs", () => {
         "python3000"
       ) as AjaxObservable;
       const request = kernelSpec$.request;
-      expect(request.url).toBe(
-        "http://localhost:8888/api/kernelspecs/python3000"
+      expect(request.url).toEqual(
+        expect.stringContaining(
+          "http://localhost:8888/api/kernelspecs/python3000?_="
+        )
       );
       expect(request.method).toBe("GET");
     });

@@ -1,7 +1,6 @@
-// @flow
-import * as Immutable from "immutable";
-import { combineReducers } from "redux-immutable";
+import { List, Map } from "immutable";
 import { Action } from "redux";
+import { combineReducers } from "redux-immutable";
 
 import * as actions from "@nteract/actions";
 import {
@@ -10,7 +9,7 @@ import {
   makeLocalHostRecord
 } from "@nteract/types";
 
-const byRef = (state = Immutable.Map(), action: Action) => {
+const byRef = (state = Map(), action: Action) => {
   let typedAction;
   switch (action.type) {
     case actions.ADD_HOST:
@@ -38,7 +37,7 @@ const byRef = (state = Immutable.Map(), action: Action) => {
   }
 };
 
-const refs = (state = Immutable.List(), action: Action) => {
+const refs = (state = List(), action: Action) => {
   let typedAction;
   switch (action.type) {
     case actions.ADD_HOST:

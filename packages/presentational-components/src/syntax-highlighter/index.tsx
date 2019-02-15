@@ -1,8 +1,8 @@
-import SyntaxHighlighter from "react-syntax-highlighter/prism";
 import * as React from "react";
+import SyntaxHighlighter from "react-syntax-highlighter/prism";
 import {
-  xonokai as darkTheme,
-  vs as lightTheme
+  vs as lightTheme,
+  xonokai as darkTheme
 } from "react-syntax-highlighter/styles/prism";
 
 // import syntax from "./theme";

@@ -1,23 +1,19 @@
 {
   "name": "@nteract/fixtures",
-  "version": "1.0.0",
+  "version": "2.0.2",
   "description": "",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
-  "scripts": {
-    "prepare": "npm run build",
-    "prepublishOnly": "npm run:build",
-    "build": "npm run build:clean && npm run build:lib",
-    "build:clean": "tsc -b --clean",
-    "build:lib": "tsc -b",
-    "build:lib:watch": "tsc -b --watch",
-    "build:watch": "npm run build:clean && npm run build:lib:watch"
-  },
+  "scripts": {},
   "keywords": [],
   "author": "Safia Abdalla <safia@safia.rocks>",
   "license": "BSD-3-Clause",
+  "publishConfig": {
+    "access": "public"
+  },
   "dependencies": {
-    "@nteract/commutable": "^6.0.0-alpha.0",
-    "@nteract/types": "^3.1.0"
+    "@nteract/commutable": "^7.0.1",
+    "@nteract/reducers": "^2.1.0",
+    "@nteract/types": "^4.0.1"
   }
 }

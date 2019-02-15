@@ -1,4 +1,0 @@
-declare export var transforms: any;
-declare export var displayOrder: any;
-declare export var registerTransform: any;
-declare export var richestMimetype: any;

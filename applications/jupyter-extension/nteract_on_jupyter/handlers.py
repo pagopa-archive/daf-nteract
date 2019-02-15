@@ -6,12 +6,7 @@ HTTPError = web.HTTPError
 
 import notebook
 
-from notebook.base.handlers import (
-    IPythonHandler,
-    FileFindHandler,
-    FilesRedirectHandler,
-    path_regex,
-)
+from notebook.base.handlers import IPythonHandler, FileFindHandler, FilesRedirectHandler, path_regex
 
 from notebook.utils import url_escape
 
@@ -23,8 +18,10 @@ from . import PACKAGE_DIR
 
 FILE_LOADER = FileSystemLoader(PACKAGE_DIR)
 
+
 class NAppHandler(IPythonHandler):
     """Render the nteract view"""
+
     def initialize(self, config, page):
         self.nteract_config = config
         self.page = page
@@ -44,8 +41,7 @@ class NAppHandler(IPythonHandler):
         page_config.setdefault('appName', config.name)
         page_config.setdefault('appVersion', config.version)
 
-        mathjax_config = self.settings.get('mathjax_config',
-                                           'TeX-AMS_HTML-full,Safe')
+        mathjax_config = self.settings.get('mathjax_config', 'TeX-AMS_HTML-full,Safe')
 
         asset_url = config.asset_url
 
@@ -90,32 +86,16 @@ def add_handlers(web_app, config):
     with open(package_file) as fid:
         data = json.load(fid)
 
-    config.version = (config.version or
-                      data['version'])
+    config.version = config.version or data['version']
     config.name = config.name or data['name']
-
 
     handlers = [
         # TODO Redirect to /tree
-        (url + r'/?', NAppHandler, {
-            'config': config,
-            'page': 'tree'
-        }),
-        (url + r"/tree%s" % path_regex, NAppHandler, {
-            'config': config,
-            'page': 'tree',
-        }),
-        (url + r"/edit%s" % path_regex, NAppHandler, {
-            'config': config,
-            'page': 'edit',
-        }),
-        (url + r"/view%s" % path_regex, NAppHandler, {
-            'config': config,
-            'page': 'view'
-        }),
-        (url + r"/static/(.*)", FileFindHandler, {
-            'path': assets_dir
-        }),
+        (url + r'/?', NAppHandler, {'config': config, 'page': 'tree'}),
+        (url + r"/tree%s" % path_regex, NAppHandler, {'config': config, 'page': 'tree'}),
+        (url + r"/edit%s" % path_regex, NAppHandler, {'config': config, 'page': 'edit'}),
+        (url + r"/view%s" % path_regex, NAppHandler, {'config': config, 'page': 'view'}),
+        (url + r"/static/(.*)", FileFindHandler, {'path': assets_dir}),
     ]
 
     web_app.add_handlers(".*$", handlers)

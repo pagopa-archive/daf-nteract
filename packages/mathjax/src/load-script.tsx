@@ -28,7 +28,7 @@ export function load(src: string, opts?: Options | Callback, cb?: Callback) {
   }
 
   opts = opts || defaultOptions;
-  cb = cb || function() {};
+  cb = cb || (() => {});
 
   script.type = opts.type || "text/javascript";
   script.charset = opts.charset || "utf8";
@@ -40,7 +40,7 @@ export function load(src: string, opts?: Options | Callback, cb?: Callback) {
   }
 
   if (opts.text) {
-    script.text = "" + opts.text;
+    script.text = `${opts.text}`;
   }
 
   const onend = "onload" in script ? stdOnEnd : ieOnEnd;
@@ -60,8 +60,10 @@ function setAttributes(
   script: HTMLScriptElement,
   attrs: { [key: string]: any }
 ) {
-  for (let attr in attrs) {
-    script.setAttribute(attr, attrs[attr]);
+  for (const attr in attrs) {
+    if (attrs.hasOwnProperty(attr)) {
+      script.setAttribute(attr, attrs[attr]);
+    }
   }
 }
 
@@ -74,13 +76,15 @@ function stdOnEnd(script: any, cb: Callback) {
     // this.onload = null here is necessary
     // because even IE9 works not like others
     this.onerror = this.onload = null;
-    cb(script, new Error("Failed to load " + this.src));
+    cb(script, new Error(`Failed to load ${this.src}`));
   };
 }
 
 function ieOnEnd(script: any, cb: Callback) {
   script.onreadystatechange = function() {
-    if (this.readyState != "complete" && this.readyState != "loaded") return;
+    if (this.readyState !== "complete" && this.readyState !== "loaded") {
+      return;
+    }
     this.onreadystatechange = null;
     cb(script); // there is no way to catch loading errors in IE8
   };

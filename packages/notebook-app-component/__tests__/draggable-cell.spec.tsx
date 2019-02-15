@@ -1,7 +1,6 @@
-import React from "react";
-import { shallow } from "enzyme";
 import { emptyMarkdownCell } from "@nteract/commutable";
-import { displayOrder, transforms } from "@nteract/transforms";
+import { shallow } from "enzyme";
+import React from "react";
 
 import DraggableCell from "../src/draggable-cell";
 
@@ -18,15 +17,11 @@ const dragDropManager = {
   })
 };
 
-const sharedProps = { displayOrder, transforms };
 describe("DraggableCell", () => {
   test("can be rendered", () => {
-    const cell = shallow(
-      <DraggableCell cell={emptyMarkdownCell} {...sharedProps} />,
-      {
-        context: { dragDropManager }
-      }
-    );
+    const cell = shallow(<DraggableCell cell={emptyMarkdownCell} />, {
+      context: { dragDropManager }
+    });
     expect(cell).not.toBeNull();
   });
 });

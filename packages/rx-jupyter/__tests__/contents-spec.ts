@@ -25,8 +25,10 @@ describe("contents", () => {
         "/walla/walla/bingbang.ipynb"
       ) as AjaxObservable;
       const request = content$.request;
-      expect(request.url).toBe(
-        "http://localhost:8888/api/contents/walla/walla/bingbang.ipynb"
+      expect(request.url).toEqual(
+        expect.stringContaining(
+          "http://localhost:8888/api/contents/walla/walla/bingbang.ipynb?_="
+        )
       );
       expect(request.method).toBe("GET");
       expect(request.crossDomain).toBe(true);
@@ -37,8 +39,10 @@ describe("contents", () => {
         type: "directory"
       }) as AjaxObservable;
       const request = content$.request;
-      expect(request.url).toBe(
-        "http://localhost:8888/api/contents/walla/walla?type=directory"
+      expect(request.url).toEqual(
+        expect.stringContaining(
+          "http://localhost:8888/api/contents/walla/walla?type=directory&_="
+        )
       );
       expect(request.method).toBe("GET");
       expect(request.crossDomain).toBe(true);
@@ -107,8 +111,10 @@ describe("contents", () => {
         "/path/to/content"
       );
       const request = (create$ as AjaxObservable).request;
-      expect(request.url).toBe(
-        "http://localhost:8888/api/contents/path/to/content/checkpoints"
+      expect(request.url).toEqual(
+        expect.stringContaining(
+          "http://localhost:8888/api/contents/path/to/content/checkpoints?_="
+        )
       );
       expect(request.method).toBe("GET");
       expect(request.crossDomain).toBe(true);

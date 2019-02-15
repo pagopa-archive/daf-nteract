@@ -1055,13 +1055,175 @@ exports[`HTML renders direct HTML 1`] = `
   data="<b>cats are best</b>"
   mediaType="text/html"
 >
-  <div
+  <styled.div
     dangerouslySetInnerHTML={
       Object {
         "__html": "<b>cats are best</b>",
       }
     }
-  />
+  >
+    <StyledComponent
+      dangerouslySetInnerHTML={
+        Object {
+          "__html": "<b>cats are best</b>",
+        }
+      }
+      forwardedComponent={
+        Object {
+          "$$typeof": Symbol(react.forward_ref),
+          "attrs": Array [],
+          "componentStyle": ComponentStyle {
+            "componentId": "sc-bxivhb",
+            "isStatic": true,
+            "lastClassName": "dCqVSe",
+            "rules": Array [
+              "
+  ",
+              "
+& a {
+  color: var(--link-color-unvisited, blue);
+}
+
+& a:visited {
+  color: var(--link-color-visited, blue);
+}
+
+& code {
+  font-family: \\"Source Code Pro\\";
+  white-space: pre-wrap;
+  font-size: 14px;
+}
+
+& pre {
+  white-space: pre-wrap;
+  font-size: 14px;
+  word-wrap: break-word;
+}
+
+& img {
+  display: block;
+  max-width: 100%;
+}
+
+& kbd {
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 0.1em 0.5em;
+  margin: 0 0.2em;
+  box-shadow: 0 1px 0px rgba(0, 0, 0, 0.2), 0 0 0 2px #fff inset;
+  background-color: #f7f7f7;
+}
+
+& table {
+  border-collapse: collapse;
+}
+
+& th,
+& td,
+/* for legacy output handling */
+& .th,
+& .td {
+  padding: 0.5em 1em;
+  border: 1px solid var(--theme-app-border, #cbcbcb);
+}
+
+& th {
+  text-align: left;
+}
+
+& blockquote {
+  padding: 0.75em 0.5em 0.75em 1em;
+  background: var(--theme-cell-output-bg, white);
+  border-left: 0.5em solid #ddd;
+}
+
+& blockquote::before {
+  display: block;
+  height: 0;
+  content: \\"“\\";
+  margin-left: -0.95em;
+  font: italic 400%/1 Open Serif, Georgia, \\"Times New Roman\\", serif;
+  color: solid var(--theme-app-border, #cbcbcb);
+}
+
+/* for nested paragraphs in block quotes */
+& blockquote p {
+  display: inline;
+}
+
+& dd {
+  display: block;
+  -webkit-margin-start: 40px;
+}
+& dl {
+  display: block;
+  -webkit-margin-before: 1__qem;
+  -webkit-margin-after: 1em;
+  -webkit-margin-start: 0;
+  -webkit-margin-end: 0;
+}
+
+& dt {
+  display: block;
+}
+
+& dl {
+  width: 100%;
+  overflow: hidden;
+  padding: 0;
+  margin: 0;
+}
+
+& dt {
+  font-weight: bold;
+  float: left;
+  width: 20%;
+  /* adjust the width; make sure the total of both is 100% */
+  padding: 0;
+  margin: 0;
+}
+
+& dd {
+  float: left;
+  width: 80%;
+  /* adjust the width; make sure the total of both is 100% */
+  padding: 0;
+  margin: 0;
+}
+
+/** Adaptation for the R kernel's inline lists **/
+& .list-inline li {
+  display: inline;
+  padding-right: 20px;
+  text-align: center;
+}",
+              "
+",
+            ],
+          },
+          "displayName": "styled.div",
+          "foldedComponentIds": Array [],
+          "render": [Function],
+          "styledComponentId": "sc-bxivhb",
+          "target": "div",
+          "toString": [Function],
+          "warnTooManyClasses": [Function],
+          "withComponent": [Function],
+        }
+      }
+      forwardedRef={[Function]}
+    >
+      <div
+        className="sc-bxivhb dCqVSe"
+        dangerouslySetInnerHTML={
+          Object {
+            "__html": "<b>cats are best</b>",
+          }
+        }
+      />
+    </StyledComponent>
+  </styled.div>
 </HTML>
 `;
 
@@ -1070,13 +1232,175 @@ exports[`HTML updates the underlying HTML when data changes 1`] = `
   data="<b>squirrels are pretty great, too</b>"
   mediaType="text/html"
 >
-  <div
+  <styled.div
     dangerouslySetInnerHTML={
       Object {
         "__html": "<b>squirrels are pretty great, too</b>",
       }
     }
-  />
+  >
+    <StyledComponent
+      dangerouslySetInnerHTML={
+        Object {
+          "__html": "<b>squirrels are pretty great, too</b>",
+        }
+      }
+      forwardedComponent={
+        Object {
+          "$$typeof": Symbol(react.forward_ref),
+          "attrs": Array [],
+          "componentStyle": ComponentStyle {
+            "componentId": "sc-bxivhb",
+            "isStatic": true,
+            "lastClassName": "dCqVSe",
+            "rules": Array [
+              "
+  ",
+              "
+& a {
+  color: var(--link-color-unvisited, blue);
+}
+
+& a:visited {
+  color: var(--link-color-visited, blue);
+}
+
+& code {
+  font-family: \\"Source Code Pro\\";
+  white-space: pre-wrap;
+  font-size: 14px;
+}
+
+& pre {
+  white-space: pre-wrap;
+  font-size: 14px;
+  word-wrap: break-word;
+}
+
+& img {
+  display: block;
+  max-width: 100%;
+}
+
+& kbd {
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 0.1em 0.5em;
+  margin: 0 0.2em;
+  box-shadow: 0 1px 0px rgba(0, 0, 0, 0.2), 0 0 0 2px #fff inset;
+  background-color: #f7f7f7;
+}
+
+& table {
+  border-collapse: collapse;
+}
+
+& th,
+& td,
+/* for legacy output handling */
+& .th,
+& .td {
+  padding: 0.5em 1em;
+  border: 1px solid var(--theme-app-border, #cbcbcb);
+}
+
+& th {
+  text-align: left;
+}
+
+& blockquote {
+  padding: 0.75em 0.5em 0.75em 1em;
+  background: var(--theme-cell-output-bg, white);
+  border-left: 0.5em solid #ddd;
+}
+
+& blockquote::before {
+  display: block;
+  height: 0;
+  content: \\"“\\";
+  margin-left: -0.95em;
+  font: italic 400%/1 Open Serif, Georgia, \\"Times New Roman\\", serif;
+  color: solid var(--theme-app-border, #cbcbcb);
+}
+
+/* for nested paragraphs in block quotes */
+& blockquote p {
+  display: inline;
+}
+
+& dd {
+  display: block;
+  -webkit-margin-start: 40px;
+}
+& dl {
+  display: block;
+  -webkit-margin-before: 1__qem;
+  -webkit-margin-after: 1em;
+  -webkit-margin-start: 0;
+  -webkit-margin-end: 0;
+}
+
+& dt {
+  display: block;
+}
+
+& dl {
+  width: 100%;
+  overflow: hidden;
+  padding: 0;
+  margin: 0;
+}
+
+& dt {
+  font-weight: bold;
+  float: left;
+  width: 20%;
+  /* adjust the width; make sure the total of both is 100% */
+  padding: 0;
+  margin: 0;
+}
+
+& dd {
+  float: left;
+  width: 80%;
+  /* adjust the width; make sure the total of both is 100% */
+  padding: 0;
+  margin: 0;
+}
+
+/** Adaptation for the R kernel's inline lists **/
+& .list-inline li {
+  display: inline;
+  padding-right: 20px;
+  text-align: center;
+}",
+              "
+",
+            ],
+          },
+          "displayName": "styled.div",
+          "foldedComponentIds": Array [],
+          "render": [Function],
+          "styledComponentId": "sc-bxivhb",
+          "target": "div",
+          "toString": [Function],
+          "warnTooManyClasses": [Function],
+          "withComponent": [Function],
+        }
+      }
+      forwardedRef={[Function]}
+    >
+      <div
+        className="sc-bxivhb dCqVSe"
+        dangerouslySetInnerHTML={
+          Object {
+            "__html": "<b>squirrels are pretty great, too</b>",
+          }
+        }
+      />
+    </StyledComponent>
+  </styled.div>
 </HTML>
 `;
 
@@ -1163,7 +1487,7 @@ exports[`Markdown Should render markdown 1`] = `
 `;
 
 exports[`Plain Should render markdown 1`] = `
-<Plain
+<Plaintext
   data="The text in Spain is mainly plain"
   mediaType="text/plain"
 >
@@ -1173,6 +1497,7 @@ exports[`Plain Should render markdown 1`] = `
     >
       <code>
         <span
+          className={null}
           key="0"
           style={Object {}}
         >
@@ -1181,5 +1506,5 @@ exports[`Plain Should render markdown 1`] = `
       </code>
     </Ansi>
   </pre>
-</Plain>
+</Plaintext>
 `;

@@ -2,24 +2,24 @@ This document attempts to specify the goal for an nteract core package that can
 provide generic/core state management to all notebook-y applications. Right now
 this is focused on these apps:
 
-* Desktop
-* nteract on jupyter
-* `@nteract/play`
-* notebook on next
+- Desktop
+- nteract on jupyter
+- `@nteract/play`
+- notebook on next
 
 This describes a pretty far and wide overhaul of our core logic, including the
 notebook itself.
 
 ## Core concepts
 
-* `ref` - an internal _reference_ to an entity upon _recognition_, e.g. kernels, hosts, kernelspec collections, etc.
-* `id` - likely an external identifier, e.g. with /api/kernels/9092, 9092 is the id
+- `ref` - an internal _reference_ to an entity upon _recognition_, e.g. kernels, hosts, kernelspec collections, etc.
+- `id` - likely an external identifier, e.g. with /api/kernels/9092, 9092 is the id
 
 We use the term _recognition_ over _creation_ because we want to have a way to
 reference an entity _before_ we get a response from some api. A good example is
 having a _ref_ for an active kernel before the kernel has been launched with a
 jupyter notebook server. Since there will be a proliferation of id-strings, the
-internal ones are called _ref_s and they are only meant for use inside the
+internal ones are called \_ref_s and they are only meant for use inside the
 application--i.e., they have no meaning externally. The external id-string that
 will typically be found is called `id`.
 
@@ -50,9 +50,9 @@ and `cellOrder` (list of cell ids). We're taking it to the next level here.
 
 ## The Proposed Structure
 
-```flow js
-opaque type Id = string;
-opaque type Ref = string;
+```js
+type Id = string;
+type Ref = string;
 
 type core = {
 
@@ -71,7 +71,7 @@ type core = {
       saving: boolean,
       error: ?Object
     },
-    
+
     // TODO: what's this doing again?
     hostSpec: {
       loading: boolean,
@@ -124,7 +124,7 @@ type core = {
   //   * API Calls
   //   * User input
   //   * Kernel output
-  entities: {    
+  entities: {
     preferences: {
       lastSaved: Date,
       theme: "light" | "dark"
@@ -205,7 +205,7 @@ type core = {
           token: string,
           serverUrl: string,
           crossDomain: boolean,
-          
+
           // TODO: I think we're attempting to split apart host and document.
           //   1. what was the purpose of this?
           //   2. can it be provided in some other way?
@@ -246,7 +246,7 @@ type core = {
       },
       refs: Array<Ref>
     },
-    
+
     contents: {
       byRef: {
         [ref: Ref]: {
@@ -268,9 +268,9 @@ type core = {
           model: ?Object, // null | DirectoryModel | NotebookModel | FileModel
 
           // The sessionRef is nullable here because we don't necessarily need
-          // the session to be running to display the document. This allows us 
+          // the session to be running to display the document. This allows us
           // to render a document and start up a session in parallel.
-          sessionRef: ?SessionRef 
+          sessionRef: ?SessionRef
         }
       }
     },

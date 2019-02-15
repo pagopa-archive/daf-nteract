@@ -1,7 +1,12 @@
-import * as React from "react";
 import { cloneDeep } from "lodash";
+import * as React from "react";
 
-import { objectToReactElement, VDOMEl, Attributes, SerializedEvent } from "./object-to-react";
+import {
+  Attributes,
+  SerializedEvent,
+  objectToReactElement,
+  VDOMEl
+} from "./object-to-react";
 
 interface Props {
   mediaType: "application/vdom.v1+json";
@@ -14,21 +19,27 @@ export { objectToReactElement, VDOMEl, Attributes, SerializedEvent };
 
 const mediaType = "application/vdom.v1+json";
 
-export default class VDOM extends React.PureComponent<Props> {
+export default class VDOM extends React.PureComponent<Partial<Props>> {
   static MIMETYPE = mediaType;
 
   static defaultProps = {
     mediaType,
     onVDOMEvent: () => {
-      console.log("This app doesn't support vdom events ☹️ See @nteract/transform-vdom for more info: https://github.com/nteract/nteract/tree/master/packages/transform-vdom");
+      console.log(
+        "This app doesn't support vdom events ☹️ See @nteract/transform-vdom for more info: https://github.com/nteract/nteract/tree/master/packages/transform-vdom"
+      );
     }
   };
 
   render(): React.ReactElement<any> {
     try {
       // objectToReactElement is mutatitve so we'll clone our object
-      const obj = cloneDeep(this.props.data);
-      return objectToReactElement(obj, this.props.onVDOMEvent);
+      if (this.props.data && this.props.onVDOMEvent) {
+        const obj = cloneDeep(this.props.data);
+        return objectToReactElement(obj, this.props.onVDOMEvent);
+      } else {
+        throw new Error("No VDOM data provided.");
+      }
     } catch (err) {
       return (
         <React.Fragment>

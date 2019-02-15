@@ -1,16 +1,19 @@
+/**
+ * @module types
+ */
 import * as Immutable from "immutable";
 
-export type FileModelRecordProps = {
+export interface FileModelRecordProps {
   type: "file";
   text: string;
-};
+}
 export const makeFileModelRecord = Immutable.Record<FileModelRecordProps>({
   type: "file",
   text: ""
 });
 export type FileModelRecord = Immutable.RecordOf<FileModelRecordProps>;
 
-export type FileContentRecordProps = {
+export interface FileContentRecordProps {
   type: "file";
   mimetype?: string | null;
   created?: Date | null;
@@ -18,7 +21,10 @@ export type FileContentRecordProps = {
   lastSaved: null;
   filepath: string;
   model: FileModelRecord;
-};
+  saving: boolean;
+  loading: boolean;
+  error?: object | null;
+}
 export const makeFileContentRecord = Immutable.Record<FileContentRecordProps>({
   type: "file",
   mimetype: null,
@@ -26,7 +32,10 @@ export const makeFileContentRecord = Immutable.Record<FileContentRecordProps>({
   format: "json",
   lastSaved: null,
   filepath: "",
-  model: makeFileModelRecord()
+  model: makeFileModelRecord(),
+  saving: false,
+  loading: false,
+  error: null
 });
 
 export type FileContentRecord = Immutable.RecordOf<FileContentRecordProps>;

@@ -4,11 +4,11 @@
 import { EventEmitter } from "events";
 
 class Socket extends EventEmitter {
+  throttle = false;
+
   constructor(public type: any, public scheme: any, public key: any) {
     super();
   }
-
-  throttle = false;
 
   monitor() {}
   unmonitor() {}
@@ -22,13 +22,13 @@ class Socket extends EventEmitter {
   close() {}
 }
 
-const Message = (msg: any) => ({
-  header: { ...msg.header },
-  parent_header: { ...msg.parent_header },
-  content: { ...msg.content },
-  metadata: { ...msg.metadata },
-  buffers: [],
-  idents: []
-});
+function Message(properties: { [prop: string]: any }) {
+  this.idents = (properties && properties.idents) || [];
+  this.header = (properties && properties.header) || {};
+  this.parent_header = (properties && properties.parent_header) || {};
+  this.metadata = (properties && properties.metadata) || {};
+  this.content = (properties && properties.content) || {};
+  this.buffers = (properties && properties.buffers) || [];
+}
 
 export { Message, Socket };

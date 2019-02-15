@@ -1,19 +1,11 @@
 {
   "name": "@nteract/transform-vdom",
-  "version": "3.0.0-alpha.0",
+  "version": "4.0.1",
   "description": "VDOM Transform for jupyter outputs",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "nteractDesktop": "src/index.tsx",
-  "scripts": {
-    "prepare": "npm run build",
-    "prepublishOnly": "npm run build",
-    "build": "npm run build:clean && npm run build:lib",
-    "build:clean": "tsc -b --clean",
-    "build:lib": "tsc -b",
-    "build:lib:watch": "tsc -b --watch",
-    "build:watch": "npm run build:clean && npm run build:lib:watch"
-  },
+  "scripts": {},
   "repository": "https://github.com/nteract/nteract/tree/master/packages/transform-vdom",
   "author": "",
   "publishConfig": {

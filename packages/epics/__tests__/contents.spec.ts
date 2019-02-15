@@ -1,22 +1,17 @@
-jest.mock("file-saver");
-
 import FileSaver from "file-saver";
+
 import { stringifyNotebook } from "@nteract/commutable";
 
+import { fixtureJSON } from "@nteract/fixtures";
 import { downloadString } from "../src/contents";
-import { bigDummyJSON } from "@nteract/core";
 
 describe("downloadString", () => {
-  beforeEach(() => {
-    (FileSaver.saveAs as any).mockClear();
-    (global as any).Blob = (content, options) => ({ content, options });
-  });
   it("calls FileSaver.saveAs with notebook and filename", () => {
     const filename = "/here/there/awesome.ipynb";
-    const expectedData = bigDummyJSON;
+    const expectedData = fixtureJSON;
     expect(FileSaver.saveAs).not.toHaveBeenCalled();
     downloadString(
-      stringifyNotebook(bigDummyJSON),
+      stringifyNotebook(fixtureJSON),
       filename,
       "application/json"
     );

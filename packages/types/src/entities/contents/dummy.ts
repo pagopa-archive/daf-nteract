@@ -1,24 +1,30 @@
+/**
+ * @module types
+ */
 import * as Immutable from "immutable";
 
-export type EmptyModelRecordProps = {
+export interface EmptyModelRecordProps {
   type: "unknown";
-};
+}
 
 export const makeEmptyModel = Immutable.Record<EmptyModelRecordProps>({
   type: "unknown"
 });
 export type EmptyModelRecord = Immutable.RecordOf<EmptyModelRecordProps>;
 
-type NotebookTypes = "unknown" | "directory" | "notebook" | "file";
+export type NotebookTypes = "unknown" | "directory" | "notebook" | "file";
 
-export type DummyContentRecordProps = {
+export interface DummyContentRecordProps {
   type: "dummy";
   assumedType: NotebookTypes;
   mimetype?: string | null;
   lastSaved: null;
   filepath: string;
   model: EmptyModelRecord;
-};
+  saving: boolean;
+  loading: boolean;
+  error?: object | null;
+}
 export const makeDummyContentRecord = Immutable.Record<DummyContentRecordProps>(
   {
     type: "dummy",
@@ -26,7 +32,10 @@ export const makeDummyContentRecord = Immutable.Record<DummyContentRecordProps>(
     assumedType: "unknown",
     lastSaved: null,
     filepath: "",
-    model: makeEmptyModel()
+    model: makeEmptyModel(),
+    saving: false,
+    loading: false,
+    error: null
   }
 );
 export type DummyContentRecord = Immutable.RecordOf<DummyContentRecordProps>;

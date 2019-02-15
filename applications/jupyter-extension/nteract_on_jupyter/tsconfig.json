@@ -1,0 +1,36 @@
+{
+  "extends": "../../../tsconfig.base.json",
+  "compilerOptions": {
+    "target": "es6",
+    // Since webpack can handle esnext, we can make our apps produce esnext
+    // so that webpack can do better tree shaking, code splitting, and dynamic imports
+    "module": "esnext",
+    "strict": true,
+    "sourceMap": true,
+    "moduleResolution": "node",
+    "outDir": "dist",
+    "lib": ["es2017", "dom"]
+  },
+  "include": ["nteract_on_jupyter/app", "nteract_on_jupyter/global.d.ts"],
+  "references": [
+    { "path": "../../../packages/commutable" },
+    { "path": "../../../packages/connected-components" },
+    { "path": "../../../packages/core" },
+    { "path": "../../../packages/directory-listing" },
+    { "path": "../../../packages/editor" },
+    { "path": "../../../packages/iron-icons" },
+    { "path": "../../../packages/jupyter-widgets" },
+    { "path": "../../../packages/logos" },
+    { "path": "../../../packages/monaco-editor" },
+    { "path": "../../../packages/notebook-app-component" },
+    { "path": "../../../packages/octicons" },
+    { "path": "../../../packages/presentational-components" },
+    { "path": "../../../packages/data-explorer" },
+    { "path": "../../../packages/styles" },
+    { "path": "../../../packages/transform-geojson" },
+    { "path": "../../../packages/transform-model-debug" },
+    { "path": "../../../packages/transform-plotly" },
+    { "path": "../../../packages/transform-vega" },
+    { "path": "../../../packages/types" }
+  ]
+}

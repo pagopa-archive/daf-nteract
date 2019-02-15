@@ -9,7 +9,7 @@ import * as stateModule from "@nteract/types";
 import * as coreEpics from "../src";
 
 describe("launchWebSocketKernelEpic", () => {
-  test("launches remote kernels", async function() {
+  test("launches remote kernels", async () => {
     const contentRef = "fakeContentRef";
     const kernelRef = "fake";
     const value = {
@@ -86,7 +86,7 @@ describe("launchWebSocketKernelEpic", () => {
 });
 
 describe("interruptKernelEpic", () => {
-  test("", async function() {
+  test("", async () => {
     const state$ = new StateObservable(new Subject<stateModule.AppState>(), {
       core: stateModule.makeStateRecord({
         kernelRef: "fake",

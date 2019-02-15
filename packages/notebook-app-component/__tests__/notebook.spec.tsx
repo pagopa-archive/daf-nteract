@@ -1,8 +1,8 @@
 /* eslint-disable max-len */
-import React from "react";
-import Immutable from "immutable";
+import { fixtureCommutable, fixtureStore } from "@nteract/fixtures";
 import { shallow } from "enzyme";
-import { fixtureStore, fixtureCommutable } from "@nteract/fixtures";
+import Immutable from "immutable";
+import React from "react";
 
 import { NotebookApp } from "../src/notebook-app";
 

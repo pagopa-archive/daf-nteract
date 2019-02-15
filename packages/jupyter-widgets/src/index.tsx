@@ -3,10 +3,10 @@ import { Subject } from "rxjs";
 
 // import { OuterShim } from "./outer-shim";
 
-type Props = {
+interface Props {
   data: { model_id: string };
   channels: Subject<any>;
-};
+}
 
 /**
  * Component used to render a widget view.
@@ -19,7 +19,7 @@ type Props = {
  * Even though it may appear to be pure, since it doesn't have react state, this
  * component's iframe maintains it's own state in communication with the kernel.
  */
-export class WidgetDisplay extends React.Component<Props, null> {
+export class WidgetDisplay extends React.Component<Partial<Props>> {
   static MIMETYPE = "application/vnd.jupyter.widget-view+json";
 
   // TODO: Uncomment this and related code in a follow-up PR.
@@ -33,7 +33,9 @@ export class WidgetDisplay extends React.Component<Props, null> {
 
   /** @override */
   componentDidMount() {
-    if (!this.container.current) return;
+    if (!this.container.current) {
+      return;
+    }
 
     // When the component has mounted, inject the widget iframe.
     // const view = this.shim.getView();
@@ -51,7 +53,10 @@ export class WidgetDisplay extends React.Component<Props, null> {
   /** @override */
   shouldComponentUpdate(nextProps: Props): boolean {
     // Only update if the model_id or kernel_id have changed.
-    if (nextProps.data.model_id !== this.props.data.model_id) {
+    if (
+      this.props.data &&
+      nextProps.data.model_id !== this.props.data.model_id
+    ) {
       return true;
     }
 

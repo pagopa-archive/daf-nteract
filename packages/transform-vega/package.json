@@ -1,19 +1,11 @@
 {
   "name": "@nteract/transform-vega",
-  "version": "4.0.0-alpha.0",
+  "version": "5.0.0",
   "description": "Vega Transform",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "nteractDesktop": "src/index.tsx",
-  "scripts": {
-    "prepare": "npm run build",
-    "prepublishOnly": "npm run build",
-    "build": "npm run build:clean && npm run build:lib",
-    "build:clean": "tsc -b --clean",
-    "build:lib": "tsc -b",
-    "build:lib:watch": "tsc -b --watch",
-    "build:watch": "npm run build:clean && npm run build:lib:watch"
-  },
+  "scripts": {},
   "author": "",
   "publishConfig": {
     "access": "public"
@@ -22,8 +14,8 @@
   "dependencies": {
     "@nteract/vega-embed-v2": "^1.1.0",
     "lodash": "^4.17.4",
-    "vega-embed": "3.16.1",
-    "vega-tooltip": "^0.14.0"
+    "vega-embed": "3.29.0",
+    "vega-tooltip": "^0.15.0"
   },
   "peerDependencies": {
     "react": "^16.3.2"

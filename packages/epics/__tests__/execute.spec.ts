@@ -1,15 +1,15 @@
-import { ActionsObservable } from "redux-observable";
-import { createExecuteRequest, createMessage } from "@nteract/messaging";
-import { empty, Subject, from } from "rxjs";
-import { toArray, share, catchError } from "rxjs/operators";
 import * as actions from "@nteract/actions";
+import { createExecuteRequest, createMessage } from "@nteract/messaging";
 import * as stateModule from "@nteract/types";
+import { ActionsObservable } from "redux-observable";
+import { empty, from, Subject } from "rxjs";
+import { catchError, share, toArray } from "rxjs/operators";
 
 import {
-  executeCellStream,
+  createExecuteCellStream,
   executeCellEpic,
-  updateDisplayEpic,
-  createExecuteCellStream
+  executeCellStream,
+  updateDisplayEpic
 } from "../src/execute";
 
 const Immutable = require("immutable");
@@ -192,7 +192,7 @@ describe("executeCellEpic", () => {
       err => done.fail(err)
     );
   });
-  test("Informs about disconnected kernels, allows reconnection", async function() {
+  test("Informs about disconnected kernels, allows reconnection", async () => {
     const state$ = {
       value: {
         core: stateModule.makeStateRecord({

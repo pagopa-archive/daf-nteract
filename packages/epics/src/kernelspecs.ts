@@ -1,24 +1,23 @@
 /**
  * @module epics
  */
-import { empty, of } from "rxjs";
-import { catchError, map, mergeMap } from "rxjs/operators";
-import { kernelspecs, ServerConfig } from "rx-jupyter";
 import { ofType } from "redux-observable";
 import { ActionsObservable } from "redux-observable";
+import { kernelspecs, ServerConfig } from "rx-jupyter";
+import { empty, of } from "rxjs";
+import { catchError, map, mergeMap } from "rxjs/operators";
 
 import * as actions from "@nteract/actions";
-import { FetchKernelspecs } from "@nteract/actions";
 import * as selectors from "@nteract/selectors";
 import { KernelspecProps } from "@nteract/types";
 
 export const fetchKernelspecsEpic = (
-  action$: ActionsObservable<FetchKernelspecs>,
+  action$: ActionsObservable<actions.FetchKernelspecs>,
   state$: any
 ) =>
   action$.pipe(
     ofType(actions.FETCH_KERNELSPECS),
-    mergeMap((action: FetchKernelspecs) => {
+    mergeMap((action: actions.FetchKernelspecs) => {
       const {
         payload: { hostRef, kernelspecsRef }
       } = action;

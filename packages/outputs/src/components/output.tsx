@@ -1,26 +1,85 @@
-import * as React from "react";
 // We might only need this as a devDependency as it is only here for flow
-import { OutputType } from "@nteract/records";
+import { ImmutableOutput } from "@nteract/commutable";
+import * as React from "react";
 
-type Props = {
+import styled from "styled-components";
+interface Props {
   /**
    * React elements that accept Output
    */
   children: React.ReactNode;
   /**
-   * The raw output, as expected from @nteract/records
+   * The raw output
    */
-  output: OutputType;
-};
+  output: ImmutableOutput;
 
-type State = {};
+  renderError(param: {
+    error: Error | null;
+    info: ReactErrorInfo;
+    output: ImmutableOutput;
+    children: React.ReactNode;
+  }): React.ReactElement<any>;
+}
 
-export class Output extends React.Component<Props, State> {
+interface Caught {
+  error: Error | null;
+  info: ReactErrorInfo;
+}
+
+interface State {
+  caughtError: Caught | null;
+}
+
+interface ReactErrorInfo {
+  componentStack: string;
+}
+
+const ErrorFallbackDiv = styled.div`
+  backgroundcolor: ghostwhite;
+  color: black;
+  font-weight: 600;
+  display: block;
+  padding: 10px;
+  margin-bottom: 20px;
+`;
+
+const ErrorFallback = (caught: Caught) => (
+  <ErrorFallbackDiv>
+    {caught.error ? <h3>{caught.error.toString()}</h3> : null}
+    <details>
+      <summary>stack trace</summary>
+      <pre>{caught.info.componentStack}</pre>
+    </details>
+  </ErrorFallbackDiv>
+);
+
+export class Output extends React.PureComponent<Props, State> {
   static defaultProps = {
-    output: null
+    output: null,
+    renderError: ErrorFallback
   };
 
+  readonly state: State = { caughtError: null };
+
+  componentDidCatch(error: Error | null, info: ReactErrorInfo) {
+    const caughtError: Caught = {
+      error,
+      info
+    };
+    this.setState({
+      caughtError
+    });
+  }
+
   render() {
+    if (this.state.caughtError) {
+      return this.props.renderError({
+        ...this.state.caughtError,
+        output: this.props.output,
+        children: this.props.children
+      });
+    }
+
     // We must pick only one child to render
     let chosenOne: React.ReactChild | null = null;
 
@@ -28,7 +87,7 @@ export class Output extends React.Component<Props, State> {
       return null;
     }
 
-    const outputType = this.props.output.outputType;
+    const output_type = this.props.output.output_type;
 
     // Find the first child element that matches something in this.props.data
     React.Children.forEach(this.props.children, child => {
@@ -43,8 +102,8 @@ export class Output extends React.Component<Props, State> {
       }
       if (
         childElement.props &&
-        childElement.props.outputType &&
-        childElement.props.outputType === outputType
+        childElement.props.output_type &&
+        childElement.props.output_type === output_type
       ) {
         chosenOne = childElement;
         return;
@@ -57,6 +116,6 @@ export class Output extends React.Component<Props, State> {
     }
 
     // Render the output component that handles this output type
-    return React.cloneElement(chosenOne, this.props.output as any);
+    return React.cloneElement(chosenOne, { output: this.props.output });
   }
 }

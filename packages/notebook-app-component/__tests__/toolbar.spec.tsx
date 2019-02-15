@@ -1,9 +1,9 @@
-import * as React from "react";
+import { actions } from "@nteract/core";
+import { fixtureStore } from "@nteract/fixtures";
 import { mount } from "enzyme";
 import toJSON from "enzyme-to-json";
+import * as React from "react";
 import { Provider } from "react-redux";
-import { fixtureStore } from "@nteract/fixtures";
-import { actions } from "@nteract/core";
 
 import Toolbar, { PureToolbar } from "../src/toolbar";
 

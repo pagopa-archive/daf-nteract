@@ -1,5 +1,3 @@
-// @flow
-
 export default {
   hljs: {
     display: "block",

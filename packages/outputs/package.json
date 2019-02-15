@@ -1,25 +1,24 @@
 {
   "name": "@nteract/outputs",
-  "version": "1.0.0-alpha.0",
+  "version": "2.0.1",
   "description": "components for rendering outputs",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "nteractDesktop": "src/index.ts",
-  "scripts": {
-    "prepare": "npm run build",
-    "prepublishOnly": "npm run build",
-    "build": "npm run build:clean && npm run build:lib",
-    "build:clean": "tsc -b --clean",
-    "build:lib": "tsc -b",
-    "build:lib:watch": "tsc -b --watch",
-    "build:watch": "npm run build:clean && npm run build:lib:watch"
-  },
+  "scripts": {},
   "dependencies": {
-    "@nteract/markdown": "^3.0.1",
-    "@nteract/mathjax": "^3.0.1",
-    "ansi-to-react": "^4.0.0-alpha.0",
+    "@nteract/markdown": "^4.0.0",
+    "@nteract/mathjax": "^4.0.0",
+    "ansi-to-react": "^5.0.0",
     "react-json-tree": "^0.11.0",
-    "styled-jsx": "^3.1.0"
+    "styled-components": "^4.1.3"
+  },
+  "note:devDeps": [
+    "commutable is a development dependency as we don't want to force consumers of our library to install commutable.",
+    "we only use it for type checking within the monorepo"
+  ],
+  "devDependencies": {
+    "@nteract/commutable": "^7.0.1"
   },
   "peerDependencies": {
     "react": "^16.3.2"

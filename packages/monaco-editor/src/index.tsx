@@ -1,6 +1,6 @@
-import * as React from "react";
 import { debounce } from "lodash";
 import { editor } from "monaco-editor";
+import * as React from "react";
 
 export interface MonacoEditorProps {
   theme: string;
@@ -10,15 +10,15 @@ export interface MonacoEditorProps {
   editorFocused: boolean;
 }
 
-class MonacoEditor extends React.Component<MonacoEditorProps> {
-  monaco?: editor.IStandaloneCodeEditor;
-  monacoContainerRef = React.createRef<HTMLDivElement>();
-
+export default class MonacoEditor extends React.Component<MonacoEditorProps> {
   static defaultProps = {
     onChange: () => {},
     editorFocused: false,
     mode: "text/plain"
   };
+
+  monaco?: editor.IStandaloneCodeEditor;
+  monacoContainerRef = React.createRef<HTMLDivElement>();
 
   componentWillMount() {
     this.componentWillReceiveProps = debounce(
@@ -92,5 +92,3 @@ class MonacoEditor extends React.Component<MonacoEditorProps> {
     );
   }
 }
-
-export default MonacoEditor;

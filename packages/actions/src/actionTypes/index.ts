@@ -3,10 +3,10 @@
  */
 import {
   CellId,
-  MimeBundle,
-  Output,
+  ImmutableJSONType,
   JSONObject,
-  ImmutableJSONType
+  MediaBundle,
+  OnDiskOutput
 } from "@nteract/commutable";
 
 import { ContentRef, HostRef, KernelRef, PayloadMessage } from "@nteract/types";
@@ -20,194 +20,226 @@ export * from "./contents";
 export * from "./kernels";
 export * from "./kernelspecs";
 
-export type ErrorAction<T extends string> = {
+export interface ErrorAction<T extends string> {
   type: T;
   payload: Error;
   error: true;
-};
+}
 
 export const OPEN_MODAL = "CORE/OPEN_MODAL";
-export type OpenModal = {
+export interface OpenModal {
   type: "CORE/OPEN_MODAL";
   payload: {
     modalType: string;
   };
-};
+}
 
 export const CLOSE_MODAL = "CORE/CLOSE_MODAL";
-export type CloseModal = {
+export interface CloseModal {
   type: "CORE/CLOSE_MODAL";
-};
+}
 
 export const ADD_HOST = "CORE/ADD_HOST";
-export type AddHost = {
+export interface AddHost {
   type: "CORE/ADD_HOST";
   payload: { hostRef: HostRef; host: HostRecord };
-};
+}
 
 export const CHANGE_FILENAME = "CHANGE_FILENAME";
-export type ChangeFilenameAction = {
+export interface ChangeFilenameAction {
   type: "CHANGE_FILENAME";
   payload: {
     filepath?: string;
     contentRef: ContentRef;
   };
-};
+}
 
 export const APPEND_OUTPUT = "APPEND_OUTPUT";
-export type AppendOutput = {
+export interface AppendOutput {
   type: "APPEND_OUTPUT";
   payload: {
     id: CellId;
-    output: Output;
+    output: OnDiskOutput;
     contentRef: ContentRef;
   };
-};
+}
 
 export const UPDATE_DISPLAY = "UPDATE_DISPLAY";
-export type UpdateDisplay = {
+export interface UpdateDisplay {
   type: "UPDATE_DISPLAY";
   payload: {
     content: {
-      data: MimeBundle;
+      data: MediaBundle;
       metadata: JSONObject;
       transient: { display_id: string };
     };
     contentRef: ContentRef;
   };
-};
+}
 
 export const UPDATE_DISPLAY_FAILED = "UPDATE_DISPLAY_FAILED";
-export type UpdateDisplayFailed = {
+export interface UpdateDisplayFailed {
   type: "UPDATE_DISPLAY_FAILED";
   payload: {
     error: Error;
     contentRef: ContentRef;
   };
   error: true;
-};
+}
 
 export const ACCEPT_PAYLOAD_MESSAGE = "ACCEPT_PAYLOAD_MESSAGE";
-export type AcceptPayloadMessage = {
+export interface AcceptPayloadMessage {
   type: "ACCEPT_PAYLOAD_MESSAGE";
   payload: {
     id: CellId;
     payload: PayloadMessage;
     contentRef: ContentRef;
   };
-};
+}
 
 export const SET_LANGUAGE_INFO = "SET_LANGUAGE_INFO";
-export type SetLanguageInfo = {
+export interface SetLanguageInfo {
   type: "SET_LANGUAGE_INFO";
   payload: {
     langInfo: LanguageInfoMetadata;
     kernelRef: KernelRef;
     contentRef: ContentRef;
   };
-};
+}
 
 export const OVERWRITE_METADATA_FIELD = "OVERWRITE_METADATA_FIELD";
-export type OverwriteMetadataField = {
+export interface OverwriteMetadataField {
   type: "OVERWRITE_METADATA_FIELD";
   payload: {
     field: string;
     value: any;
     contentRef: ContentRef;
   };
-};
+}
 
 export const DELETE_METADATA_FIELD = "DELETE_METADATA_FIELD";
-export type DeleteMetadataField = {
+export interface DeleteMetadataField {
   type: "DELETE_METADATA_FIELD";
   payload: {
     field: string;
     contentRef: ContentRef;
   };
-};
+}
 
 export const REGISTER_COMM_TARGET = "REGISTER_COMM_TARGET";
-export type RegisterCommTargetAction = {
+export interface RegisterCommTargetAction {
   type: "REGISTER_COMM_TARGET";
   name: string;
   handler: string;
-};
+}
 
 export const COMM_OPEN = "COMM_OPEN";
-export type CommOpenAction = {
+export interface CommOpenAction {
   type: "COMM_OPEN";
   target_name: string;
   target_module: string;
   data: any;
   comm_id: string;
-};
+}
 
 export const COMM_MESSAGE = "COMM_MESSAGE";
-export type CommMessageAction = {
+export interface CommMessageAction {
   type: "COMM_MESSAGE";
   data: any;
   comm_id: string;
-};
+}
 
 export const SET_CONFIG_AT_KEY = "SET_CONFIG_AT_KEY";
-export type SetConfigAction<T> = {
+export interface SetConfigAction<T> {
   type: "SET_CONFIG_AT_KEY";
-  key: string;
-  value: T;
-};
+  payload: {
+    key: string;
+    value: T;
+  };
+}
 
 export const MERGE_CONFIG = "MERGE_CONFIG";
-export type MergeConfigAction = {
+export interface MergeConfigAction {
   type: "MERGE_CONFIG";
-  config: Map<string, ImmutableJSONType>;
-};
+  payload: {
+    config: { [key: string]: any };
+  };
+}
 
 export const LOAD_CONFIG = "LOAD_CONFIG";
-export type LoadConfigAction = { type: "LOAD_CONFIG" };
+export interface LoadConfigAction {
+  type: "LOAD_CONFIG";
+}
 
 export const SAVE_CONFIG = "SAVE_CONFIG";
-export type SaveConfigAction = { type: "SAVE_CONFIG" };
+export interface SaveConfigAction {
+  type: "SAVE_CONFIG";
+}
 
 export const DONE_SAVING_CONFIG = "DONE_SAVING_CONFIG";
-export type DoneSavingConfigAction = { type: "DONE_SAVING_CONFIG" };
+export interface DoneSavingConfigAction {
+  type: "DONE_SAVING_CONFIG";
+}
 
 export const TOGGLE_OUTPUT_EXPANSION = "TOGGLE_OUTPUT_EXPANSION";
-export type ToggleCellExpansion = {
+export interface ToggleCellExpansion {
   type: "TOGGLE_OUTPUT_EXPANSION";
   payload: {
     id: CellId;
     contentRef: ContentRef;
   };
-};
+}
 
 export const SET_EXECUTION_STATE = "SET_EXECUTION_STATE";
-export type SetExecutionStateAction = {
+export interface SetExecutionStateAction {
   type: "SET_EXECUTION_STATE";
   payload: {
     kernelStatus: string;
     kernelRef: KernelRef;
   };
-};
+}
 
 export const SET_NOTIFICATION_SYSTEM = "SET_NOTIFICATION_SYSTEM";
-export type SetNotificationSystemAction = {
+export interface SetNotificationSystemAction {
   type: "SET_NOTIFICATION_SYSTEM";
-  notificationSystem: NotificationSystem;
-};
+  payload: {
+    notificationSystem: NotificationSystem;
+  };
+}
 
 export const SET_GITHUB_TOKEN = "SET_GITHUB_TOKEN";
-export type SetGithubTokenAction = {
+export interface SetGithubTokenAction {
   type: "SET_GITHUB_TOKEN";
-  githubToken: string;
-};
+  payload: {
+    githubToken: string;
+  };
+}
 
 export const PUBLISH_GIST = "CORE/PUBLISH_GIST";
-export type PublishGist = {
+export interface PublishGist {
   type: "CORE/PUBLISH_GIST";
   payload: {
     contentRef: ContentRef;
   };
-};
+}
+
+export const ADD_TRANSFORM = "ADD_TRANSFORM";
+export interface AddTransform {
+  type: "ADD_TRANSFORM";
+  payload: {
+    mediaType: string;
+    component: any;
+  };
+}
+
+export const REMOVE_TRANSFORM = "REMOVE_TRANSFORM";
+export interface RemoveTransform {
+  type: "REMOVE_TRANSFORM";
+  payload: {
+    mediaType: string;
+    component: any;
+  };
+}
 
 export const ERROR = "CORE/ERROR";
 export type CoreError = ErrorAction<"CORE/ERROR">;

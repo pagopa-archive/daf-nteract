@@ -4,6 +4,7 @@
 import { CellId, CellType } from "@nteract/commutable";
 import { ContentRef, KernelRef } from "@nteract/types";
 
+import { JSONObject } from "@nteract/commutable";
 import * as actionTypes from "../actionTypes";
 
 export function setExecutionState(payload: {
@@ -172,7 +173,7 @@ export function toggleTagInCell(payload: {
  */
 export function setInCell<T>(payload: {
   id: CellId;
-  path: Array<string>;
+  path: string[];
   value: T;
   contentRef: ContentRef;
 }): actionTypes.SetInCell<T> {
@@ -339,6 +340,19 @@ export function changeCellType(payload: {
 }): actionTypes.ChangeCellType {
   return {
     type: actionTypes.CHANGE_CELL_TYPE,
+    payload
+  };
+}
+
+export function updateOutputMetadata(payload: {
+  id: CellId;
+  metadata: JSONObject;
+  contentRef: ContentRef;
+  index: number;
+  mediaType: string;
+}): actionTypes.UpdateOutputMetadata {
+  return {
+    type: actionTypes.UPDATE_OUTPUT_METADATA,
     payload
   };
 }
