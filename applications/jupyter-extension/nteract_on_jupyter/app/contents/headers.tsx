@@ -14,6 +14,7 @@ import { Nav, NavSection } from "../components/nav";
 // import { ThemedLogo } from "../components/themed-logo";
 import { H4 } from "../../../../../packages/daf-nteract-packages/theme";
 import { ThemedLogo } from "../../../../../packages/daf-nteract-packages/theme";
+import { LogoutButton } from "../../../../../packages/daf-nteract-packages/login";
 
 /* Returns a header for the Directory view, which only consists of the Nav. */
 export interface DirectoryHeaderProps {
@@ -140,6 +141,7 @@ class FileHeader extends React.PureComponent<FileHeaderProps, State> {
           <NavSection>
             <span className="icon">{icon}</span>
             <LastSaved contentRef={this.props.contentRef} />
+            <LogoutButton />
           </NavSection>
         </Nav>
         {this.props.children}

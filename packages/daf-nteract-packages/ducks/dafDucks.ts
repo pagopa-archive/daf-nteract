@@ -14,6 +14,14 @@ import datasetList, {
   datasetListInitialState
 } from "../select-dataset/duck/datasetListDuck";
 
+import loggedUser, {
+  loggedUserTypes,
+  loggedUserActions,
+  loggedUserSelectors,
+  loggedUserOperations,
+  loggedUserInitialState
+} from "../login/duck/loginDuck";
+
 const selectedDatasetDuck = {
   selectedDatasetTypes,
   selectedDatasetInitialState,
@@ -32,41 +40,59 @@ const datasetListDuck = {
   datasetListOperations
 };
 
+const loggedUserDuck = {
+  loggedUserTypes,
+  loggedUserInitialState,
+  loggedUser,
+  loggedUserActions,
+  loggedUserSelectors,
+  loggedUserOperations
+};
+
 const dafActionTypes = {
   ...selectedDatasetTypes,
-  ...datasetListTypes
+  ...datasetListTypes,
+  ...loggedUserTypes
 };
 
 const dafInitialState = {
   selectedDatasetInitialState,
-  datasetListInitialState
+  datasetListInitialState,
+  loggedUserInitialState
 };
 
 const dafReducers = {
   selectedDataset,
-  datasetList
+  datasetList,
+  loggedUser
 };
 
 const dafActionCreators = {
   ...selectedDatasetActions,
-  ...datasetListActions
+  ...datasetListActions,
+  ...loggedUserActions
 };
 
 const dafSelectors = {
   ...selectedDatasetSelectors,
-  ...datasetListSelectors
+  ...datasetListSelectors,
+  ...loggedUserSelectors
 };
 
 const dafEpics = [
   selectedDatasetOperations.datasetEpic,
   selectedDatasetOperations.requestDatasetEpic,
   datasetListOperations.datasetListEpic,
-  datasetListOperations.resetDatasetListEpic
+  datasetListOperations.resetDatasetListEpic,
+  loggedUserOperations.loginEpic,
+  loggedUserOperations.requestLoginEpic,
+  loggedUserOperations.logoutEpic
 ];
 
 export {
   selectedDatasetDuck,
   datasetListDuck,
+  loggedUserDuck,
   dafActionTypes,
   dafInitialState,
   dafReducers,
