@@ -96,7 +96,8 @@ payload = ""
 
 headers = {'authorization': 'Bearer ${bearerToken}'}
 response = requests.request("GET", url, data=payload, headers=headers)
-anpr_row = pd.read_json(StringIO(response.text))`;
+data = pd.read_json(StringIO(response.text))
+data`;
 
 //// epics
 const datasetEpic = (action$, state$) =>
