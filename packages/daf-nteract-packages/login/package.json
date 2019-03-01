@@ -1,0 +1,8 @@
+{
+  "name": "@daf-nteract-packages/login",
+  "version": "0.1.0",
+  "main": "dafLogin.ts",
+  "author": "and0111",
+  "license": "BSD-3-Clause",
+  "private": true
+}

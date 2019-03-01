@@ -31,6 +31,8 @@ import("./fonts");
 
 import configureStore from "./store";
 
+import { dafActionCreators } from "../../../../packages/daf-nteract-packages/ducks";
+
 export async function main(config: JupyterConfigData, rootEl): Promise<void> {
   // When the data element isn't there, provide an error message
   // Primarily for development usage
@@ -132,15 +134,27 @@ export async function main(config: JupyterConfigData, rootEl): Promise<void> {
   const store = configureStore(initialState);
   (window as any).store = store;
 
+  // store.dispatch(
+  //   actions.fetchContent({
+  //     filepath: config.contentsPath,
+  //     params: {},
+  //     kernelRef,
+  //     contentRef
+  //   })
+  // );
+  // store.dispatch(actions.fetchKernelspecs({ hostRef, kernelspecsRef }));
+
   store.dispatch(
-    actions.fetchContent({
-      filepath: config.contentsPath,
-      params: {},
-      kernelRef,
-      contentRef
+    dafActionCreators.initializeLogin({
+      fetchContent: {
+        filepath: config.contentsPath,
+        params: {},
+        kernelRef,
+        contentRef
+      },
+      fetchKernelspecs: { hostRef, kernelspecsRef }
     })
   );
-  store.dispatch(actions.fetchKernelspecs({ hostRef, kernelspecsRef }));
 
   ReactDOM.render(
     <React.Fragment>
