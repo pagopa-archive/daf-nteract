@@ -3,6 +3,7 @@ import { Map, List } from "immutable";
 interface DafState {
   datasetList: Map<string, any>;
   selectedDataset: Map<string, any>;
+  loggedUser: Map<string, any>;
 }
 
 const makeDafState = (): DafState => ({
@@ -18,6 +19,14 @@ const makeDafState = (): DafState => ({
     data: Map(),
     meta: Map({
       datasetName: "",
+      isLoading: false,
+      hasLoaded: false,
+      error: false
+    })
+  }),
+  loggedUser: Map({
+    data: Map(),
+    meta: Map({
       isLoading: false,
       hasLoaded: false,
       error: false
