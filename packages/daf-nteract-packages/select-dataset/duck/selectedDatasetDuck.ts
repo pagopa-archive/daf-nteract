@@ -97,7 +97,8 @@ payload = ""
 
 headers = {'authorization': 'Basic ${basicSecret}'}
 response = requests.request("GET", url, data=payload, headers=headers)
-anpr_row = pd.read_json(StringIO(response.text))`;
+data = pd.read_json(StringIO(response.text))
+data`;
 
 const datasetEpic = (action$, state$) =>
   action$.pipe(
