@@ -15,10 +15,10 @@ import { Suggest, ItemRenderer, ItemPredicate } from "@blueprintjs/select";
 import { IconNames } from "@blueprintjs/icons";
 
 import { highlightText } from "./highlightUtil";
-import { IDatasetItem } from "./types";
+import { IDatasetItem } from "../types";
 
 const renderDatasetItem: ItemRenderer<IDatasetItem> = (
-  { modified, name, notes, owner_org, theme, title, privatex }: IDatasetItem,
+  { name, title }: IDatasetItem,
   { handleClick, modifiers, query }
 ): JSX.Element | null => {
   return modifiers.matchesPredicate ? (

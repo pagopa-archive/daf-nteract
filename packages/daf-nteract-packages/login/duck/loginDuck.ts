@@ -1,33 +1,28 @@
 import { fromJS, Map } from "immutable";
-import { of } from "rxjs";
+import { of, interval } from "rxjs";
 import {
   map,
   take,
   catchError,
   concatMap,
-  mergeMap,
-  tap
+  tap,
+  skipWhile
 } from "rxjs/operators";
 import { ajax } from "rxjs/ajax";
 import { ofType } from "redux-observable";
 import { createSelector } from "reselect";
-import { actions as nteractActions } from "@nteract/core";
-
-const { fetchContent, fetchKernelspecs } = nteractActions;
 
 const appName = "nteract-daf";
 const reducerName = "loggedUser";
 const actionDomain = appName + "/" + reducerName + "/";
 
 // actionTypes
-const LOGIN_INIT = actionDomain + "INIT";
 const LOGIN_REQUEST = actionDomain + "REQUEST";
 const LOGIN_FULFILL = actionDomain + "FULFILL";
 const LOGIN_REJECT = actionDomain + "REJECT";
 const LOGIN_RESET = actionDomain + "RESET";
 
 const loggedUserTypes = {
-  LOGIN_INIT,
   LOGIN_REQUEST,
   LOGIN_FULFILL,
   LOGIN_REJECT,
@@ -36,7 +31,7 @@ const loggedUserTypes = {
 
 // reducer
 const loggedUserInitialState = Map({
-  data: Map({ token: "" }),
+  data: Map({ token: "", uid: "" }),
   meta: Map({ error: false, isLoading: false, hasLoaded: false })
 });
 
@@ -45,8 +40,6 @@ const loggedUser = (
   { type, payload, error, meta }
 ) =>
   ({
-    [LOGIN_INIT]: loggedUserInitialState,
-
     [LOGIN_REQUEST]: loggedUserInitialState,
 
     [LOGIN_FULFILL]: Map({
@@ -55,7 +48,7 @@ const loggedUser = (
     }),
 
     [LOGIN_REJECT]: Map({
-      data: fromJS(payload),
+      data: Map(),
       meta: Map({ ...meta, error })
     }),
 
@@ -63,11 +56,6 @@ const loggedUser = (
   }[type] || state);
 
 // actionCreators
-const initializeLogin = payload => ({
-  type: LOGIN_INIT,
-  payload: payload
-});
-
 const requestLogin = payload => ({
   type: LOGIN_REQUEST,
   payload: payload,
@@ -80,9 +68,8 @@ const fulfillLogin = response => ({
   meta: { isLoading: false, hasLoaded: true }
 });
 
-const rejectLogin = error => ({
+const rejectLogin = () => ({
   type: LOGIN_REJECT,
-  payload: error,
   error: true,
   meta: { isLoading: false, hasLoaded: false }
 });
@@ -92,7 +79,6 @@ const resetLogin = () => ({
 });
 
 const loggedUserActions = {
-  initializeLogin,
   requestLogin,
   fulfillLogin,
   rejectLogin,
@@ -100,14 +86,31 @@ const loggedUserActions = {
 };
 
 // selectors
-// const loggedUserDataSelector = createSelector(
-//   state => state["daf"][reducerName],
-//   loggedUser => loggedUser.get("data").toJS()
-// );
+const loggedUserDataSelector = createSelector(
+  state => state["daf"][reducerName],
+  loggedUser => loggedUser.get("data").toJS()
+);
+
+const usernameSelector = createSelector(
+  [loggedUserDataSelector],
+  ({ uid }) => ({ username: uid })
+);
+
+const tokenSelector = createSelector(
+  [loggedUserDataSelector],
+  ({ token }) => ({ bearerToken: token })
+);
 
 const loggedUserMetaSelector = createSelector(
   state => state["daf"][reducerName],
   loggedUser => loggedUser.get("meta").toJS()
+);
+
+const isUserLogged = createSelector(
+  [loggedUserMetaSelector],
+  ({ isLoading, hasLoaded, error }) => ({
+    isUserLogged: hasLoaded && !error && !isLoading
+  })
 );
 
 // const loggedUserSelector = createSelector(
@@ -116,69 +119,109 @@ const loggedUserMetaSelector = createSelector(
 // );
 
 const loggedUserSelectors = {
-  // loggedUserDataSelector,
-  loggedUserMetaSelector /* ,
-  loggedUserSelector */
+  // loggedUserSelector,
+  loggedUserDataSelector,
+  usernameSelector,
+  tokenSelector,
+  loggedUserMetaSelector,
+  isUserLogged
 };
 
 // epics
-const loginEpic = action$ =>
-  action$.pipe(
-    ofType(LOGIN_INIT),
-    concatMap(({ payload }) =>
-      action$.pipe(
-        ofType(LOGIN_FULFILL),
-        take(1),
-        mergeMap(() =>
-          of(
-            fetchKernelspecs(payload.fetchKernelspecs),
-            fetchContent(payload.fetchContent)
-          )
-        )
-      )
+const commonURL = "https://api.daf.teamdigitale.it/";
+
+const requestUserObservable = ({ token, username }) =>
+  ajax
+    .get(commonURL + "security-manager/v1/ipa/userbymail/" + username, {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + token
+    })
+    .pipe(
+      map(({ response }) => ({ token, ...response })),
+      tap(() => {
+        window.localStorage.setItem("bearerToken", token);
+        window.localStorage.setItem("username", username);
+      }),
+      map(mappedResponse => fulfillLogin(mappedResponse)),
+      catchError(error => of(rejectLogin()))
+    );
+
+const loginEpic = (action$, state$) =>
+  interval(5000).pipe(
+    // bearerToken && validate ? fulfill : reset non working
+    map(() => ({
+      token: window.localStorage.getItem("bearerToken"),
+      username: window.localStorage.getItem("username")
+    })),
+    concatMap(({ token, username }) =>
+      token && username
+        ? ajax
+            .get(commonURL + "sso-manager/secured/test", {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+              Authorization: "Bearer " + token
+            })
+            .pipe(
+              // catchError(error => of(resetLogin()))
+              skipWhile(({ status }) => status !== 200),
+              concatMap(() =>
+                ({ ...isUserLogged(state$.value) }.isUserLogged
+                  ? []
+                  : requestUserObservable({ token, username }))
+              )
+            )
+        : []
     )
   );
 
 const requestLoginEpic = action$ => {
-  const commonURL = "https://api.daf.teamdigitale.it/security-manager/v1/";
   return action$.pipe(
     ofType(LOGIN_REQUEST),
     concatMap(({ payload: { username, password } }) =>
       ajax
-        .get(commonURL + "token", {
+        .get(commonURL + "security-manager/v1/token", {
           Accept: "application/json",
           "Content-Type": "application/json",
           Authorization: "Basic " + btoa(username + ":" + password)
         })
         .pipe(
           map(({ response }) => response),
-          catchError(error => of(rejectLogin(error))),
-          concatMap(token =>
-            ajax
-              .get(commonURL + "ipa/userbymail/" + username, {
-                Accept: "application/json",
-                "Content-Type": "application/json",
-                Authorization: "Bearer " + token
-              })
-              .pipe(
-                map(({ response }) => ({ token, ...response })),
-                map(mappedResponse => fulfillLogin(mappedResponse)),
-                catchError(error => of(rejectLogin(error)))
-              )
-          )
+          catchError(error => of(rejectLogin())),
+          concatMap(token => requestUserObservable({ token, username }))
         )
     )
   );
 };
 
+const removeLocals = () => {
+  window.localStorage.removeItem("bearerToken");
+  window.localStorage.removeItem("username");
+};
+
+const rejectLoginEpic = action$ =>
+  action$.pipe(
+    ofType(LOGIN_REJECT),
+    take(1),
+    tap(() => removeLocals())
+  );
+
 const logoutEpic = action$ =>
   action$.pipe(
     ofType(LOGIN_RESET),
     take(1),
-    tap(() => window.location.reload(true))
+    tap(() => {
+      removeLocals();
+      window.location.reload(true);
+    })
   );
 
-const loggedUserOperations = { loginEpic, requestLoginEpic, logoutEpic };
+const loggedUserOperations = {
+  loginEpic,
+  requestLoginEpic,
+  rejectLoginEpic,
+  logoutEpic
+};
 
 export {
   LOGIN_REQUEST,
@@ -192,10 +235,16 @@ export {
   resetLogin,
   loggedUserActions,
   // loggedUserSelector,
-  // loggedUserDataSelector,
+  loggedUserDataSelector,
+  usernameSelector,
+  tokenSelector,
   loggedUserMetaSelector,
+  isUserLogged,
   loggedUserSelectors,
   loginEpic,
+  requestLoginEpic,
+  rejectLoginEpic,
+  logoutEpic,
   loggedUserOperations,
   loggedUserInitialState,
   reducerName,
