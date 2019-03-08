@@ -9,4 +9,8 @@ interface IDatasetItem {
   title: string;
 }
 
-export { IDatasetItem };
+interface IDatasetPopoverProps {
+  isUserLogged: boolean;
+}
+
+export { IDatasetItem, IDatasetPopoverProps };

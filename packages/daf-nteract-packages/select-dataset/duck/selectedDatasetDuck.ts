@@ -8,6 +8,7 @@ import { Map as ImmutableMap, List as ImmutableList, fromJS } from "immutable";
 import { FOCUS_CELL, updateCellSource } from "@nteract/actions/src";
 import { cellById as cellByIdSelector } from "@nteract/selectors/src/notebook";
 import { model as modelSelector } from "@nteract/selectors/src";
+import { tokenSelector } from "../../login/duck/loginDuck";
 
 // actionTypes
 const appName = "nteract-daf";
@@ -86,20 +87,19 @@ const datasetMetaSelector = createSelector(
 
 const selectedDatasetSelectors = { datasetSelector, datasetMetaSelector };
 
-// epics
-const basicSecret = "";
-
-const makeDatasetSnippet = (datasetURI: string): string =>
-  `url = "https://api.daf.teamdigitale.it/dataset-manager/v1/dataset/${
-    encodeURIComponent(datasetURI
+// operations
+const makeDatasetSnippet = ({ datasetURI, bearerToken }): string =>
+  `url = "https://api.daf.teamdigitale.it/dataset-manager/v1/dataset/${encodeURIComponent(
+    datasetURI
   )}?format=json"
 payload = ""
 
-headers = {'authorization': 'Basic ${basicSecret}'}
+headers = {'authorization': 'Bearer ${bearerToken}'}
 response = requests.request("GET", url, data=payload, headers=headers)
 data = pd.read_json(StringIO(response.text))
 data`;
 
+//// epics
 const datasetEpic = (action$, state$) =>
   action$.pipe(
     ofType(FOCUS_CELL),
@@ -110,15 +110,18 @@ const datasetEpic = (action$, state$) =>
           take(1)
         ),
       (focusedCell, selectedDataset) => {
+        const state = state$.value;
         const { contentRef, id } = focusedCell.payload;
-
-        //getFocusedCellValue
+        const { bearerToken } = { ...tokenSelector(state) };
         const value =
-          cellByIdSelector(modelSelector(state$.value, { contentRef }), {
+          cellByIdSelector(modelSelector(state, { contentRef }), {
             id
           }).get("source", "") +
           "\n" +
-          makeDatasetSnippet(selectedDataset.payload);
+          makeDatasetSnippet({
+            datasetURI: selectedDataset.payload,
+            bearerToken
+          });
 
         return updateCellSource({ id, value, contentRef });
       }
@@ -136,7 +139,7 @@ const requestDatasetEpic = action$ => {
         .get(endpoint + payload, {
           Accept: "application/json",
           "Content-Type": "application/json",
-          Authorization: "Basic " + basicSecret
+          Authorization: "Basic " // + basicSecret
         })
         .pipe(
           map(({ response }) => response.operational.logical_uri),

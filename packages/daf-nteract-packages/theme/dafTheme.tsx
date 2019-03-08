@@ -1,6 +1,5 @@
 import React from "react";
 import styled, { StyledComponent } from "styled-components";
-import { WideLogo } from "@nteract/logos";
 import { H4 as BlueprintH4, Classes } from "@blueprintjs/core";
 
 import { DafWideLogo as ThemedLogo } from "./components/dafLogos";

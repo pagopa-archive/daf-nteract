@@ -1,4 +1,4 @@
 import LoginDialogContainer from "./src/LoginDialogContainer";
-import LogoutButton from "./src/LogoutButton";
+import LoginLogoutButton from "./src/LoginLogoutButton";
 
-export { LoginDialogContainer, LogoutButton };
+export { LoginDialogContainer, LoginLogoutButton };

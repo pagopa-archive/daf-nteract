@@ -1,4 +1,6 @@
-interface LoginDialogProps {
+interface ILoginDialogProps {
+  isOpen: boolean;
+  onClose: Function;
   loggedUser: {
     token: string;
   };
@@ -7,22 +9,28 @@ interface LoginDialogProps {
   error: boolean;
   requestLogin: Function;
 }
-
-interface PasswordInputProps {
+interface IPasswordInputProps {
   error: boolean;
 }
 
-interface PasswordInputState {
+interface IPasswordInputState {
   isShown: boolean;
 }
 
-interface LogoutButtonProps {
+interface ILoginLogoutButtonProps {
+  username?: string;
+  isUserLogged: boolean;
   resetLogin: Function;
 }
 
+interface ILoginLogoutButtonState {
+  isOpen: boolean;
+}
+
 export {
-  LoginDialogProps,
-  PasswordInputProps,
-  PasswordInputState,
-  LogoutButtonProps
+  ILoginDialogProps,
+  IPasswordInputProps,
+  IPasswordInputState,
+  ILoginLogoutButtonProps,
+  ILoginLogoutButtonState
 };
