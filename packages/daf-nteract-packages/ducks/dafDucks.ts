@@ -86,6 +86,7 @@ const dafEpics = [
   datasetListOperations.resetDatasetListEpic,
   loggedUserOperations.loginEpic,
   loggedUserOperations.requestLoginEpic,
+  loggedUserOperations.rejectLoginEpic,
   loggedUserOperations.logoutEpic
 ];
 

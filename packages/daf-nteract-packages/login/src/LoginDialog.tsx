@@ -11,20 +11,16 @@ import {
 } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 
-import { LoginDialogProps } from "../types";
+import { ILoginDialogProps } from "../types";
 import PasswordInput from "./PasswordInput";
 
-const {
-  DIALOG_HEADER,
-  DIALOG_BODY,
-  DIALOG_FOOTER,
-  DIALOG_FOOTER_ACTIONS
-} = Classes;
+const { DIALOG_BODY, DIALOG_FOOTER, DIALOG_FOOTER_ACTIONS } = Classes;
 const { PRIMARY, DANGER, NONE } = Intent;
 const { LOG_IN, USER } = IconNames;
 
-const LoginDialog: FunctionComponent<LoginDialogProps> = ({
-  hasLoaded,
+const LoginDialog: FunctionComponent<ILoginDialogProps> = ({
+  isOpen,
+  onClose,
   error,
   requestLogin
 }) => {
@@ -38,10 +34,11 @@ const LoginDialog: FunctionComponent<LoginDialogProps> = ({
   };
   const commonURL = "https://dataportal.daf.teamdigitale.it/#/";
   return (
-    <Dialog isOpen={!hasLoaded || error}>
-      <div className={DIALOG_HEADER}>
-        <H3 style={{ color: "hsl(210, 100%, 40%)" }}>DAF Login</H3>
-      </div>
+    <Dialog
+      isOpen={isOpen}
+      title={<H3 style={{ color: "hsl(210, 100%, 40%)" }}>DAF Login</H3>}
+      onClose={onClose}
+    >
       <form onSubmit={handleSubmit}>
         <div className={DIALOG_BODY}>
           <FormGroup
