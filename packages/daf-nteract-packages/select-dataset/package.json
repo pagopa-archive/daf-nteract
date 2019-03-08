@@ -1,7 +1,7 @@
 {
   "name": "@daf-nteract-packages/select-dataset",
-  "version": "0.1.0",
-  "main": "DatasetPopover.tsx",
+  "version": "0.2.0",
+  "main": "DatasetPopoverContainer.tsx",
   "author": "and0111",
   "license": "BSD-3-Clause",
   "private": true
