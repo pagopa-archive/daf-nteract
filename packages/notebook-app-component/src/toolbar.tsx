@@ -22,7 +22,7 @@ import styled, { StyledComponent } from "styled-components";
 
 import { CellType } from "@nteract/commutable";
 
-import DafMenu from "../../daf-nteract-packages/select-dataset";
+import PdndMenu from "../../pdnd-nteract-packages/select-dataset";
 
 export interface PureToolbarProps {
   type: CellType;
@@ -140,7 +140,7 @@ export class PureToolbar extends React.PureComponent<PureToolbarProps> {
               </span>
             </button>
           )}
-          <DafMenu />
+          <PdndMenu />
           <DropdownMenu>
             <DropdownTrigger>
               <button title="show additional actions">

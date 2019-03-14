@@ -1,6 +1,6 @@
 import * as React from "react";
 import styled, { StyledComponent } from "styled-components";
-import { WrapperDiv } from "../../../../../packages/daf-nteract-packages/theme";
+import { WrapperDiv } from "../../../../../packages/pdnd-nteract-packages/theme";
 
 const NavUl: StyledComponent<"ul", any, {}, never> = styled.ul`
   display: flex;
@@ -15,9 +15,9 @@ const NavLi: StyledComponent<"li", any, {}, never> = styled.li`
   box-sizing: border-box;
   padding: 0px 0px;
 
-  /* 
-   * When we have a nav section that ends up on the right, 
-   * reverse the padding order 
+  /*
+   * When we have a nav section that ends up on the right,
+   * reverse the padding order
    */
   :not(:first-child):last-child > :global(ul > li) {
     margin: 0px 0px 0px var(--nt-spacing-xl);

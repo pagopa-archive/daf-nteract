@@ -1,12 +1,12 @@
 import { Map, List } from "immutable";
 
-interface DafState {
+interface PdndState {
   datasetList: Map<string, any>;
   selectedDataset: Map<string, any>;
   loggedUser: Map<string, any>;
 }
 
-const makeDafState = (): DafState => ({
+const makePdndState = (): PdndState => ({
   datasetList: Map({
     data: List(),
     meta: Map({
@@ -34,4 +34,4 @@ const makeDafState = (): DafState => ({
   })
 });
 
-export { DafState, makeDafState };
+export { PdndState, makePdndState };

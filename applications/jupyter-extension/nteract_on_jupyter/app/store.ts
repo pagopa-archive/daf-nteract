@@ -7,9 +7,9 @@ import {
 import { applyMiddleware, combineReducers, compose, createStore } from "redux";
 import { combineEpics, createEpicMiddleware, Epic } from "redux-observable";
 import {
-  dafReducers,
-  dafEpics
-} from "../../../../packages/daf-nteract-packages/ducks";
+  pdndReducers,
+  pdndEpics
+} from "../../../../packages/pdnd-nteract-packages/ducks";
 
 const composeEnhancers =
   (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
@@ -19,11 +19,11 @@ const rootReducer = combineReducers({
   comms: reducers.comms,
   config: reducers.config,
   core: reducers.core,
-  daf: combineReducers(dafReducers)
+  pdnd: combineReducers(pdndReducers)
 });
 
 export default function configureStore(initialState: Partial<AppState>) {
-  const rootEpic = combineEpics<Epic>(...coreEpics.allEpics, ...dafEpics);
+  const rootEpic = combineEpics<Epic>(...coreEpics.allEpics, ...pdndEpics);
   const epicMiddleware = createEpicMiddleware();
   const middlewares = [
     epicMiddleware,
