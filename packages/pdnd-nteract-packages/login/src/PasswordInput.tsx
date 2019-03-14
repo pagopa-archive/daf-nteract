@@ -2,21 +2,21 @@ import React, { PureComponent, SyntheticEvent } from "react";
 import { Intent, Tooltip, Button, InputGroup } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 
-import { PasswordInputProps, PasswordInputState } from "../types";
+import { IPasswordInputProps, IPasswordInputState } from "../types";
 
 const { EYE_OFF, EYE_OPEN, LOCK } = IconNames;
 const { WARNING, DANGER, NONE } = Intent;
 
 class PasswordInput extends PureComponent<
-  PasswordInputProps,
-  PasswordInputState
+  IPasswordInputProps,
+  IPasswordInputState
 > {
   constructor(props) {
     super(props);
     this.handleVisibility = this.handleVisibility.bind(this);
   }
 
-  state: PasswordInputState = { isShown: false };
+  state: IPasswordInputState = { isShown: false };
 
   private handleVisibility(e: SyntheticEvent): void {
     e.preventDefault();
@@ -43,8 +43,8 @@ class PasswordInput extends PureComponent<
         }
         placeholder="********"
         required
-        id="daf-login-password"
-        name="daf-login-password"
+        id="pdnd-login-password"
+        name="pdnd-login-password"
       />
     );
   }

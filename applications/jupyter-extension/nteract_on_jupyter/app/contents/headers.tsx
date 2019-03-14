@@ -12,9 +12,9 @@ import { EditableTitleOverlay } from "../components/editable-title-overlay";
 import LastSaved from "../components/last-saved";
 import { Nav, NavSection } from "../components/nav";
 // import { ThemedLogo } from "../components/themed-logo";
-import { H4 } from "../../../../../packages/daf-nteract-packages/theme";
-import { ThemedLogo } from "../../../../../packages/daf-nteract-packages/theme";
-import { LoginLogoutButton } from "../../../../../packages/daf-nteract-packages/login";
+import { H4 } from "../../../../../packages/pdnd-nteract-packages/theme";
+import { ThemedLogo } from "../../../../../packages/pdnd-nteract-packages/theme";
+import { LoginLogoutButton } from "../../../../../packages/pdnd-nteract-packages/login";
 
 /* Returns a header for the Directory view, which only consists of the Nav. */
 export interface DirectoryHeaderProps {

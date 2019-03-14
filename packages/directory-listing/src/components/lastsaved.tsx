@@ -1,7 +1,7 @@
 import * as React from "react";
 import TimeAgo from "react-timeago";
 import styled from "styled-components";
-import { TimeAgoTD } from "../../../../packages/daf-nteract-packages/theme";
+import { TimeAgoTD } from "../../../../packages/pdnd-nteract-packages/theme";
 
 interface LastSavedProps {
   lastModified?: Date | null;

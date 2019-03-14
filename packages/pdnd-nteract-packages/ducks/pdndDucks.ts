@@ -49,37 +49,37 @@ const loggedUserDuck = {
   loggedUserOperations
 };
 
-const dafActionTypes = {
+const pdndActionTypes = {
   ...selectedDatasetTypes,
   ...datasetListTypes,
   ...loggedUserTypes
 };
 
-const dafInitialState = {
+const pdndInitialState = {
   selectedDatasetInitialState,
   datasetListInitialState,
   loggedUserInitialState
 };
 
-const dafReducers = {
+const pdndReducers = {
   selectedDataset,
   datasetList,
   loggedUser
 };
 
-const dafActionCreators = {
+const pdndActionCreators = {
   ...selectedDatasetActions,
   ...datasetListActions,
   ...loggedUserActions
 };
 
-const dafSelectors = {
+const pdndSelectors = {
   ...selectedDatasetSelectors,
   ...datasetListSelectors,
   ...loggedUserSelectors
 };
 
-const dafEpics = [
+const pdndEpics = [
   selectedDatasetOperations.datasetEpic,
   selectedDatasetOperations.requestDatasetEpic,
   datasetListOperations.datasetListEpic,
@@ -94,10 +94,10 @@ export {
   selectedDatasetDuck,
   datasetListDuck,
   loggedUserDuck,
-  dafActionTypes,
-  dafInitialState,
-  dafReducers,
-  dafActionCreators,
-  dafSelectors,
-  dafEpics
+  pdndActionTypes,
+  pdndInitialState,
+  pdndReducers,
+  pdndActionCreators,
+  pdndSelectors,
+  pdndEpics
 };
