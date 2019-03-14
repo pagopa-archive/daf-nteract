@@ -1,7 +1,7 @@
 {
-  "name": "@daf-nteract-packages/select-dataset",
+  "name": "@pdnd-nteract-packages/login",
   "version": "0.2.0",
-  "main": "DatasetPopoverContainer.tsx",
+  "main": "pdndLogin.ts",
   "author": "and0111",
   "license": "BSD-3-Clause",
   "private": true

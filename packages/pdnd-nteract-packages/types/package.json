@@ -1,7 +1,7 @@
 {
-  "name": "@daf-nteract-packages/login",
+  "name": "@pdnd-nteract-packages/types",
   "version": "0.2.0",
-  "main": "dafLogin.ts",
+  "main": "pdndTypes.ts",
   "author": "and0111",
   "license": "BSD-3-Clause",
   "private": true

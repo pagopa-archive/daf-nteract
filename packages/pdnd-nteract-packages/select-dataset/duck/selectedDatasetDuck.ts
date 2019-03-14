@@ -11,7 +11,7 @@ import { model as modelSelector } from "@nteract/selectors/src";
 import { tokenSelector } from "../../login/duck/loginDuck";
 
 // actionTypes
-const appName = "nteract-daf";
+const appName = "nteract-pdnd";
 const reducerName = "selectedDataset";
 const actionDomain = appName + "/" + reducerName + "/";
 
@@ -76,7 +76,7 @@ const selectedDatasetActions = {
 
 // selectors
 const datasetSelector = createSelector(
-  state => state["daf"][reducerName],
+  state => state["pdnd"][reducerName],
   selectedDataset => selectedDataset.toJS()
 );
 

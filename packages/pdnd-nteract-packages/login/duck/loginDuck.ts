@@ -12,7 +12,7 @@ import { ajax } from "rxjs/ajax";
 import { ofType } from "redux-observable";
 import { createSelector } from "reselect";
 
-const appName = "nteract-daf";
+const appName = "nteract-pdnd";
 const reducerName = "loggedUser";
 const actionDomain = appName + "/" + reducerName + "/";
 
@@ -87,7 +87,7 @@ const loggedUserActions = {
 
 // selectors
 const loggedUserDataSelector = createSelector(
-  state => state["daf"][reducerName],
+  state => state["pdnd"][reducerName],
   loggedUser => loggedUser.get("data").toJS()
 );
 
@@ -102,7 +102,7 @@ const tokenSelector = createSelector(
 );
 
 const loggedUserMetaSelector = createSelector(
-  state => state["daf"][reducerName],
+  state => state["pdnd"][reducerName],
   loggedUser => loggedUser.get("meta").toJS()
 );
 
