@@ -16,19 +16,17 @@ RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" |  tee /etc/apt/source
 RUN apt-get update
 RUN apt-get install yarn
 
-COPY . /nteract
-
-WORKDIR /nteract
-
-#RUN pip3 install nteract_on_jupyter
-
 RUN yarn
 
-RUN cd applications/jupyter-extension && \
+RUN npm install --global lerna
+
+COPY . /nteract
+
+RUN cd nteract/applications/jupyter-extension && \
     pip3 install -e .  && \ 
-    jupyter serverextension enable nteract_on_jupyter
+    jupyter serverextension enable nteract_on_jupyter && \
+    lerna run build:asap --scope nteract-on-jupyter --stream
 
+EXPOSE 8888 
 
-EXPOSE 8888 8357
-
-CMD ["jupyter", "nteract", "--dev", "--ip=0.0.0.0", "--allow-root"]
+CMD ["jupyter", "nteract","--ip=0.0.0.0", "--allow-root"]

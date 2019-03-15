@@ -1,6 +1,0 @@
-FROM ubuntu:18.04
-
-RUN apt update
-RUN apt install --yes python3-pip
-
-RUN pip3 --version
