@@ -1,14 +1,14 @@
-import React from "react";
+import React, { FunctionComponent } from "react";
 
-interface DafWideLogoProps {
+interface IPdndWideLogoProps {
   height?: number;
   width?: number;
 }
 
-const DafWideLogo = ({
+const PdndWideLogo: FunctionComponent<IPdndWideLogoProps> = ({
   height = 24,
   width = 29
-}: DafWideLogoProps): JSX.Element => (
+}) => (
   <svg
     width={width}
     height={height}
@@ -29,14 +29,14 @@ const DafWideLogo = ({
       />
     </defs>
     <g
-      id="DAF-PITTOGRAMMA-2018"
+      id="PDND-PITTOGRAMMA-2018"
       stroke="none"
       strokeWidth="1"
       fill="none"
       fillRule="evenodd"
     >
       <g
-        id="DAF-PITTOGRAMMA-2018-GRAPH"
+        id="PDND-PITTOGRAMMA-2018-GRAPH"
         transform="translate(-140.000000, -87.000000)"
       >
         <g id="Page-1" transform="translate(140.000000, 84.000000)">
@@ -100,4 +100,4 @@ const DafWideLogo = ({
   </svg>
 );
 
-export { DafWideLogo };
+export { PdndWideLogo };

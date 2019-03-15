@@ -1,7 +1,7 @@
 {
-  "name": "@daf-nteract-packages/ducks",
+  "name": "@pdnd-nteract-packages/ducks",
   "version": "0.3.0",
-  "main": "dafDucks.ts",
+  "main": "pdndDucks.ts",
   "author": "and0111",
   "license": "BSD-3-Clause",
   "private": true

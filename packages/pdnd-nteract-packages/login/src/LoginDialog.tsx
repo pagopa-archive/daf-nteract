@@ -28,21 +28,21 @@ const LoginDialog: FunctionComponent<ILoginDialogProps> = ({
     e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);
     return requestLogin({
-      username: formData.get("daf-login-username"),
-      password: formData.get("daf-login-password")
+      username: formData.get("pdnd-login-username"),
+      password: formData.get("pdnd-login-password")
     });
   };
   const commonURL = "https://dataportal.daf.teamdigitale.it/#/";
   return (
     <Dialog
       isOpen={isOpen}
-      title={<H3 style={{ color: "hsl(210, 100%, 40%)" }}>DAF Login</H3>}
+      title={<H3 style={{ color: "hsl(210, 100%, 40%)" }}>Pdnd Login</H3>}
       onClose={onClose}
     >
       <form onSubmit={handleSubmit}>
         <div className={DIALOG_BODY}>
           <FormGroup
-            labelFor="daf-login-username"
+            labelFor="pdnd-login-username"
             label="Username"
             labelInfo="(required)*"
             helperText="Please enter your username"
@@ -53,12 +53,12 @@ const LoginDialog: FunctionComponent<ILoginDialogProps> = ({
               leftIcon={USER}
               placeholder="giux78"
               required
-              id="daf-login-username"
-              name="daf-login-username"
+              id="pdnd-login-username"
+              name="pdnd-login-username"
             />
           </FormGroup>
           <FormGroup
-            labelFor="daf-login-password"
+            labelFor="pdnd-login-password"
             label="Password"
             labelInfo="(required)*"
             helperText="Please enter your password"

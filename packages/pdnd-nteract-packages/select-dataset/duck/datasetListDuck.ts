@@ -15,7 +15,7 @@ import { createSelector } from "reselect";
 import { SET_IN_CELL } from "@nteract/actions/src";
 import { DATASET_FULFILL } from "./selectedDatasetDuck";
 
-const appName = "nteract-daf";
+const appName = "nteract-pdnd";
 const reducerName = "datasetList";
 const actionDomain = appName + "/" + reducerName + "/";
 
@@ -92,7 +92,7 @@ const datasetListActions = {
 
 // selectors
 const datasetListDataSelector = createSelector(
-  state => state["daf"][reducerName],
+  state => state["pdnd"][reducerName],
   datasetList =>
     datasetList
       .get("data")
@@ -101,7 +101,7 @@ const datasetListDataSelector = createSelector(
 );
 
 const datasetListMetaSelector = createSelector(
-  state => state["daf"][reducerName],
+  state => state["pdnd"][reducerName],
   datasetList => datasetList.get("meta").toJS()
 );
 
