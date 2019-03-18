@@ -163,13 +163,12 @@ const loginEpic = (action$, state$) =>
               Authorization: "Bearer " + token
             })
             .pipe(
-              // catchError(error => of(resetLogin()))
-              skipWhile(({ status }) => status !== 200),
               concatMap(() =>
                 ({ ...isUserLogged(state$.value) }.isUserLogged
                   ? []
                   : requestUserObservable({ token, username }))
-              )
+              ),
+              catchError(error => of(resetLogin()))
             )
         : []
     )
