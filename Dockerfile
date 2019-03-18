@@ -6,6 +6,10 @@ RUN apt-get install --yes curl
 RUN apt-get install apt-transport-https
 
 RUN pip3 install jupyter  
+RUN pip3 install requests && \
+    pip3 install pandas && \
+    pip3 install fbprophet
+
 
 RUN curl -sL https://deb.nodesource.com/setup_10.x |  bash -
 RUN apt-get install --yes nodejs
