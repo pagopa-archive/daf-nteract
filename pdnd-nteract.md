@@ -44,6 +44,7 @@ cd applications/jupyter-extension
 pip3 install -e .
 jupyter serverextension enable nteract_on_jupyter
 lerna run build:asap --scope nteract-on-jupyter --stream
+cd YOUR_LOCAL_FODER_TO_SAVE_OR_LOAD_NOTEBOOKS
 jupyter nteract
 ```
 
@@ -62,10 +63,13 @@ yarn install
 cd applications/jupyter-extension 
 pip3 install -e .
 jupyter serverextension enable nteract_on_jupyter
+cd YOUR_LOCAL_FODER_TO_SAVE_OR_LOAD_NOTEBOOKS
 jupyter nteract --dev
 ```
 
 Almost the main things developed are inside the [pdnd-nteract-packages](https://github.com/teamdigitale/nteract/tree/daf-develop/packages/pdnd-nteract-packages)
+
+
 
 
 
