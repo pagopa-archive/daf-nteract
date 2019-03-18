@@ -22,9 +22,9 @@ docker build -t pdnd-nteract .
 docker run -p 8888:8888 pdnd-nteract
 ```
 
-Save the token from the output of your console as below:
+Save the token from the output of your console as:
 http://(b4fd9e3ef290 or 127.0.0.1):8888/?token=XXXXXXXXXXXXXX
-and open your browser at [http://localhost:8888]
+and open your browser at [http://localhost:8888]. If you are asked the token paste it.
 
 
 ### Install for data analyst
@@ -63,9 +63,10 @@ cd applications/jupyter-extension
 pip3 install -e .
 jupyter serverextension enable nteract_on_jupyter
 jupyter nteract --dev
+```
 
 Almost the main things developed are inside the [pdnd-nteract-packages](https://github.com/teamdigitale/nteract/tree/daf-develop/packages/pdnd-nteract-packages)
-```
+
 
 
 
