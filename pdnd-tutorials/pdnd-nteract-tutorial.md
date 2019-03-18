@@ -39,6 +39,6 @@ Once logged in, now you can search for Italian public datasets by clicking on th
 
 Run the cell and you should see something like that:
 
-![enter image description here](https://raw.githubusercontent.com/teamdigitale/nteract/daf-develop/pdnd-tutorials/img/search.png)
+![enter image description here](https://raw.githubusercontent.com/teamdigitale/nteract/daf-develop/pdnd-tutorials/img/results.png)
 
 Congratulations now you can play and analyse some different datasets. If you will do something interesting please contact us.
