@@ -69,6 +69,9 @@ jupyter nteract --dev
 
 Almost the main things developed are inside the [pdnd-nteract-packages](https://github.com/teamdigitale/nteract/tree/daf-develop/packages/pdnd-nteract-packages)
 
+### Tutorial
+
+Once installed you can read a [tutorial](https://github.com/teamdigitale/nteract/blob/daf-develop/pdnd-tutorials/pdnd-nteract-tutorial.md)
 
 
 
