@@ -1,6 +1,15 @@
 # PDND-nteract
 
-This is a branched (daf-*) fork of [nteract](https://nteract.io), a react user interface on top of jupyter server. We have developed an integration of the API from [PDND](https://dataportal.daf.teamdigitale.it) (Piattaforma Digitale Nazionale Dati) for simplyfing the access to Italian public data inside notebook for data analyst. 
+This is a branched (daf-*) fork of [nteract](https://nteract.io), a react user interface on top of jupyter server. We have developed an integration of the API from [PDND](https://dataportal.daf.teamdigitale.it) (Piattaforma Digitale Nazionale Dati) for simplyfing the access to Italian public data inside notebook for data analysis. We are develping a set of UI components integrated into a set of API to **read**, modify ,**save** and **update** data into PDND. As in the image below 
+
+![search components](https://raw.githubusercontent.com/teamdigitale/nteract/daf-develop/pdnd-tutorials/img/search.png)
+
+the user can search dataset from [PDND](https://dataportal.daf.teamdigitale.it) load into a dataframe and starting working on it. The tool is very powerful and flexible and can be an easy way to start working on public dataset from italian administrations, making simple analysis and reports.
+
+### Tutorials
+
+Once installed following the steps in this readme, you can read a simple [tutorial](https://github.com/teamdigitale/nteract/blob/daf-develop/pdnd-tutorials/pdnd-nteract-tutorial.md) for understanding the basic functionalities implemented. In the next releases we will provide more functionalities and tutorials. If you want to contribute with also only suggestions use this repo opening issues and following our [project](https://github.com/teamdigitale/nteract/projects) and [milestone](https://github.com/teamdigitale/nteract/milestones).
+
 
 ## Getting Started
 
@@ -50,7 +59,7 @@ jupyter nteract
 
 ### Install for contributing
 
-If you want to contribute to the project, we suggest to follow the contrubuting guidelines of [nteract](https://nteract.io). We have public milestones and [project](https://github.com/teamdigitale/nteract/projects) on github for look at our current work. Nteract is build using typescript react redux rx-js and is a very active project. If you are willing to working on such technolgies can be a really good start and we are very open to create a community around our integration. 
+If you want to contribute to the project, we suggest to follow the contrubuting guidelines of [nteract](https://nteract.io). We have public milestones and [project](https://github.com/teamdigitale/nteract/projects) on github for look at our current work. Nteract is build using typescript react redux rx-js and is a very active project. If you are willing to work on such technolgies can be a really good start and we are very open to create a community around our integration. 
 
 Requires [Node.js](https://docs.npmjs.com/getting-started/installing-node), [yarn](https://yarnpkg.com/lang/en/docs/install/), [lerna](https://lernajs.io/) python 3 and pip on python 3
 
@@ -69,9 +78,7 @@ jupyter nteract --dev
 
 Almost the main things developed are inside the [pdnd-nteract-packages](https://github.com/teamdigitale/nteract/tree/daf-develop/packages/pdnd-nteract-packages)
 
-### Tutorial
 
-Once installed you can read a [tutorial](https://github.com/teamdigitale/nteract/blob/daf-develop/pdnd-tutorials/pdnd-nteract-tutorial.md)
 
 
 

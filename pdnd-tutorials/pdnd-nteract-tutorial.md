@@ -18,6 +18,7 @@ From menu choose a markdown cell and write some markdown code.
   or choose a code cell and copy and paste the code below and run the cell
   ```
   a = 1 + 1
+  a
   ```
 
 
