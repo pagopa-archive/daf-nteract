@@ -3,7 +3,7 @@
 
   
 ### Intro
-We will go thought some simple steps to start with playing with pdnd-nteract, only for describing the basic steps and functionalities. In the next weeks we hope to publish some interesting use cases that could be also used for teaching and education.
+We will go trought some simple steps playing with pdnd-nteract, only for describing the basic steps and functionalities. In the next weeks we hope to publish some interesting use cases that could be also used for teaching and education.
 
   
 
@@ -11,7 +11,7 @@ Of course you must have launched nteract from the daf-develop branch. In case re
 
   
 
-Once launched nteract start a new python 3 notebook
+Once launched nteract you can start a new python 3 notebook
 
 From menu choose a markdown cell and write some markdown code.
 
@@ -22,7 +22,7 @@ From menu choose a markdown cell and write some markdown code.
   ```
 
 
-Ok if is working now you can register into [PDND](https://dataportal.daf.teamdigitale.it/#/register) or if you have already an account login in by click on the LOGIN button. 
+Ok if it is working now you can register into [PDND](https://dataportal.daf.teamdigitale.it/#/register) or if you have already an account login in by click on the LOGIN button. 
 
 ![enter image description here](https://raw.githubusercontent.com/teamdigitale/nteract/daf-develop/pdnd-tutorials/img/login.png)
 
@@ -36,7 +36,7 @@ pd.options.display.html.table_schema = True
 
 Once logged in, now you can search for Italian public datasets by clicking on the lens on the right of a new code cell. Try to look for *ricette* you will see something like that:
 
-![enter image description here](https://raw.githubusercontent.com/teamdigitale/nteract/daf-develop/pdnd-tutorials/img/search.png)
+
 
 Run the cell and you should see something like that:
 
