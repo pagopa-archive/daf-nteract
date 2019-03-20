@@ -2,8 +2,9 @@ FROM vaeum/ubuntu-python3-pip3
 
 RUN apt-get update
 
-RUN apt-get install --yes curl
-RUN apt-get install apt-transport-https
+RUN apt-get install -y curl
+RUN apt-get install -y apt-transport-https
+RUN apt-get install -y git-core
 
 RUN pip3 install jupyter  
 RUN pip3 install requests && \
@@ -20,13 +21,17 @@ RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" |  tee /etc/apt/source
 RUN apt-get update
 RUN apt-get install yarn
 
-RUN yarn
-
 RUN npm install --global lerna
 
-COPY . /nteract
+#COPY . /nteract
 
-RUN cd nteract/applications/jupyter-extension && \
+RUN git clone https://github.com/teamdigitale/nteract.git
+
+WORKDIR /nteract
+
+RUN yarn
+
+RUN cd applications/jupyter-extension && \
     pip3 install -e .  && \ 
     jupyter serverextension enable nteract_on_jupyter && \
     lerna run build:asap --scope nteract-on-jupyter --stream
