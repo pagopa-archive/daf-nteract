@@ -60,7 +60,7 @@ jupyter nteract
 
 If you want to contribute to the project, we suggest to follow the contrubuting guidelines of [nteract](https://nteract.io). We have public milestones and [project](https://github.com/teamdigitale/nteract/projects) on github for looking at our current work. Nteract is build using typescript react redux rx-js and is a very active project. If you are willing to work on such technolgies can be a really good start and we are very open to create a community around our integration. 
 
-Requires [Node.js](https://docs.npmjs.com/getting-started/installing-node), [yarn](https://yarnpkg.com/lang/en/docs/install/), [lerna](https://lernajs.io/) python 3 and pip on python 3
+Requires [Node.js](https://docs.npmjs.com/getting-started/installing-node), [yarn](https://yarnpkg.com/lang/en/docs/install/), [lerna](https://lernajs.io/) python 3 and pip on python 3. The following steps are for MacOs only but can be adjusted for different operating systems. 
 
 ```
 git clone git@github.com:teamdigitale/nteract.git
