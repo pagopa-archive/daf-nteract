@@ -39,13 +39,14 @@ and open your browser at [http://localhost:8888]. If you are asked the token pas
 
 If you want to use this repo as your favorite tool for anlysing Italian public dataset you can follow these steps:
 
-Requires [Node.js](https://docs.npmjs.com/getting-started/installing-node), [yarn](https://yarnpkg.com/lang/en/docs/install/), [lerna](https://lernajs.io/) python 3 and pip on python 3
+Requires [Node.js](https://docs.npmjs.com/getting-started/installing-node), [yarn](https://yarnpkg.com/lang/en/docs/install/), [lerna](https://lernajs.io/) python 3 and pip on python 3. The following steps are for MacOs only but can be adjusted for different operating systems. 
 
 ```
 git clone git@github.com:teamdigitale/nteract.git
 cd nteract
 pip3 install jupyter requests pandas fbprophet
 npm install --global lerna
+brew install yarn 
 yarn install
 cd applications/jupyter-extension 
 pip3 install -e .
@@ -65,6 +66,7 @@ Requires [Node.js](https://docs.npmjs.com/getting-started/installing-node), [yar
 git clone git@github.com:teamdigitale/nteract.git
 cd nteract
 pip3 install jupyter requests pandas fbprophet
+brew install yarn 
 yarn install
 cd applications/jupyter-extension 
 pip3 install -e .
