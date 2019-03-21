@@ -22,7 +22,7 @@ From menu choose a markdown cell and write some markdown code.
   ```
 
 
-Ok if it is working now you can register into [PDND](https://dataportal.daf.teamdigitale.it/#/register) or if you have already an account login in by click on the LOGIN button. 
+Ok if it is working now you can register into [PDND - DAF](https://dataportal.daf.teamdigitale.it/#/register) or if you have already an account login in by click on the LOGIN button. 
 
 ![enter image description here](https://raw.githubusercontent.com/teamdigitale/nteract/daf-develop/pdnd-tutorials/img/login.png)
 
@@ -36,7 +36,7 @@ pd.options.display.html.table_schema = True
 
 Once logged in, now you can search for Italian public datasets by clicking on the lens on the right of a new code cell. Try to look for *ricette* you will see something like that:
 
-
+![enter image description here](https://raw.githubusercontent.com/teamdigitale/nteract/daf-develop/pdnd-tutorials/img/search.png)
 
 Run the cell and you should see something like that:
 
