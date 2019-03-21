@@ -28,7 +28,7 @@ const LoginDialog: FunctionComponent<ILoginDialogProps> = ({
     e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);
     return requestLogin({
-      username: formData.get("pdnd-login-username"),
+      username: formData.get("pdnd-login-email"),
       password: formData.get("pdnd-login-password")
     });
   };
@@ -42,19 +42,20 @@ const LoginDialog: FunctionComponent<ILoginDialogProps> = ({
       <form onSubmit={handleSubmit}>
         <div className={DIALOG_BODY}>
           <FormGroup
-            labelFor="pdnd-login-username"
-            label="Username"
+            labelFor="pdnd-login-email"
+            label="Email"
             labelInfo="(required)*"
-            helperText="Please enter your username"
+            helperText="Please enter your email"
           >
             <InputGroup
               large
               intent={error ? DANGER : NONE}
               leftIcon={USER}
-              placeholder="giux78"
+              type="email"
+              placeholder="marco.rossi@teamdigitale.it"
               required
-              id="pdnd-login-username"
-              name="pdnd-login-username"
+              id="pdnd-login-email"
+              name="pdnd-login-email"
             />
           </FormGroup>
           <FormGroup
