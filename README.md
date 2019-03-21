@@ -1,10 +1,10 @@
 # PDND-nteract
 
-This is a branched (daf-*) fork of [nteract](https://nteract.io), a react user interface on top of jupyter server. We have developed an integration of the API from [PDND](https://dataportal.daf.teamdigitale.it) (Piattaforma Digitale Nazionale Dati) for simplyfing the access to Italian public data inside notebook for data analysis. We are developing a set of UI components integrated into a set of API to **read**, **save** and **update** data into PDND. As in the image below 
+This is a branched (daf-*) fork of [nteract](https://nteract.io), a react user interface on top of jupyter server. We have developed an integration of the API from [PDND - DAF](https://dataportal.daf.teamdigitale.it) (Piattaforma Digitale Nazionale Dati) for simplyfing the access to Italian public data inside notebook for data analysis. We are developing a set of UI components integrated into a set of API to **read**, **save** and **update** data into PDND - DAF. As in the image below 
 
 ![search components](https://raw.githubusercontent.com/teamdigitale/nteract/daf-develop/pdnd-tutorials/img/search_with_logo.png)
 
-the user can search dataset from [PDND](https://dataportal.daf.teamdigitale.it) load into a dataframe and starting working on it. The tool is very powerful and flexible and can be an easy way to start working on public dataset from italian administrations, making simple analysis and reports.
+the user can search dataset from [PDND - DAF](https://dataportal.daf.teamdigitale.it) load into a dataframe and starting working on it. The tool is very powerful and flexible and can be an easy way to start working on public dataset from italian administrations, making simple analysis and reports.
 
 ### Tutorials
 
