@@ -8,7 +8,7 @@ import { Map as ImmutableMap, List as ImmutableList, fromJS } from "immutable";
 import { FOCUS_CELL, updateCellSource } from "@nteract/actions/src";
 import { cellById as cellByIdSelector } from "@nteract/selectors/src/notebook";
 import { model as modelSelector } from "@nteract/selectors/src";
-import { tokenSelector } from "../../login/duck/loginDuck";
+import { tokensSelector } from "../../login/duck/loginDuck";
 
 // actionTypes
 const appName = "nteract-pdnd";
@@ -88,13 +88,13 @@ const datasetMetaSelector = createSelector(
 const selectedDatasetSelectors = { datasetSelector, datasetMetaSelector };
 
 // operations
-const makeDatasetSnippet = ({ datasetURI, bearerToken }): string =>
+const makeDatasetSnippet = ({ datasetURI, basicToken }): string =>
   `url = "https://api.daf.teamdigitale.it/dataset-manager/v1/dataset/${encodeURIComponent(
     datasetURI
   )}?format=json"
 payload = ""
 
-headers = {'authorization': 'Bearer ${bearerToken}'}
+headers = {'authorization': 'Basic ${basicToken}'}
 response = requests.request("GET", url, data=payload, headers=headers)
 data = pd.read_json(StringIO(response.text))
 data`;
@@ -112,7 +112,7 @@ const datasetEpic = (action$, state$) =>
       (focusedCell, selectedDataset) => {
         const state = state$.value;
         const { contentRef, id } = focusedCell.payload;
-        const { bearerToken } = { ...tokenSelector(state) };
+        const { basicToken } = { ...tokensSelector(state) };
         const value =
           cellByIdSelector(modelSelector(state, { contentRef }), {
             id
@@ -120,7 +120,7 @@ const datasetEpic = (action$, state$) =>
           "\n" +
           makeDatasetSnippet({
             datasetURI: selectedDataset.payload,
-            bearerToken
+            basicToken
           });
 
         return updateCellSource({ id, value, contentRef });
