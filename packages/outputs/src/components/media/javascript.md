@@ -1,7 +1,6 @@
 The Media.JavaScript component allows you to execute JavaScript in the context of the current document.
 
-```
-const JavaScript = require("./javascript").JavaScript;
+```jsx
 <JavaScript
   data={`
 console.log('%cWelcome to the nteract.io component docs!', "color: #3d3d3d; font-size: 24px;");
@@ -16,7 +15,6 @@ window.el = element;
 Because of this, you can declare variables in the scope of the current window context. For example, view the source code for the component below.
 
 ```
-const JavaScript = require("./javascript").JavaScript;
 <JavaScript data={"window.this_is_our_special_variable = 10;"}/>
 ```
 
@@ -32,7 +30,6 @@ If you're familiar with the Jupyter ecosystem, note that this component executes
 The `Media.JavaScript` component can also help you when things go wrong by printing an error trace. For example, here's what happens when you attempt to log invoke an undefined function.
 
 ```
-const JavaScript = require("./javascript").JavaScript;
 <JavaScript data={"there_is_no_way_this_function_exists_right_now(and_takes_this_parameter)"}/>
 ```
 

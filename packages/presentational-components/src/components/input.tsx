@@ -50,3 +50,5 @@ export const Input = styled(BareInput)`
 `;
 
 Input.displayName = "Input";
+
+export default Input;

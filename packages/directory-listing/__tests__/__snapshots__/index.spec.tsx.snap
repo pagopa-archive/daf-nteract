@@ -2,24 +2,34 @@
 
 exports[`Entry accepts props and renders entries in directory 1`] = `
 <DirectoryEntry>
-  <Icon
-    className="directory-entry-field"
-    color="#0366d6"
-    fileType="directory"
+  <td
     key=".0"
-  />
-  <Name
-    className="directory-entry-field"
+    style={
+      Object {
+        "width": "25px",
+      }
+    }
+  >
+    <Icon
+      color="#0366d6"
+      fileType="directory"
+    />
+  </td>
+  <td
     key=".1"
   >
-    linky jr
-  </Name>
-  <LastSaved
-    className="directory-entry-field"
+    <Name>
+      linky jr
+    </Name>
+  </td>
+  <td
     key=".2"
-    lastModified={null}
-    last_modified="Fri Jun 22 2018 00:15:55 GMT-0400 (Eastern Daylight Time)"
-  />
+  >
+    <LastSaved
+      lastModified={null}
+      last_modified="Fri Jun 22 2018 00:15:55 GMT-0400 (Eastern Daylight Time)"
+    />
+  </td>
 </DirectoryEntry>
 `;
 

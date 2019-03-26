@@ -33,3 +33,5 @@ Image.defaultProps = {
   data: "",
   mediaType: "image/jpeg"
 };
+
+export default Image;

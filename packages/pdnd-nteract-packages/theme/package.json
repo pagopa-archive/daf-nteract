@@ -1,6 +1,6 @@
 {
   "name": "@pdnd-nteract-packages/theme",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "main": "pdndTheme.tsx",
   "author": "and0111",
   "license": "BSD-3-Clause",

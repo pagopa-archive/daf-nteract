@@ -1,6 +1,6 @@
 {
   "name": "@nteract/transform-vega",
-  "version": "5.0.0",
+  "version": "5.0.1",
   "description": "Vega Transform",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -14,7 +14,7 @@
   "dependencies": {
     "@nteract/vega-embed-v2": "^1.1.0",
     "lodash": "^4.17.4",
-    "vega-embed": "3.29.0",
+    "vega-embed": "3.29.1",
     "vega-tooltip": "^0.15.0"
   },
   "peerDependencies": {

@@ -60,3 +60,5 @@ export class JavaScript extends React.PureComponent<Props> {
     );
   }
 }
+
+export default JavaScript;

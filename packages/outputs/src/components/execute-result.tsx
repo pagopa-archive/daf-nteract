@@ -1,7 +1,7 @@
 import { ImmutableExecuteResult, MediaBundle } from "@nteract/commutable";
 import * as React from "react";
 
-import { RichMedia } from "./rich-media";
+import { RichMedia, RichMediaProps } from "./rich-media";
 
 interface Props {
   /**
@@ -13,7 +13,7 @@ interface Props {
   /**
    * React elements that accept media bundle data, will get passed `data[mediaType]`
    */
-  children: React.ReactNode;
+  children: RichMediaProps["children"];
 }
 
 export const ExecuteResult = (props: Partial<Props>) => {
@@ -33,3 +33,5 @@ ExecuteResult.defaultProps = {
   output: null,
   output_type: "execute_result"
 };
+
+export default ExecuteResult;

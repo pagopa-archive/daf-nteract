@@ -12,6 +12,9 @@ interface BarOptions {
   chart: Dx.Chart;
   colors: string[];
   setColor: (color: string[]) => void;
+  barGrouping: Dx.BarGroupingType;
+  dimensions: object[];
+  metrics: object[];
 }
 
 export const semioticBarChart = (
@@ -19,8 +22,8 @@ export const semioticBarChart = (
   schema: Dx.Schema,
   options: BarOptions
 ) => {
-  const { selectedDimensions, chart, colors, setColor } = options;
-  const { dim1, metric1, metric3 } = chart;
+  const { selectedDimensions, chart, colors, setColor, barGrouping } = options;
+  const { dim1, metric1, metric3, metric4 } = chart;
 
   const oAccessor =
     selectedDimensions.length === 0
@@ -35,6 +38,7 @@ export const semioticBarChart = (
   const additionalSettings: {
     afterElements?: JSX.Element;
     dynamicColumnWidth?: string;
+    rExtent?: number[];
     tooltipContent?: (hoveredDataPoint: {
       x: number;
       y: number;
@@ -54,6 +58,56 @@ export const semioticBarChart = (
 
   if (metric3 && metric3 !== "none") {
     additionalSettings.dynamicColumnWidth = metric3;
+  }
+  let errorBarAnnotations;
+  if (barGrouping === "Clustered" && metric4 && metric4 !== "none") {
+    additionalSettings.rExtent = [
+      Math.min(...data.map(d => d[metric1] - d[metric4])),
+      Math.max(...data.map(d => d[metric1] + d[metric4]))
+    ];
+
+    errorBarAnnotations = (
+      d: Dx.Datapoint,
+      i: number,
+      xy: {
+        width: number;
+        height: number;
+        styleFn: (args: object) => object;
+        rScale: (args: object) => number;
+      }
+    ) => {
+      const errorBarSize = Math.abs(
+        xy.rScale(d[metric1]) - xy.rScale(d[metric1] + d[metric4])
+      );
+
+      return (
+        <g>
+          <rect width={xy.width} height={xy.height} style={xy.styleFn(d)} />
+          <g
+            transform={`translate(${xy.width / 2},${
+              d.negative ? xy.height : 0
+            })`}
+            stroke="#333"
+            strokeWidth="1"
+            opacity="0.75"
+          >
+            <line
+              y1={-errorBarSize}
+              y2={-errorBarSize}
+              x1={Math.min(0, -xy.width / 2 + 2)}
+              x2={Math.max(0, xy.width / 2 - 2)}
+            />
+            <line x1={0} x2={0} y1={-errorBarSize} y2={errorBarSize} />
+            <line
+              y1={errorBarSize}
+              y2={errorBarSize}
+              x1={Math.min(0, -xy.width / 2 + 2)}
+              x2={Math.max(0, xy.width / 2 - 2)}
+            />
+          </g>
+        </g>
+      );
+    };
   }
 
   const uniqueValues = sortedData.reduce(
@@ -83,27 +137,34 @@ export const semioticBarChart = (
     );
 
     if (
-      selectedDimensions.length > 0 &&
-      selectedDimensions.join(",") !== dim1
+      barGrouping === "Clustered" ||
+      (selectedDimensions.length > 0 && selectedDimensions.join(",") !== dim1)
     ) {
       additionalSettings.pieceHoverAnnotation = true;
+      const combinedOptions = [
+        ...options.dimensions,
+        ...options.metrics
+      ] as Array<{ name: string }>;
       additionalSettings.tooltipContent = hoveredDatapoint => {
         return (
           <TooltipContent x={hoveredDatapoint.x} y={hoveredDatapoint.y}>
-            {dim1 && dim1 !== "none" && <p>{hoveredDatapoint[dim1]}</p>}
-            <p>
-              {typeof oAccessor === "function"
-                ? oAccessor(hoveredDatapoint)
-                : hoveredDatapoint[oAccessor]}
-            </p>
-            <p>
-              {rAccessor}: {hoveredDatapoint[rAccessor]}
-            </p>
-            {metric3 && metric3 !== "none" && (
-              <p>
-                {metric3}: {hoveredDatapoint[metric3]}
-              </p>
-            )}
+            <div
+              style={{ heightMax: "300px", display: "flex", flexWrap: "wrap" }}
+            >
+              {combinedOptions.map((dim: { name: string }, index: number) => (
+                <div
+                  style={{
+                    margin: "2px 5px 0",
+                    display: "inline-block",
+                    minWidth: "100px"
+                  }}
+                  key={`dim-${index}`}
+                >
+                  <span style={{ fontWeight: 600 }}>{dim.name}</span>:{" "}
+                  {hoveredDatapoint[dim.name]}
+                </div>
+              ))}
+            </div>
           </TooltipContent>
         );
       };
@@ -126,7 +187,10 @@ export const semioticBarChart = (
     0;
 
   const barSettings = {
-    type: cardinality > 4 ? "clusterbar" : "bar",
+    type:
+      barGrouping === "Clustered"
+        ? { type: "clusterbar", customMark: errorBarAnnotations }
+        : { type: "bar", customMark: errorBarAnnotations },
     data: sortedData,
     oAccessor,
     rAccessor,
@@ -177,6 +241,7 @@ export const semioticBarChart = (
       );
     },
     baseMarkProps: { forceUpdate: true },
+    size: [500, 600],
     ...additionalSettings
   };
 

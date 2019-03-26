@@ -1,10 +1,13 @@
-import { Button, ButtonGroup } from "@blueprintjs/core";
-import styled from "styled-components";
+// import { Button, ButtonGroup } from "@blueprintjs/core";
+// import styled from "styled-components";
 
 /**
  * This ports over some of the overridden styles within the data
  * explorer from the migration away from styled-jsx.
  */
+
+/*
+
 export const StyledButtonGroup = styled(ButtonGroup)`
   .button-text {
     margin: 0 10px 10px 0;
@@ -39,3 +42,6 @@ export const StyledButtonGroup = styled(ButtonGroup)`
     position: relative;
   }
 `;
+*/
+
+export const StyledButtonGroup = null;

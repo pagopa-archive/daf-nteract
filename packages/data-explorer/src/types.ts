@@ -23,9 +23,13 @@ export interface DataProps {
 
 export interface Schema {
   fields: Field[];
-  pandas_version: string;
-  primaryKey: string[];
+  pandas_version?: string;
+  primaryKey?: string[];
 }
+
+// If this string is the same as another field name, it would be a problem
+// so it must be unique
+export const defaultPrimaryKey = "dx-default-pk";
 export interface Field {
   name: string;
   type: string;
@@ -62,6 +66,7 @@ export interface Chart {
   metric1: string;
   metric2: string;
   metric3: string;
+  metric4: string;
   dim1: string;
   dim2: string;
   dim3: string;
@@ -71,7 +76,18 @@ export interface Chart {
 export type LineType = "line" | "stackedarea" | "bumparea" | "stackedpercent";
 export type AreaType = "hexbin" | "heatmap" | "contour";
 
+export type BarGroupingType = "Stacked" | "Clustered";
+
+export type TrendLineType =
+  | "none"
+  | "linear"
+  | "polynomial"
+  | "logarithmic"
+  | "exponential"
+  | "power";
+
 export type SummaryType =
+  | "none"
   | "violin"
   | "joy"
   | "histogram"
@@ -98,3 +114,19 @@ export interface JSONObject {
   [key: string]: JSONType;
 }
 export interface JSONArray extends Array<JSONType> {}
+
+/**
+ *
+ * A custom `data-explorer` component is made up of at least one `viz` component
+ * and an optional toolbar. Additional components may be added in the future.
+ *
+ * The root `data-explorer` uses the following `componentType`'s to determine
+ * which props to pass down. If a child component does not have one of these types,
+ * it won't be passed any additional props.
+ *
+ * At the moment, these types are just an implementation detail, but in the future
+ * this could be used as a "public api" for creating custom components
+ * known to `data-explorer`.
+ *
+ */
+export type ComponentType = "viz" | "toolbar";

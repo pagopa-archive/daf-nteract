@@ -15,11 +15,11 @@ describe("Kernel", () => {
     const originalKill = process.kill;
     process.kill = jest.fn();
     expect(kernel.process).toBeDefined();
-    await kernel.shutdown();
+    await kernel.shutdown(500);
     expect(process.kill).toBeCalledWith(kernel.process.pid);
     expect(process.kill).toBeCalledTimes(1);
     process.kill = originalKill;
-    await kernel.shutdown();
+    await kernel.shutdown(500);
     done();
   });
   it("creates a valid shutdown epic", async done => {

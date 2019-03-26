@@ -18,3 +18,5 @@ Plain.defaultProps = {
 };
 
 Plain.displayName = "Plaintext";
+
+export default Plain;

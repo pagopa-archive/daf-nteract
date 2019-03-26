@@ -56,95 +56,100 @@ export function launchKernelObservable(
   const spec = kernelSpec.spec;
 
   return new Observable(observer => {
-    launchSpec(spec, { cwd, stdio: ["ignore", "pipe", "pipe"] }).then(
-      (c: {
-        config: JupyterConnectionInfo;
-        spawn: ChildProcess;
-        connectionFile: string;
-      }) => {
-        const { config, spawn, connectionFile } = c;
+    launchSpec(spec, { cwd, stdio: ["ignore", "pipe", "pipe"] })
+      .then(
+        async (c: {
+          config: JupyterConnectionInfo;
+          spawn: ChildProcess;
+          connectionFile: string;
+        }) => {
+          const { config, spawn, connectionFile } = c;
 
-        // Pick a random color for the kernel to assist in debugging kernels
-        const logColor = sample([
-          "#404040",
-          "#704040",
-          "#407040",
-          "#404070",
-          "#704070",
-          "#707040",
-          "#407070",
-          "#707070"
-        ]);
+          // Pick a random color for the kernel to assist in debugging kernels
+          const logColor = sample([
+            "#404040",
+            "#704040",
+            "#407040",
+            "#404070",
+            "#704070",
+            "#707040",
+            "#407070",
+            "#707070"
+          ]);
 
-        const logStd = (text: string) => {
+          const logStd = (text: string) => {
+            console.log(
+              `%c${text}`,
+              `color: ${logColor}; font-family: Source Code Pro, courier;`
+            );
+          };
+
           console.log(
-            `%c${text}`,
-            `color: ${logColor}; font-family: Source Code Pro, courier;`
+            `\n>>>> %cLogging kernel ${
+              kernelSpec.name
+            } (ref ${kernelRef}) stdout and stderr to javascript console in %cthis color %c  %c <<<<\n`,
+            "font-weight: bold;",
+            `color: ${logColor}; font-weight: bold;`,
+            `background-color: ${logColor}; padding: 2px;`,
+            "color: black"
           );
-        };
 
-        console.log(
-          `\n>>>> %cLogging kernel ${
-            kernelSpec.name
-          } (ref ${kernelRef}) stdout and stderr to javascript console in %cthis color %c  %c <<<<\n`,
-          "font-weight: bold;",
-          `color: ${logColor}; font-weight: bold;`,
-          `background-color: ${logColor}; padding: 2px;`,
-          "color: black"
-        );
-
-        spawn.stdout.on("data", data => {
-          const text = data.toString();
-          logStd(text);
-          observer.next(actions.kernelRawStdout({ text, kernelRef }));
-        });
-        spawn.stderr.on("data", data => {
-          const text = data.toString();
-          logStd(text);
-          observer.next(actions.kernelRawStderr({ text, kernelRef }));
-        });
-
-        // do dependency injection of jmp to make it match our ABI version of node
-        createMainChannel(config, undefined, undefined, undefined, jmp)
-          .then((channels: Channels) => {
-            observer.next(
-              actions.setKernelspecInfo({
-                contentRef,
-                kernelInfo: kernelSpec
-              })
-            );
-
-            const kernel: LocalKernelProps = {
-              info: null,
-              type: "zeromq",
-              hostRef: null,
-              channels,
-              connectionFile,
-              spawn,
-              cwd,
-              kernelSpecName: kernelSpec.name,
-              lastActivity: null,
-              status: "launched"
-            };
-
-            observer.next(
-              actions.launchKernelSuccessful({
-                kernel,
-                kernelRef,
-                contentRef,
-                selectNextKernel: true
-              })
-            );
-            observer.next(
-              actions.setExecutionState({ kernelStatus: "launched", kernelRef })
-            );
-            observer.complete();
-          })
-          .catch(error => {
-            observer.error({ type: "ERROR", payload: error, err: true });
+          spawn.stdout.on("data", data => {
+            const text = data.toString();
+            logStd(text);
+            observer.next(actions.kernelRawStdout({ text, kernelRef }));
           });
-      }
-    );
+          spawn.stderr.on("data", data => {
+            const text = data.toString();
+            logStd(text);
+            observer.next(actions.kernelRawStderr({ text, kernelRef }));
+          });
+
+          // do dependency injection of jmp to make it match our ABI version of node
+          const channels = await createMainChannel(
+            config,
+            undefined,
+            undefined,
+            undefined,
+            jmp
+          );
+          observer.next(
+            actions.setKernelspecInfo({
+              contentRef,
+              kernelInfo: kernelSpec
+            })
+          );
+
+          const kernel: LocalKernelProps = {
+            info: null,
+            type: "zeromq",
+            hostRef: null,
+            channels,
+            connectionFile,
+            spawn,
+            cwd,
+            kernelSpecName: kernelSpec.name,
+            lastActivity: null,
+            status: "launched"
+          };
+
+          observer.next(
+            actions.launchKernelSuccessful({
+              kernel,
+              kernelRef,
+              contentRef,
+              selectNextKernel: true
+            })
+          );
+          observer.next(
+            actions.setExecutionState({ kernelStatus: "launched", kernelRef })
+          );
+          observer.complete();
+        }
+      )
+      .catch(error => {
+        observer.error({ type: "ERROR", payload: error, err: true });
+      });
   });
 }
 

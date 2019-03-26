@@ -13,7 +13,7 @@ interface Caught {
   info: ReactErrorInfo;
 }
 
-interface RichMediaProps {
+export interface RichMediaProps {
   /**
    * Object of media type → data
    *
@@ -37,7 +37,7 @@ interface RichMediaProps {
   /**
    * React elements that accept media bundle data, will get passed data[mimetype]
    */
-  children: React.ReactNode;
+  children: React.ReactElement<any> | React.ReactNodeArray | null | undefined;
 
   renderError(param: {
     error: Error;
@@ -85,28 +85,36 @@ export class RichMedia extends React.PureComponent<RichMediaProps, State> {
     this.setState({ caughtError: { error, info } });
   }
 
-  render() {
-    if (this.state.caughtError) {
-      return this.props.renderError({
-        ...this.state.caughtError,
-        data: this.props.data,
-        metadata: this.props.metadata,
-        children: this.props.children
-      });
-    }
-
+  choose = (
+    children: RichMediaProps["children"]
+  ): null | React.ReactElement<any> => {
     // We must pick only one child to render
-    let chosenOne: React.ReactChild | null = null;
+    let chosenOne: React.ReactElement<any> | null = null;
 
     const data = this.props.data;
 
     // Find the first child element that matches something in this.props.data
-    React.Children.forEach(this.props.children, child => {
-      const childElement = child as React.ReactElement<any>;
+    React.Children.forEach(children, child => {
       if (chosenOne) {
         // Already have a selection
         return;
       }
+      const childElement = child;
+
+      if (
+        !childElement ||
+        typeof childElement === "string" ||
+        typeof childElement === "number"
+      ) {
+        return;
+      }
+
+      if (childElement.type === RichMedia) {
+        // One of our children is itself a RichMedia we can defer to
+        chosenOne = this.choose(childElement.props.children);
+        return;
+      }
+
       if (
         childElement.props &&
         childElement.props.mediaType &&
@@ -117,12 +125,27 @@ export class RichMedia extends React.PureComponent<RichMediaProps, State> {
       }
     });
 
+    return chosenOne;
+  };
+
+  render() {
+    if (this.state.caughtError) {
+      return this.props.renderError({
+        ...this.state.caughtError,
+        data: this.props.data,
+        metadata: this.props.metadata,
+        children: this.props.children
+      });
+    }
+
+    const chosenOne = this.choose(this.props.children);
+
     // If we didn't find a match, render nothing
-    if (chosenOne === null) {
+    if (chosenOne === null || !chosenOne.props.mediaType) {
       return null;
     }
 
-    const mediaType = (chosenOne as React.ReactElement<any>).props.mediaType;
+    const mediaType = chosenOne.props.mediaType;
 
     return React.cloneElement(chosenOne, {
       data: this.props.data[mediaType],
@@ -130,3 +153,5 @@ export class RichMedia extends React.PureComponent<RichMediaProps, State> {
     });
   }
 }
+
+export default RichMedia;

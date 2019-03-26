@@ -9,7 +9,7 @@ $ yarn add @nteract/monaco-editor
 ```
 
 ```
-$ npm install --save @nteract/actions
+$ npm install --save @nteract/monaco-editor
 ```
 
 ## Usage

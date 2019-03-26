@@ -50,3 +50,5 @@ Source.defaultProps = {
 };
 
 Source.displayName = "Source";
+
+export default Source;
