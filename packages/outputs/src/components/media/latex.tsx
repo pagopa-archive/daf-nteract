@@ -16,3 +16,5 @@ export class LaTeX extends React.PureComponent<Props> {
     return <MathJax.Text>{this.props.data}</MathJax.Text>;
   }
 }
+
+export default LaTeX;

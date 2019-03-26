@@ -16,3 +16,5 @@ export const Pagers = styled(Outputs)`
 `;
 
 Pagers.displayName = "Pagers";
+
+export default Pagers;

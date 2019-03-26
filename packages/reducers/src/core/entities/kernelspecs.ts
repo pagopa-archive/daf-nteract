@@ -1,16 +1,15 @@
-import { List, Map } from "immutable";
-import { Action } from "redux";
-import { combineReducers } from "redux-immutable";
-
+// Vendor modules
 import * as actionTypes from "@nteract/actions";
 import {
-  KernelspecProps,
   makeKernelspec,
   makeKernelspecsByRefRecord,
   makeKernelspecsRecord
 } from "@nteract/types";
+import { List, Map } from "immutable";
+import { Action, Reducer } from "redux";
+import { combineReducers } from "redux-immutable";
 
-const byRef = (state = Map(), action: Action) => {
+const byRef = (state = Map(), action: Action): Map<{}, {}> => {
   const typedAction = action as actionTypes.FetchKernelspecsFulfilled;
   switch (action.type) {
     case actionTypes.FETCH_KERNELSPECS_FULFILLED:
@@ -32,7 +31,7 @@ const byRef = (state = Map(), action: Action) => {
   }
 };
 
-const refs = (state = List(), action: Action) => {
+const refs = (state = List(), action: Action): List<any> => {
   let typedAction;
   switch (action.type) {
     case actionTypes.FETCH_KERNELSPECS_FULFILLED:
@@ -45,7 +44,10 @@ const refs = (state = List(), action: Action) => {
   }
 };
 
-export const kernelspecs = combineReducers(
-  { byRef, refs },
-  makeKernelspecsRecord as any
-);
+export const kernelspecs: Reducer<
+  {
+    byRef: Map<{}, {}>;
+    refs: List<any>;
+  },
+  Action<any>
+> = combineReducers({ byRef, refs }, makeKernelspecsRecord as any);

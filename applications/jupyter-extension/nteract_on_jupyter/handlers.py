@@ -58,6 +58,9 @@ class NAppHandler(IPythonHandler):
         else:
             page_title = 'nteract'
 
+        bookstore_settings =  self.settings.get("bookstore", {})
+        bookstore_settings['enabled'] = all(value for value in bookstore_settings.get("validation", {}).values())
+
         config = dict(
             ga_code=config.ga_code,
             asset_url=asset_url,
@@ -68,7 +71,9 @@ class NAppHandler(IPythonHandler):
             public_url=url,
             contents_path=path,
             page=self.page,
+            bookstore=bookstore_settings
         )
+
         self.write(self.render_template('index.html', **config))
 
     def get_template(self, name):

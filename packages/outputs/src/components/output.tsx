@@ -119,3 +119,5 @@ export class Output extends React.PureComponent<Props, State> {
     return React.cloneElement(chosenOne, { output: this.props.output });
   }
 }
+
+export default Output;

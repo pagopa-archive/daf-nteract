@@ -17,3 +17,5 @@ export const Cells = styled.div`
 `;
 
 Cells.displayName = "Cells";
+
+export default Cells;

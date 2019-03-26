@@ -18,6 +18,8 @@ import {
 import { Media } from "@nteract/outputs";
 import { ContentRecord, HostRecord } from "@nteract/types";
 
+import TransformVDOM from "@nteract/transform-vdom";
+
 import * as Immutable from "immutable";
 import * as React from "react";
 import ReactDOM from "react-dom";
@@ -110,7 +112,7 @@ export async function main(config: JupyterConfigData, rootEl): Promise<void> {
             "application/vnd.vegalite.v2+json": NullTransform,
             "application/vnd.vega.v2+json": NullTransform,
             "application/vnd.vega.v3+json": NullTransform,
-            "application/vdom.v1+json": NullTransform,
+            "application/vdom.v1+json": TransformVDOM,
             "application/json": Media.Json,
             "application/javascript": Media.JavaScript,
             "text/html": Media.HTML,

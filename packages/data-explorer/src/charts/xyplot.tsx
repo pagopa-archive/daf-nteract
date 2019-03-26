@@ -32,6 +32,8 @@ interface XYPlotOptions {
   height: Dx.ChartOptions["height"];
   primaryKey: Dx.ChartOptions["primaryKey"];
   setColor: Dx.ChartOptions["setColor"];
+  trendLine: Dx.TrendLineType;
+  marginalGraphics: Dx.SummaryType;
 }
 
 const binHash = {
@@ -98,7 +100,15 @@ export const semioticScatterplot = (
 ) => {
   const height = options.height - 150 || 500;
 
-  const { chart, primaryKey, colors, setColor, dimensions } = options;
+  const {
+    chart,
+    primaryKey,
+    colors,
+    setColor,
+    dimensions,
+    trendLine,
+    marginalGraphics
+  } = options;
 
   const { dim1, dim2, dim3, metric1, metric2, metric3 } = chart;
   const filteredData: Dx.Datapoint[] = data.filter(
@@ -136,7 +146,9 @@ export const semioticScatterplot = (
   };
 
   const areaTooltip = (hoveredDatapoint: Dx.Datapoint) => {
-    if (hoveredDatapoint.binItems.length === 0) {
+    const binItems = hoveredDatapoint.binItems || hoveredDatapoint.data || [];
+
+    if (binItems.length === 0) {
       return null;
     }
     return (
@@ -144,7 +156,7 @@ export const semioticScatterplot = (
         <TooltipHeader>
           ID, {metric1}, {metric2}
         </TooltipHeader>
-        {hoveredDatapoint.binItems.map(
+        {binItems.map(
           (binnedDatapoint: { [index: string]: any }, index: number) => {
             const id = dimensions
               .map(
@@ -238,7 +250,6 @@ export const semioticScatterplot = (
   }
 
   let areas: Array<{ coordinates: Dx.Datapoint[] }> = [];
-
   if (
     type === "heatmap" ||
     type === "hexbin" ||
@@ -248,7 +259,7 @@ export const semioticScatterplot = (
 
     if (type !== "contour") {
       const calculatedAreas = binHash[type]({
-        areaType: { type, bins: 10 },
+        summaryType: { type, bins: 10 },
         data: {
           coordinates: filteredData.map(datapoint => ({
             ...datapoint,
@@ -258,6 +269,7 @@ export const semioticScatterplot = (
         },
         size: [height, height]
       });
+
       areas = calculatedAreas;
 
       const thresholdSteps = [0.2, 0.4, 0.6, 0.8, 1]
@@ -339,7 +351,43 @@ export const semioticScatterplot = (
   const renderInCanvas =
     (type === "scatterplot" || type === "contour") && data.length > 999;
 
-  return {
+  let marginalGraphicsAxes: object[] = [];
+
+  if (marginalGraphics !== "none") {
+    marginalGraphicsAxes = [
+      {
+        orient: "right",
+        tickLineGenerator: () => <g />,
+        tickFormat: () => "",
+        marginalSummaryType: {
+          type: marginalGraphics,
+          showPoints: !renderInCanvas
+        }
+      },
+      {
+        orient: "top",
+        tickLineGenerator: () => <g />,
+        tickFormat: () => "",
+        marginalSummaryType: {
+          type: marginalGraphics,
+          showPoints: !renderInCanvas
+        }
+      }
+    ];
+  }
+
+  let calculatedSummaryType;
+  if (type === "scatterplot" && trendLine !== "none") {
+    calculatedSummaryType = { type: "trendline", regressionType: trendLine };
+  } else if (type !== "scatterplot") {
+    calculatedSummaryType = {
+      type,
+      bins: 10,
+      thresholds: dim3 === "none" ? 6 : 3
+    };
+  }
+
+  const xyPlotSettings: { [key: string]: any } = {
     xAccessor: type === "hexbin" || type === "heatmap" ? "x" : metric1,
     yAccessor: type === "hexbin" || type === "heatmap" ? "y" : metric2,
     axes: [
@@ -359,26 +407,28 @@ export const semioticScatterplot = (
         footer: type === "heatmap",
         baseline: type === "scatterplot",
         tickSize: type === "heatmap" ? 0 : undefined
-      }
+      },
+      ...marginalGraphicsAxes
     ],
     points: (type === "scatterplot" || type === "contour") && data,
     canvasPoints: renderInCanvas,
-    areas: type !== "scatterplot" && areas,
-    areaType: { type, bins: 10, thresholds: dim3 === "none" ? 6 : 3 },
-    areaStyle: (areaDatapoint: Dx.Datapoint) => {
+    summaryType: calculatedSummaryType,
+    summaryStyle: (areaDatapoint: Dx.Datapoint) => {
+      if (type === "scatterplot") {
+        return { stroke: "darkred", strokeWidth: 2, fill: "none" };
+      }
+
       return {
         fill:
           type === "contour"
             ? "none"
-            : thresholds(
-                (areaDatapoint.binItems || areaDatapoint.data.binItems).length
-              ),
+            : thresholds((areaDatapoint.binItems || areaDatapoint.data).length),
         stroke:
           type !== "contour"
             ? undefined
             : dim3 === "none"
             ? "#BBB"
-            : areaDatapoint.parentArea.color,
+            : areaDatapoint.parentSummary.color,
         strokeWidth: type === "contour" ? 2 : 1
       };
     },
@@ -396,8 +446,8 @@ export const semioticScatterplot = (
     }),
     hoverAnnotation: true,
     responsiveWidth: false,
-    size: [height + 225, height + 80],
-    margin: { left: 75, bottom: 50, right: 150, top: 30 },
+    size: [height + 105, height + 80],
+    margin: { left: 75, bottom: 50, right: 30, top: 30 },
     annotations: (type === "scatterplot" && annotations) || undefined,
     annotationSettings: {
       layout: { type: "marginalia", orient: "right", marginOffset: 30 }
@@ -407,4 +457,10 @@ export const semioticScatterplot = (
       pointTooltip,
     ...additionalSettings
   };
+
+  if (type !== "scatterplot") {
+    xyPlotSettings.areas = areas;
+  }
+
+  return xyPlotSettings;
 };

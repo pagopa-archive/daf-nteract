@@ -80,6 +80,7 @@ export class DirectoryApp extends React.PureComponent<DirectoryProps> {
               <Entry>
                 <Icon fileType={"directory"} />
                 <Name>{dotdotlink}</Name>
+                <LastSaved lastModified={null} />
               </Entry>
             )}
             {this.props.contents.map((entry, index) => {
