@@ -1,13 +1,12 @@
+// Vendor modules
+import * as actions from "@nteract/actions";
+import { makeStateRecord } from "@nteract/types";
 import { Action } from "redux";
 import { combineReducers } from "redux-immutable";
 
-import * as actions from "@nteract/actions";
-
-import { makeStateRecord } from "@nteract/types";
-
+// Local modules
 import { entities } from "./entities";
 
-// TODO: #2618: This should at a minimum be moved into a contents entry.
 // TODO: This is temporary until we have sessions in place. Ideally, we point to
 // a document, which knows about its session and that session knows about its
 // kernel. For now, we need to keep a reference to the currently targeted kernel

@@ -88,3 +88,5 @@ export const PromptBuffer = styled(Prompt)``;
 PromptBuffer.defaultProps = {
   blank: true
 };
+
+export default Prompt;

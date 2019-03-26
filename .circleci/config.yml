@@ -20,6 +20,7 @@ jobs:
             # fallback to using the latest cache if no exact match is found
             - yarn-packages-
 
+      - run: echo 'export PATH=/home/circleci/.local/bin:$PATH' >> $BASH_ENV
       - run: pip install --user setuptools
       - run: pip install --user jupyter
       - run: yarn
@@ -51,6 +52,5 @@ jobs:
       - run:
           name: Lint Jupyter Extension
           command: |
-            export PATH='/home/circleci/.local/bin':$PATH
             pip install --user black
             cd ./applications/jupyter-extension && black --config ./pyproject.toml .

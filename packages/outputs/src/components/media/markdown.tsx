@@ -23,3 +23,5 @@ export class Markdown extends React.PureComponent<Props> {
     return <MarkdownComponent source={this.props.data} />;
   }
 }
+
+export default Markdown;

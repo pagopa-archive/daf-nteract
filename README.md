@@ -1,6 +1,6 @@
 # PDND-nteract
 
-This is a branched (daf-*) fork of [nteract](https://nteract.io), a react user interface on top of jupyter server. We have developed an integration of the API from [PDND - DAF](https://dataportal.daf.teamdigitale.it) (Piattaforma Digitale Nazionale Dati) for simplyfing the access to Italian public data inside notebook for data analysis. We are developing a set of UI components integrated into a set of API to **read**, **save** and **update** data into PDND - DAF. As in the image below 
+This is a branched (daf-\*) fork of [nteract](https://nteract.io), a react user interface on top of jupyter server. We have developed an integration of the API from [PDND - DAF](https://dataportal.daf.teamdigitale.it) (Piattaforma Digitale Nazionale Dati) for simplyfing the access to Italian public data inside notebook for data analysis. We are developing a set of UI components integrated into a set of API to **read**, **save** and **update** data into PDND - DAF. As in the image below
 
 ![search components](https://raw.githubusercontent.com/teamdigitale/nteract/daf-develop/pdnd-tutorials/img/search_with_logo.png)
 
@@ -10,16 +10,15 @@ the user can search dataset from [PDND - DAF](https://dataportal.daf.teamdigital
 
 Once installed on you local machine, you can read a simple [tutorial](https://github.com/teamdigitale/nteract/blob/daf-develop/pdnd-tutorials/pdnd-nteract-tutorial.md) for understanding the basic functionalities implemented. In the next releases we will provide more functionalities and tutorials. If you want to contribute with only suggestions use this repo, opening issues and following our [project](https://github.com/teamdigitale/nteract/projects) and [milestone](https://github.com/teamdigitale/nteract/milestones).
 
-
 ## Getting Started
 
 There are three ways to get you a copy of the project up and running on your local machine depending on your purpose:
-* [Docker](#docker-installation) for a fast try (no data saved)
-* [Install for data analyst](#install-for-data-analyst)
-* [Install for contributing as developers](#install-for-contributing)
 
+- [Docker](#docker-installation) for a fast try (no data saved)
+- [Install for data analyst](#install-for-data-analyst)
+- [Install for contributing as developers](#install-for-contributing)
 
-### Docker 
+### Docker
 
 Docker MUST be installed on your local machine
 
@@ -34,21 +33,20 @@ Save the token from the output of your console as:
 http://(b4fd9e3ef290 or 127.0.0.1):8888/?token=XXXXXXXXXXXXXX
 and open your browser at [http://localhost:8888]. If you are asked the token paste it.
 
-
 ### Install for data analyst
 
 If you want to use this repo as your favorite tool for anlysing Italian public dataset you can follow these steps:
 
-Requires [Node.js](https://docs.npmjs.com/getting-started/installing-node), [yarn](https://yarnpkg.com/lang/en/docs/install/), [lerna](https://lernajs.io/) python 3 and pip on python 3. The following steps are for MacOs only but can be adjusted for different operating systems. 
+Requires [Node.js](https://docs.npmjs.com/getting-started/installing-node), [yarn](https://yarnpkg.com/lang/en/docs/install/), [lerna](https://lernajs.io/) python 3 and pip on python 3. The following steps are for MacOs only but can be adjusted for different operating systems.
 
 ```
 git clone git@github.com:teamdigitale/nteract.git
 cd nteract
 pip3 install jupyter requests pandas fbprophet
 npm install --global lerna
-brew install yarn 
+brew install yarn
 yarn install
-cd applications/jupyter-extension 
+cd applications/jupyter-extension
 pip3 install -e .
 jupyter serverextension enable nteract_on_jupyter
 lerna run build:asap --scope nteract-on-jupyter --stream
@@ -58,17 +56,17 @@ jupyter nteract
 
 ### Install for contributing
 
-If you want to contribute to the project, we suggest to follow the contrubuting guidelines of [nteract](https://nteract.io). We have public milestones and [project](https://github.com/teamdigitale/nteract/projects) on github for looking at our current work. Nteract is build using typescript react redux rx-js and is a very active project. If you are willing to work on such technolgies can be a really good start and we are very open to create a community around our integration. 
+If you want to contribute to the project, we suggest to follow the contrubuting guidelines of [nteract](https://nteract.io). We have public milestones and [project](https://github.com/teamdigitale/nteract/projects) on github for looking at our current work. Nteract is build using typescript react redux rx-js and is a very active project. If you are willing to work on such technolgies can be a really good start and we are very open to create a community around our integration.
 
-Requires [Node.js](https://docs.npmjs.com/getting-started/installing-node), [yarn](https://yarnpkg.com/lang/en/docs/install/), [lerna](https://lernajs.io/) python 3 and pip on python 3. The following steps are for MacOs only but can be adjusted for different operating systems. 
+Requires [Node.js](https://docs.npmjs.com/getting-started/installing-node), [yarn](https://yarnpkg.com/lang/en/docs/install/), [lerna](https://lernajs.io/) python 3 and pip on python 3. The following steps are for MacOs only but can be adjusted for different operating systems.
 
 ```
 git clone git@github.com:teamdigitale/nteract.git
 cd nteract
 pip3 install jupyter requests pandas fbprophet
-brew install yarn 
+brew install yarn
 yarn install
-cd applications/jupyter-extension 
+cd applications/jupyter-extension
 pip3 install -e .
 jupyter serverextension enable nteract_on_jupyter
 cd YOUR_LOCAL_FODER_TO_SAVE_OR_LOAD_NOTEBOOKS

@@ -21,6 +21,7 @@ export type ChartOptionTypes =
   | "metric1"
   | "metric2"
   | "metric3"
+  | "metric4"
   | "dim1"
   | "dim2"
   | "dim3"
@@ -36,8 +37,10 @@ export type ExplorationTypes =
   | "summaryType"
   | "hierarchyType"
   | "nestingDimensions"
-  | "barDimensions";
-
+  | "barDimensions"
+  | "trendLine"
+  | "barGrouping"
+  | "marginalGraphics";
 export const controlHelpText: {
   [key in ExplorationTypes]?: { [key: string]: string } | string
 } = {
@@ -53,6 +56,7 @@ export const controlHelpText: {
     default: "Size the width of bars (Marimekko style) based on this metric",
     scatter: "Size the radius of points based on this metric"
   },
+  metric4: "Error bars according to this value",
   dim1: {
     default: "Color items by this dimension",
     summary: "Group items into this category",
@@ -75,5 +79,10 @@ export const controlHelpText: {
     "Represent your data using a line chart, stacked area chart or ranked area chart",
   areaType: "Represent as a heatmap, hexbin or contour plot",
   lineDimensions:
-    "Only plot the selected dimensions (or all if none are selected)"
+    "Only plot the selected dimensions (or all if none are selected)",
+  trendLine: "Select the kind of trend line you want to display on the chart",
+  barGrouping:
+    "Choose between a clustered or a stacked bar chart when there are multiple pieces in the same category",
+  marginalGraphics:
+    "Choose the kind of marginal summary you want to see for summarizing density along the axes"
 };

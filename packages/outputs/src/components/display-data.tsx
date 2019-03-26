@@ -2,7 +2,7 @@ import * as React from "react";
 
 import { ImmutableDisplayData } from "@nteract/commutable";
 
-import { RichMedia } from "./rich-media";
+import { RichMedia, RichMediaProps } from "./rich-media";
 
 interface Props {
   /**
@@ -13,7 +13,7 @@ interface Props {
   /**
    * React elements that accept media bundle data, will get passed `data[mediaType]`
    */
-  children: React.ReactNode;
+  children: RichMediaProps["children"];
 }
 
 export const DisplayData = (props: Props) => {
@@ -33,3 +33,5 @@ DisplayData.defaultProps = {
   output_type: "display_data",
   output: null
 };
+
+export default DisplayData;

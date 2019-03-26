@@ -79,3 +79,5 @@ export class HTML extends React.PureComponent<Props> {
     );
   }
 }
+
+export default HTML;

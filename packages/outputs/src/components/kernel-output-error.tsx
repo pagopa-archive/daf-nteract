@@ -48,3 +48,5 @@ KernelOutputError.defaultProps = {
 };
 
 KernelOutputError.displayName = "KernelOutputError";
+
+export default KernelOutputError;

@@ -1,11 +1,13 @@
-import { shallow } from "enzyme";
+import { mount, shallow } from "enzyme";
 import * as React from "react";
 
 import {
   DisplayData,
   ExecuteResult,
   KernelOutputError,
+  Media,
   Output,
+  RichMedia,
   StreamText
 } from "../src";
 
@@ -94,5 +96,47 @@ describe("Output", () => {
     );
 
     expect(component.type()).toEqual(ExecuteResult);
+  });
+});
+
+describe("Full Outputs usage", () => {
+  const testOutput = {
+    output_type: "display_data",
+    data: {
+      "text/html": "<p>This is some HTML that <b>WILL</b> render</p>",
+      "text/plain": "This is some plain text that WILL NOT render"
+    },
+    metadata: {}
+  };
+
+  function Usage(props) {
+    // This example tests nested RichMedia usage, see #4250
+    const richMedia = (
+      <RichMedia>
+        <Media.Json />
+        <Media.HTML />
+        <Media.Plain />
+      </RichMedia>
+    );
+
+    return (
+      <Output output={props.output}>
+        <DisplayData>{richMedia}</DisplayData>
+        <ExecuteResult>{richMedia}</ExecuteResult>
+      </Output>
+    );
+  }
+
+  const wrapper = mount(<Usage output={testOutput} />);
+
+  test("<Output /> selects correct output to render based on output.displayType", () => {
+    expect(wrapper.find(DisplayData).exists()).toEqual(true);
+    expect(wrapper.find(ExecuteResult).exists()).toEqual(false);
+  });
+
+  test("Nested <RichMedia /> chooses the richest media type", () => {
+    const chosen = wrapper.find(Media.HTML);
+    expect(chosen.type()).toEqual(Media.HTML);
+    expect(chosen.text()).toEqual("This is some HTML that WILL render");
   });
 });

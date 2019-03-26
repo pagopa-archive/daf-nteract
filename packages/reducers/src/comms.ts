@@ -1,11 +1,11 @@
-import { fromJS } from "immutable";
-
+// Vendor modules
 import {
   CommMessageAction,
   CommOpenAction,
   RegisterCommTargetAction
 } from "@nteract/actions";
 import { CommsRecord, makeCommsRecord } from "@nteract/types";
+import { fromJS } from "immutable";
 
 function registerCommTarget(
   state: CommsRecord,
@@ -60,7 +60,7 @@ type CommAction = RegisterCommTargetAction | CommMessageAction | CommOpenAction;
 export default function(
   state: CommsRecord = makeCommsRecord(),
   action: CommAction
-) {
+): CommsRecord {
   switch (action.type) {
     case "REGISTER_COMM_TARGET":
       return registerCommTarget(state, action);

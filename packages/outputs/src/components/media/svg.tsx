@@ -40,3 +40,5 @@ export class SVG extends React.PureComponent<Props> {
     );
   }
 }
+
+export default SVG;

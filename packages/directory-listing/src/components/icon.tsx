@@ -7,22 +7,19 @@ interface IconProps {
   fileType: "unknown" | "notebook" | "directory" | "file" | "dummy";
 }
 
-const IconTD = styled.td.attrs(props => ({
+const IconWrapper = styled.span.attrs(props => ({
   style: {
     color: props.color
   }
 }))`
-  padding-right: 2px;
-  padding-left: 10px;
-  width: 17px;
   vertical-align: middle;
   text-align: center;
   opacity: 0.95;
   color: "#0366d6";
 `;
 
-IconTD.displayName = "IconTD";
-IconTD.defaultProps = {
+IconWrapper.displayName = "IconWrapper";
+IconWrapper.defaultProps = {
   color: "#0366d6"
 };
 
@@ -49,6 +46,8 @@ export class Icon extends React.PureComponent<IconProps> {
         icon = <FileText />;
     }
 
-    return <IconTD>{icon}</IconTD>;
+    return <IconWrapper>{icon}</IconWrapper>;
   }
 }
+
+export default Icon;

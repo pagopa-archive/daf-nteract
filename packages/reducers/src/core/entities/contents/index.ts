@@ -1,8 +1,6 @@
-import { fromJS } from "@nteract/commutable";
-import { List, Map, RecordOf } from "immutable";
-import { Action } from "redux";
-
+// Vendor modules
 import * as actionTypes from "@nteract/actions";
+import { fromJS } from "@nteract/commutable";
 import {
   ContentModel,
   ContentRecord,
@@ -19,7 +17,10 @@ import {
   makeFileModelRecord,
   makeNotebookContentRecord
 } from "@nteract/types";
+import { List, Map, RecordOf } from "immutable";
+import { Action } from "redux";
 
+// Local modules
 import { file } from "./file";
 import { notebook } from "./notebook";
 
@@ -195,8 +196,9 @@ const byRef = (
         .updateIn(
           [saveFulfilledAction.payload.contentRef, "model"],
           (model: ContentModel) => {
-            // Notebook ends up needing this because we store a last saved version of the notebook
-            // Alternatively, we could be storing a hash of the content to compare 🤔
+            // Notebook ends up needing this because we store a last
+            // saved version of the notebook Alternatively, we could
+            // be storing a hash of the content to compare 🤔
             if (model && model.type === "notebook") {
               return notebook(model, saveFulfilledAction);
             }

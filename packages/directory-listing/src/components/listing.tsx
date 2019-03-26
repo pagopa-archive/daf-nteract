@@ -11,6 +11,7 @@ const ListingRoot = styled.table`
   border-collapse: collapse;
   border-radius: 2px;
   border-spacing: 0;
+  table-layout: auto;
 `;
 
 ListingRoot.displayName = "ListingRoot";
@@ -28,3 +29,5 @@ export class Listing extends React.PureComponent<ListingProps> {
     );
   }
 }
+
+export default Listing;

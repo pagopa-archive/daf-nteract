@@ -27,3 +27,5 @@ export class StreamText extends React.PureComponent<Props> {
     );
   }
 }
+
+export default StreamText;
