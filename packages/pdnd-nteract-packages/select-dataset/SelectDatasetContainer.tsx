@@ -5,10 +5,10 @@ import { IconNames } from "@blueprintjs/icons";
 
 import DatasetListContainer from "./src/DatasetListContainer";
 import { isUserLogged } from "../login/duck/loginDuck";
-import { IDatasetPopoverProps } from "./types";
+import { ISelectDatasetProps } from "./types";
 import "./styles.css";
 
-const DatasetPopover: FunctionComponent<IDatasetPopoverProps> = ({
+const SelectDataset: FunctionComponent<ISelectDatasetProps> = ({
   isUserLogged
 }) =>
   isUserLogged && (
@@ -23,9 +23,9 @@ const DatasetPopover: FunctionComponent<IDatasetPopoverProps> = ({
     />
   );
 
-const DatasetPopoverContainer = connect(
+const SelectDatasetContainer = connect(
   state => ({ ...isUserLogged(state) }),
   null
-)(DatasetPopover);
+)(SelectDataset);
 
-export default DatasetPopoverContainer;
+export default SelectDatasetContainer;

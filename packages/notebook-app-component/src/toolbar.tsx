@@ -22,7 +22,8 @@ import styled, { StyledComponent } from "styled-components";
 
 import { CellType } from "@nteract/commutable";
 
-import PdndMenu from "../../pdnd-nteract-packages/select-dataset";
+import SelectDataset from "../../pdnd-nteract-packages/select-dataset";
+import SaveDataset from "../../pdnd-nteract-packages/save-dataset";
 
 export interface PureToolbarProps {
   type: CellType;
@@ -140,7 +141,8 @@ export class PureToolbar extends React.PureComponent<PureToolbarProps> {
               </span>
             </button>
           )}
-          <PdndMenu />
+          <SelectDataset />
+          <SaveDataset />
           <DropdownMenu>
             <DropdownTrigger>
               <button title="show additional actions">

@@ -22,6 +22,14 @@ import loggedUser, {
   loggedUserInitialState
 } from "../login/duck/loginDuck";
 
+import saveDataset, {
+  saveDatasetTypes,
+  saveDatasetActions,
+  saveDatasetSelectors,
+  saveDatasetOperations,
+  saveDatasetInitialState
+} from "../save-dataset/duck/saveDatasetDuck";
+
 const selectedDatasetDuck = {
   selectedDatasetTypes,
   selectedDatasetInitialState,
@@ -49,34 +57,48 @@ const loggedUserDuck = {
   loggedUserOperations
 };
 
+const saveDatasetDuck = {
+  saveDatasetTypes,
+  saveDatasetInitialState,
+  saveDataset,
+  saveDatasetActions,
+  saveDatasetSelectors,
+  saveDatasetOperations
+};
+
 const pdndActionTypes = {
   ...selectedDatasetTypes,
   ...datasetListTypes,
-  ...loggedUserTypes
+  ...loggedUserTypes,
+  ...saveDatasetTypes
 };
 
 const pdndInitialState = {
   selectedDatasetInitialState,
   datasetListInitialState,
-  loggedUserInitialState
+  loggedUserInitialState,
+  saveDatasetInitialState
 };
 
 const pdndReducers = {
   selectedDataset,
   datasetList,
-  loggedUser
+  loggedUser,
+  saveDataset
 };
 
 const pdndActionCreators = {
   ...selectedDatasetActions,
   ...datasetListActions,
-  ...loggedUserActions
+  ...loggedUserActions,
+  ...saveDatasetActions
 };
 
 const pdndSelectors = {
   ...selectedDatasetSelectors,
   ...datasetListSelectors,
-  ...loggedUserSelectors
+  ...loggedUserSelectors,
+  ...saveDatasetSelectors
 };
 
 const pdndEpics = [
@@ -87,13 +109,16 @@ const pdndEpics = [
   loggedUserOperations.loginEpic,
   loggedUserOperations.requestLoginEpic,
   loggedUserOperations.rejectLoginEpic,
-  loggedUserOperations.logoutEpic
+  loggedUserOperations.logoutEpic,
+  saveDatasetOperations.datasetSaveEpic,
+  saveDatasetOperations.requestDatasetSaveEpic
 ];
 
 export {
   selectedDatasetDuck,
   datasetListDuck,
   loggedUserDuck,
+  saveDatasetDuck,
   pdndActionTypes,
   pdndInitialState,
   pdndReducers,
