@@ -31,7 +31,7 @@ const loggedUserTypes = {
 
 // reducer
 const loggedUserInitialState = Map({
-  data: Map({ bearerToken: "", basicToken: "", uid: "" }),
+  data: Map({ bearerToken: "", basicToken: "", uid: "", roles: [] }),
   meta: Map({ error: false, isLoading: false, hasLoaded: false })
 });
 

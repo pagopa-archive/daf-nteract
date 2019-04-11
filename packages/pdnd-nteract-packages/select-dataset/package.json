@@ -1,7 +1,7 @@
 {
   "name": "@pdnd-nteract-packages/select-dataset",
-  "version": "0.3.0",
-  "main": "DatasetPopoverContainer.tsx",
+  "version": "0.4.0",
+  "main": "SelectDatasetContainer.tsx",
   "author": "and0111",
   "license": "BSD-3-Clause",
   "private": true
