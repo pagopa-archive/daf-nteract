@@ -3,10 +3,13 @@ import * as React from "react";
 import DataResourceTransformGrid from "./charts/grid";
 import { semioticSettings } from "./charts/settings";
 import { Toolbar } from "./components/Toolbar";
+import { Viz } from "./components/Viz";
 import { colors } from "./settings";
 import VizControls from "./VizControls";
 
-const mediaType = "application/vnd.dataresource+json";
+export { DataExplorer, Toolbar, Viz };
+
+const mediaType: Props["mediaType"] = "application/vnd.dataresource+json";
 
 import styled from "styled-components";
 import * as Dx from "./types";
@@ -31,6 +34,9 @@ interface dxMetaProps {
   summaryType?: SummaryType;
   networkType?: NetworkType;
   hierarchyType?: HierarchyType;
+  trendLine?: Dx.TrendLineType;
+  marginalGraphics?: SummaryType;
+  barGrouping?: Dx.BarGroupingType;
   colors?: string[];
   chart?: Chart;
 }
@@ -40,15 +46,19 @@ interface Metadata {
   sampled?: boolean;
 }
 
-interface Props {
+export interface Props {
   data: Dx.DataProps;
   metadata: Metadata;
   theme?: string;
   expanded?: boolean;
   height?: number;
+  models?: {};
   mediaType: "application/vnd.dataresource+json";
   initialView: View;
-  onMetadataChange?: ({ dx }: { dx: dxMetaProps }, mediaType: string) => void;
+  onMetadataChange?: (
+    { dx }: { dx: dxMetaProps },
+    mediaType: Props["mediaType"]
+  ) => void;
 }
 
 interface State {
@@ -68,6 +78,9 @@ interface State {
   displayChart: DisplayChart;
   primaryKey: string[];
   data: Dx.Datapoint[];
+  trendLine: Dx.TrendLineType;
+  marginalGraphics: Dx.SummaryType;
+  barGrouping: Dx.BarGroupingType;
 }
 
 const generateChartKey = ({
@@ -80,6 +93,9 @@ const generateChartKey = ({
   summaryType,
   networkType,
   hierarchyType,
+  trendLine,
+  marginalGraphics,
+  barGrouping,
   chart
 }: {
   view: View;
@@ -91,13 +107,16 @@ const generateChartKey = ({
   summaryType: SummaryType;
   networkType: NetworkType;
   hierarchyType: HierarchyType;
+  trendLine: Dx.TrendLineType;
+  marginalGraphics: SummaryType;
+  barGrouping: Dx.BarGroupingType;
   chart: Chart;
 }) =>
   `${view}-${lineType}-${areaType}-${selectedDimensions.join(
     ","
   )}-${selectedMetrics.join(
     ","
-  )}-${pieceType}-${summaryType}-${networkType}-${hierarchyType}-${JSON.stringify(
+  )}-${pieceType}-${summaryType}-${networkType}-${hierarchyType}-${trendLine}-${marginalGraphics}-${barGrouping}-${JSON.stringify(
     chart
   )}`;
 
@@ -148,12 +167,8 @@ const FlexWrapper = styled.div`
   width: 100%;
 `;
 
-const FlexItem = styled.div`
-  flex: 1;
-`;
-
 const SemioticWrapper = styled.div`
-  width: "calc(100vw - 200px)";
+  width: 100%;
   .html-legend-item {
     color: var(--theme-app-fg);
   }
@@ -207,7 +222,7 @@ const SemioticWrapper = styled.div`
 `;
 
 class DataExplorer extends React.PureComponent<Partial<Props>, State> {
-  static MIMETYPE = mediaType;
+  static MIMETYPE: Props["mediaType"] = mediaType;
 
   static defaultProps = {
     metadata: {
@@ -227,7 +242,12 @@ class DataExplorer extends React.PureComponent<Partial<Props>, State> {
     const dx = metadata.dx || {};
     const chart = dx.chart || {};
 
-    const { fields = [], primaryKey = [] } = props.data.schema;
+    let { fields = [], primaryKey = [] } = props.data.schema;
+    // Provide a default primaryKey if none provided
+    if (primaryKey.length === 0) {
+      primaryKey = [Dx.defaultPrimaryKey];
+      fields = [...fields, { name: Dx.defaultPrimaryKey, type: "integer" }];
+    }
 
     const dimensions = fields.filter(
       field =>
@@ -237,11 +257,14 @@ class DataExplorer extends React.PureComponent<Partial<Props>, State> {
     ) as Dx.Dimension[];
 
     // Should datetime data types be transformed into js dates before getting to this resource?
-    const data = props.data.data.map(datapoint => {
+    const data = props.data.data.map((datapoint, datapointIndex) => {
       const mappedDatapoint: Dx.Datapoint = {
         ...datapoint
       };
       fields.forEach(field => {
+        if (field.name === Dx.defaultPrimaryKey) {
+          mappedDatapoint[Dx.defaultPrimaryKey] = datapointIndex;
+        }
         if (field.type === "datetime") {
           mappedDatapoint[field.name] = new Date(mappedDatapoint[field.name]);
         }
@@ -265,6 +288,9 @@ class DataExplorer extends React.PureComponent<Partial<Props>, State> {
       view: initialView,
       lineType: "line",
       areaType: "hexbin",
+      trendLine: "none",
+      marginalGraphics: "none",
+      barGrouping: "Clustered",
       selectedDimensions: [],
       selectedMetrics: [],
       pieceType: "bar",
@@ -279,6 +305,7 @@ class DataExplorer extends React.PureComponent<Partial<Props>, State> {
         metric1: (metrics[0] && metrics[0].name) || "none",
         metric2: (metrics[1] && metrics[1].name) || "none",
         metric3: "none",
+        metric4: "none",
         dim1: (dimensions[0] && dimensions[0].name) || "none",
         dim2: (dimensions[1] && dimensions[1].name) || "none",
         dim3: "none",
@@ -314,6 +341,9 @@ class DataExplorer extends React.PureComponent<Partial<Props>, State> {
       summaryType,
       networkType,
       hierarchyType,
+      trendLine,
+      marginalGraphics,
+      barGrouping,
       colors,
       primaryKey,
       data: stateData
@@ -337,7 +367,10 @@ class DataExplorer extends React.PureComponent<Partial<Props>, State> {
       summaryType,
       networkType,
       hierarchyType,
-      chart
+      chart,
+      trendLine,
+      marginalGraphics,
+      barGrouping
     });
 
     const frameSettings = chartGenerator(stateData, data!.schema, {
@@ -355,6 +388,9 @@ class DataExplorer extends React.PureComponent<Partial<Props>, State> {
       networkType,
       hierarchyType,
       primaryKey,
+      trendLine,
+      marginalGraphics,
+      barGrouping,
       setColor: this.setColor
     });
 
@@ -377,6 +413,9 @@ class DataExplorer extends React.PureComponent<Partial<Props>, State> {
             hierarchyType,
             summaryType,
             networkType,
+            trendLine,
+            marginalGraphics,
+            barGrouping,
             updateChart: this.updateChart,
             updateDimensions: this.updateDimensions,
             setLineType: this.setLineType,
@@ -405,6 +444,9 @@ class DataExplorer extends React.PureComponent<Partial<Props>, State> {
             summaryType,
             networkType,
             hierarchyType,
+            trendLine,
+            marginalGraphics,
+            barGrouping,
             colors,
             chart
           }
@@ -474,7 +516,10 @@ class DataExplorer extends React.PureComponent<Partial<Props>, State> {
       pieceType,
       summaryType,
       networkType,
-      hierarchyType
+      hierarchyType,
+      trendLine,
+      marginalGraphics,
+      barGrouping
     } = this.state;
 
     let display: React.ReactNode = null;
@@ -503,27 +548,61 @@ class DataExplorer extends React.PureComponent<Partial<Props>, State> {
         summaryType,
         networkType,
         hierarchyType,
-        chart
+        chart,
+        trendLine,
+        marginalGraphics,
+        barGrouping
       });
 
       display = this.state.displayChart[chartKey];
     }
+    const children = React.Children.map(this.props.children, child => {
+      if (!React.isValidElement(child)) {
+        return;
+      }
+      const { componentType } = child.props as any;
+      if (componentType === "viz") {
+        const newProps = { children: display };
+        return React.cloneElement(child, newProps);
+      } else if (componentType === "toolbar") {
+        const toolbarProps = {
+          dimensions,
+          currentView: view,
+          setGrid: this.setGrid,
+          setView: this.setView
+        };
+        return React.cloneElement(child, toolbarProps);
+      }
+
+      return child;
+    });
 
     return (
       <div>
         <MetadataWarning metadata={this.props.metadata!} />
-        <FlexWrapper>
-          <FlexItem>{display}</FlexItem>
-          <Toolbar
-            dimensions={dimensions}
-            setGrid={this.setGrid}
-            setView={this.setView}
-            currentView={view}
-          />
-        </FlexWrapper>
+        <FlexWrapper>{children}</FlexWrapper>
       </div>
     );
   }
 }
 
-export default DataExplorer;
+const DataExplorerDefault: React.FunctionComponent<Props> & {
+  MIMETYPE: Props["mediaType"];
+} = (props: Partial<Props>) => {
+  return (
+    <DataExplorer {...props}>
+      <Viz />
+      <Toolbar />
+    </DataExplorer>
+  );
+};
+
+DataExplorerDefault.defaultProps = {
+  mediaType
+};
+DataExplorerDefault.displayName = "DataExplorerDefault";
+
+// For the jupyter extension to load MIMETYPE must be present.
+DataExplorerDefault.MIMETYPE = mediaType;
+
+export default DataExplorerDefault;

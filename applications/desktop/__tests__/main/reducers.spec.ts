@@ -16,7 +16,7 @@ describe("setKernelspecs", () => {
               "/usr/local/share/jupyter/kernels/python3/logo-32x32.png",
               "/usr/local/share/jupyter/kernels/python3/logo-64x64.png"
             ],
-            resources_dir: "/usr/local/share/jupyter/kernels/python3",
+            resource_dir: "/usr/local/share/jupyter/kernels/python3",
             spec: {
               language: "python",
               display_name: "Python 3",
@@ -29,7 +29,7 @@ describe("setKernelspecs", () => {
               "/Users/rgbkrk/Library/Jupyter/kernels/javascript/logo-32x32.png",
               "/Users/rgbkrk/Library/Jupyter/kernels/javascript/logo-64x64.png"
             ],
-            resources_dir: "/Users/rgbkrk/Library/Jupyter/kernels/javascript",
+            resource_dir: "/Users/rgbkrk/Library/Jupyter/kernels/javascript",
             spec: {
               argv: [Object],
               display_name: "Javascript (Node.js)",

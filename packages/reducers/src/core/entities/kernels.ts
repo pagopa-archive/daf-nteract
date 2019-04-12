@@ -1,25 +1,23 @@
-import { List, Map } from "immutable";
-import { Action } from "redux";
-import { combineReducers } from "redux-immutable";
-
+// Vendor modules
 import * as actionTypes from "@nteract/actions";
-import { JSONObject } from "@nteract/commutable/src";
+import { JSONObject } from "@nteract/commutable";
 import {
+  HelpLink,
+  makeHelpLinkRecord,
+  makeKernelInfoRecord,
   makeKernelNotStartedRecord,
   makeKernelsRecord,
   makeLocalKernelRecord,
   makeRemoteKernelRecord
 } from "@nteract/types";
-import {
-  HelpLink,
-  makeHelpLinkRecord,
-  makeKernelInfoRecord
-} from "@nteract/types";
+import { List, Map } from "immutable";
+import { Action, Reducer } from "redux";
+import { combineReducers } from "redux-immutable";
 
 // TODO: we need to clean up references to old kernels at some point. Listening
 // for KILL_KERNEL_SUCCESSFUL seems like a good candidate, but I think you can
 // also end up with a dead kernel if that fails and you hit KILL_KERNEL_FAILED.
-const byRef = (state = Map(), action: Action) => {
+const byRef = (state = Map(), action: Action): Map<{}, {}> => {
   let typedAction;
   switch (action.type) {
     case actionTypes.SET_LANGUAGE_INFO:
@@ -127,4 +125,9 @@ const byRef = (state = Map(), action: Action) => {
   }
 };
 
-export const kernels = combineReducers({ byRef }, makeKernelsRecord as any);
+export const kernels: Reducer<
+  {
+    byRef: Map<{}, {}>;
+  },
+  Action<any>
+> = combineReducers({ byRef }, makeKernelsRecord as any);

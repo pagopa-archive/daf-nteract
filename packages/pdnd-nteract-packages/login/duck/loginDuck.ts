@@ -31,7 +31,7 @@ const loggedUserTypes = {
 
 // reducer
 const loggedUserInitialState = Map({
-  data: Map({ token: "", uid: "" }),
+  data: Map({ bearerToken: "", basicToken: "", uid: "", roles: [] }),
   meta: Map({ error: false, isLoading: false, hasLoaded: false })
 });
 
@@ -96,9 +96,9 @@ const usernameSelector = createSelector(
   ({ uid }) => ({ username: uid })
 );
 
-const tokenSelector = createSelector(
+const tokensSelector = createSelector(
   [loggedUserDataSelector],
-  ({ token }) => ({ bearerToken: token })
+  ({ bearerToken, basicToken }) => ({ bearerToken, basicToken })
 );
 
 const loggedUserMetaSelector = createSelector(
@@ -122,7 +122,7 @@ const loggedUserSelectors = {
   // loggedUserSelector,
   loggedUserDataSelector,
   usernameSelector,
-  tokenSelector,
+  tokensSelector,
   loggedUserMetaSelector,
   isUserLogged
 };
@@ -130,17 +130,18 @@ const loggedUserSelectors = {
 // epics
 const commonURL = "https://api.daf.teamdigitale.it/";
 
-const requestUserObservable = ({ token, username }) =>
+const requestUserObservable = ({ bearerToken, basicToken, username }) =>
   ajax
     .get(commonURL + "security-manager/v1/ipa/userbymail/" + username, {
       Accept: "application/json",
       "Content-Type": "application/json",
-      Authorization: "Bearer " + token
+      Authorization: "Bearer " + bearerToken
     })
     .pipe(
-      map(({ response }) => ({ token, ...response })),
+      map(({ response }) => ({ bearerToken, basicToken, ...response })),
       tap(() => {
-        window.localStorage.setItem("bearerToken", token);
+        window.localStorage.setItem("bearerToken", bearerToken);
+        window.localStorage.setItem("basicToken", basicToken);
         window.localStorage.setItem("username", username);
       }),
       map(mappedResponse => fulfillLogin(mappedResponse)),
@@ -151,22 +152,27 @@ const loginEpic = (action$, state$) =>
   interval(5000).pipe(
     // bearerToken && validate ? fulfill : reset non working
     map(() => ({
-      token: window.localStorage.getItem("bearerToken"),
+      bearerToken: window.localStorage.getItem("bearerToken"),
+      basicToken: window.localStorage.getItem("basicToken"),
       username: window.localStorage.getItem("username")
     })),
-    concatMap(({ token, username }) =>
-      token && username
+    concatMap(({ bearerToken, basicToken, username }) =>
+      bearerToken && basicToken && username
         ? ajax
             .get(commonURL + "sso-manager/secured/test", {
               Accept: "application/json",
               "Content-Type": "application/json",
-              Authorization: "Bearer " + token
+              Authorization: "Bearer " + bearerToken
             })
             .pipe(
               concatMap(() =>
                 ({ ...isUserLogged(state$.value) }.isUserLogged
                   ? []
-                  : requestUserObservable({ token, username }))
+                  : requestUserObservable({
+                      bearerToken,
+                      basicToken,
+                      username
+                    }))
               ),
               catchError(error => of(resetLogin()))
             )
@@ -177,24 +183,28 @@ const loginEpic = (action$, state$) =>
 const requestLoginEpic = action$ => {
   return action$.pipe(
     ofType(LOGIN_REQUEST),
-    concatMap(({ payload: { username, password } }) =>
-      ajax
+    concatMap(({ payload: { username, password } }) => {
+      const basicToken = btoa(username + ":" + password);
+      return ajax
         .get(commonURL + "security-manager/v1/token", {
           Accept: "application/json",
           "Content-Type": "application/json",
-          Authorization: "Basic " + btoa(username + ":" + password)
+          Authorization: "Basic " + basicToken
         })
         .pipe(
           map(({ response }) => response),
           catchError(error => of(rejectLogin())),
-          concatMap(token => requestUserObservable({ token, username }))
-        )
-    )
+          concatMap(bearerToken =>
+            requestUserObservable({ bearerToken, basicToken, username })
+          )
+        );
+    })
   );
 };
 
 const removeLocals = () => {
   window.localStorage.removeItem("bearerToken");
+  window.localStorage.removeItem("basicToken");
   window.localStorage.removeItem("username");
 };
 
@@ -236,7 +246,7 @@ export {
   // loggedUserSelector,
   loggedUserDataSelector,
   usernameSelector,
-  tokenSelector,
+  tokensSelector,
   loggedUserMetaSelector,
   isUserLogged,
   loggedUserSelectors,

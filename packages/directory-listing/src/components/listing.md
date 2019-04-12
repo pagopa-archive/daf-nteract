@@ -11,6 +11,8 @@ import {
 The `Listing` component is a container component to show any listing of directories and files in a tabular layout for users. This component works best with `<Entry>` for each item in a content listing.
 
 ```jsx
+const { Entry, Name, Icon, LastSaved } = require("..");
+
 <Listing>
   <Entry>
     <Icon fileType="notebook" />
@@ -42,5 +44,5 @@ The `Listing` component is a container component to show any listing of director
     </Name>
     <LastSaved lastModified={new Date("2018-05-27T16:21:25.354Z")} />
   </Entry>
-</Listing>
+</Listing>;
 ```

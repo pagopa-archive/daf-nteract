@@ -59,3 +59,5 @@ export class Json extends React.PureComponent<Props> {
     );
   }
 }
+
+export default Json;

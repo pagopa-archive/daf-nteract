@@ -9,7 +9,7 @@ import { numeralFormatting } from "../utilities";
 interface SummaryOptions {
   chart: Dx.Chart;
   colors: Dx.ChartOptions["colors"];
-  primaryKey: Dx.Schema["primaryKey"];
+  primaryKey: string[];
   setColor: Dx.ChartOptions["setColor"];
   summaryType: Dx.SummaryType;
 }

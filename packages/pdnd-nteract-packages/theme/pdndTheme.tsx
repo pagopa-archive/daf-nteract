@@ -14,9 +14,7 @@ const H4: FunctionComponent = props => (
 );
 
 const TimeAgoTD: StyledComponent<"td", any, {}, never> = styled.td`
-  text-align: right;
   color: #f5f8fa;
-  padding-right: 10px;
 `;
 
 export { WrapperDiv, ThemedLogo, H4, TimeAgoTD };

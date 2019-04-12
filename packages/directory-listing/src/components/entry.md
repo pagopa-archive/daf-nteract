@@ -7,6 +7,8 @@ This component is used to create individual entries in a directory. It is not me
 In the example below, we use the `Entry` component to display an icon, name, and time since last save of an entry in a directory.
 
 ```jsx
+const { Listing, Icon, Name, LastSaved } = require("..");
+
 <Listing>
   <Entry>
     <Icon fileType="notebook" />
@@ -15,5 +17,5 @@ In the example below, we use the `Entry` component to display an icon, name, and
     </Name>
     <LastSaved lastModified={new Date("2018-07-04")} />
   </Entry>
-</Listing>
+</Listing>;
 ```

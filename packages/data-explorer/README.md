@@ -10,10 +10,40 @@
 yarn install @nteract/data-explorer
 ```
 
+The `data` prop must be a [tabular data resource `application/vnd.dataresource+json`](https://frictionlessdata.io/specs/tabular-data-resource/)
+
 ```jsx
+// Default import complete with right side toolbar
 import DataExplorer from "@nteract/data-explorer";
 
-<DataExplorer />;
+<DataExplorer data={data} />;
+```
+
+Or, with custom `Toolbar` position:
+
+```jsx
+// Individual components as named imports
+import { DataExplorer, Toolbar, Viz } from "@nteract/data-explorer";
+
+<DataExplorer data={data}>
+  <Toolbar />
+  <Viz />
+</DataExplorer>;
+
+// Toolbar is optional
+<DataExplorer data={data}>
+  <Viz />
+</DataExplorer>;
+```
+
+## CSS
+
+Note: you also need to include the CSS for a few dependencies as well
+
+```
+
+// CSS for the grid view on the data explorer
+import "react-table/react-table.css";
 ```
 
 ## Hacking on the nteract Data Explorer

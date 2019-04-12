@@ -1,11 +1,8 @@
+// Vendor modules
+import { makeEntitiesRecord } from "@nteract/types";
 import { combineReducers } from "redux-immutable";
 
-import {
-  EntitiesRecord,
-  EntitiesRecordProps,
-  makeEntitiesRecord
-} from "@nteract/types";
-
+// Local modules
 import { contents } from "./contents";
 import { hosts } from "./hosts";
 import { kernels } from "./kernels";

@@ -95,3 +95,5 @@ Cell.defaultProps = {
   _hovered: false,
   children: null
 };
+
+export default Cell;

@@ -162,8 +162,9 @@ const OutputWrapper = styled.div.attrs<OutputWrapperProps>(props => ({
 export class Outputs extends React.PureComponent<OutputsProps> {
   static defaultProps = {
     children: null,
-    expanded: false,
-    hidden: false
+    className: "nteract-outputs",
+    hidden: false,
+    expanded: false
   };
 
   render() {
@@ -185,3 +186,5 @@ export class Outputs extends React.PureComponent<OutputsProps> {
     return null;
   }
 }
+
+export default Outputs;

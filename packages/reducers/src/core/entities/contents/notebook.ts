@@ -1,34 +1,36 @@
+// Vendor modules
+import * as actionTypes from "@nteract/actions";
 import {
   CellId,
-  ImmutableCell,
-  ImmutableCodeCell,
-  ImmutableMarkdownCell,
-  ImmutableNotebook,
-  ImmutableOutput,
-  OnDiskOutput,
-  OnDiskStreamOutput
-} from "@nteract/commutable";
-import {
   createFrozenMediaBundle,
   createImmutableOutput,
   deleteCell,
   emptyCodeCell,
   emptyMarkdownCell,
   emptyNotebook,
+  ImmutableCell,
+  ImmutableCodeCell,
+  ImmutableMarkdownCell,
+  ImmutableNotebook,
+  ImmutableOutput,
   insertCellAfter,
   insertCellAt,
   makeCodeCell,
   makeMarkdownCell,
-  makeRawCell
+  makeRawCell,
+  OnDiskOutput,
+  OnDiskStreamOutput
 } from "@nteract/commutable";
+import {
+  DocumentRecordProps,
+  makeDocumentRecord,
+  NotebookModel,
+  PayloadMessage
+} from "@nteract/types";
 import { escapeCarriageReturnSafe } from "escape-carriage";
-import { fromJS, List, Map, Set } from "immutable";
+import { fromJS, List, Map, RecordOf, Set } from "immutable";
 import { has } from "lodash";
 import uuid from "uuid/v4";
-
-import * as actionTypes from "@nteract/actions";
-import { makeDocumentRecord, PayloadMessage } from "@nteract/types";
-import { NotebookModel } from "@nteract/types";
 
 type KeyPath = List<string | number>;
 type KeyPaths = List<KeyPath>;
@@ -45,7 +47,7 @@ type KeyPaths = List<KeyPath>;
 export function reduceOutputs(
   outputs: List<ImmutableOutput> = List(),
   output: OnDiskOutput
-) {
+): List<ImmutableOutput> {
   // Find the last output to see if it's a stream type
   // If we don't find one, default to null
   const last = outputs.last(null);
@@ -57,11 +59,12 @@ export function reduceOutputs(
   if (output.output_type !== "stream" || last.output_type !== "stream") {
     // If the last output type or the incoming output type isn't a stream
     // we just add it to the outputs
-    // This is kind of like a "break" between streams if we get error, display_data, execute_result, etc.
+    // This is kind of like a "break" between streams if we get error,
+    // display_data, execute_result, etc.
     return outputs.push(createImmutableOutput(output));
   }
 
-  const streamOutput = output;
+  const streamOutput: OnDiskStreamOutput = output;
 
   if (typeof streamOutput.name === "undefined") {
     return outputs.push(createImmutableOutput(streamOutput));
@@ -93,7 +96,10 @@ export function reduceOutputs(
   return outputs.push(createImmutableOutput(streamOutput));
 }
 
-export function cleanCellTransient(state: NotebookModel, id: string) {
+export function cleanCellTransient(
+  state: NotebookModel,
+  id: string
+): RecordOf<DocumentRecordProps> {
   // Clear out key paths that should no longer be referenced
   return state
     .setIn(["cellPagers", id], List())
@@ -107,16 +113,24 @@ export function cleanCellTransient(state: NotebookModel, id: string) {
     .setIn(["transient", "cellMap", id], Map());
 }
 
-function setNotebookCheckpoint(state: NotebookModel) {
+function setNotebookCheckpoint(
+  state: NotebookModel
+): RecordOf<DocumentRecordProps> {
   // Use the current version of the notebook document
   return state.set("savedNotebook", state.get("notebook"));
 }
 
-function focusCell(state: NotebookModel, action: actionTypes.FocusCell) {
+function focusCell(
+  state: NotebookModel,
+  action: actionTypes.FocusCell
+): RecordOf<DocumentRecordProps> {
   return state.set("cellFocused", action.payload.id);
 }
 
-function clearOutputs(state: NotebookModel, action: actionTypes.ClearOutputs) {
+function clearOutputs(
+  state: NotebookModel,
+  action: actionTypes.ClearOutputs
+): RecordOf<DocumentRecordProps> {
   const id = action.payload.id ? action.payload.id : state.cellFocused;
   if (!id) {
     return state;
@@ -137,7 +151,7 @@ function clearOutputs(state: NotebookModel, action: actionTypes.ClearOutputs) {
 function toggleTagInCell(
   state: NotebookModel,
   action: actionTypes.ToggleTagInCell
-): NotebookModel {
+): RecordOf<DocumentRecordProps> {
   const { id, tag } = action.payload;
 
   return state.updateIn(
@@ -155,7 +169,7 @@ function toggleTagInCell(
 function clearAllOutputs(
   state: NotebookModel,
   action: actionTypes.ClearAllOutputs | actionTypes.RestartKernel
-) {
+): RecordOf<DocumentRecordProps> {
   // If we get a restart kernel action that said to clear outputs, we'll
   // handle it
   if (
@@ -190,7 +204,10 @@ function clearAllOutputs(
     .set("transient", transient);
 }
 
-function appendOutput(state: NotebookModel, action: actionTypes.AppendOutput) {
+function appendOutput(
+  state: NotebookModel,
+  action: actionTypes.AppendOutput
+): RecordOf<DocumentRecordProps> {
   const output = action.payload.output;
   const cellId = action.payload.id;
 
@@ -257,7 +274,7 @@ function appendOutput(state: NotebookModel, action: actionTypes.AppendOutput) {
 function updateDisplay(
   state: NotebookModel,
   action: actionTypes.UpdateDisplay
-) {
+): RecordOf<DocumentRecordProps> {
   const { content } = action.payload;
   if (!(content && content.transient && content.transient.display_id)) {
     return state;
@@ -287,7 +304,7 @@ function updateDisplay(
 function focusNextCell(
   state: NotebookModel,
   action: actionTypes.FocusNextCell
-) {
+): RecordOf<DocumentRecordProps> {
   const cellOrder = state.getIn(["notebook", "cellOrder"]);
 
   const id = action.payload.id ? action.payload.id : state.get("cellFocused");
@@ -325,7 +342,7 @@ function focusNextCell(
 function focusPreviousCell(
   state: NotebookModel,
   action: actionTypes.FocusPreviousCell
-): NotebookModel {
+): RecordOf<DocumentRecordProps> {
   const cellOrder = state.getIn(["notebook", "cellOrder"]);
   const curIndex = cellOrder.findIndex(
     (id: CellId) => id === action.payload.id
@@ -338,14 +355,14 @@ function focusPreviousCell(
 function focusCellEditor(
   state: NotebookModel,
   action: actionTypes.FocusCellEditor
-) {
+): RecordOf<DocumentRecordProps> {
   return state.set("editorFocused", action.payload.id);
 }
 
 function focusNextCellEditor(
   state: NotebookModel,
   action: actionTypes.FocusNextCellEditor
-) {
+): RecordOf<DocumentRecordProps> {
   const cellOrder: List<CellId> = state.getIn(["notebook", "cellOrder"]);
 
   const id = action.payload.id ? action.payload.id : state.get("editorFocused");
@@ -365,7 +382,7 @@ function focusNextCellEditor(
 function focusPreviousCellEditor(
   state: NotebookModel,
   action: actionTypes.FocusPreviousCellEditor
-) {
+): RecordOf<DocumentRecordProps> {
   const cellOrder: List<CellId> = state.getIn(["notebook", "cellOrder"]);
   const curIndex = cellOrder.findIndex(
     (id: CellId) => id === action.payload.id
@@ -375,7 +392,10 @@ function focusPreviousCellEditor(
   return state.set("editorFocused", cellOrder.get(nextIndex));
 }
 
-function moveCell(state: NotebookModel, action: actionTypes.MoveCell) {
+function moveCell(
+  state: NotebookModel,
+  action: actionTypes.MoveCell
+): RecordOf<DocumentRecordProps> {
   return state.updateIn(
     ["notebook", "cellOrder"],
     (cellOrder: List<CellId>) => {
@@ -400,7 +420,7 @@ function moveCell(state: NotebookModel, action: actionTypes.MoveCell) {
 function deleteCellFromState(
   state: NotebookModel,
   action: actionTypes.DeleteCell | actionTypes.RemoveCell
-) {
+): RecordOf<DocumentRecordProps> {
   const id = action.payload.id ? action.payload.id : state.cellFocused;
   if (!id) {
     return state;
@@ -416,7 +436,7 @@ function deleteCellFromState(
 function createCellBelow(
   state: NotebookModel,
   action: actionTypes.CreateCellBelow
-) {
+): RecordOf<DocumentRecordProps> {
   const id = action.payload.id ? action.payload.id : state.cellFocused;
   if (!id) {
     return state;
@@ -439,7 +459,7 @@ function createCellBelow(
 function createCellAbove(
   state: NotebookModel,
   action: actionTypes.CreateCellAbove
-) {
+): RecordOf<DocumentRecordProps> {
   const id = action.payload.id ? action.payload.id : state.cellFocused;
   if (!id) {
     return state;
@@ -458,7 +478,7 @@ function createCellAbove(
 function createCellAfter(
   state: NotebookModel,
   action: actionTypes.CreateCellAfter
-) {
+): RecordOf<DocumentRecordProps> {
   console.log(
     "DEPRECATION WARNING: This function is being deprecated. Please use createCellBelow() instead"
   );
@@ -484,7 +504,7 @@ function createCellAfter(
 function createCellBefore(
   state: NotebookModel,
   action: actionTypes.CreateCellBefore
-) {
+): RecordOf<DocumentRecordProps> {
   console.log(
     "DEPRECATION WARNING: This function is being deprecated. Please use createCellAbove() instead"
   );
@@ -506,7 +526,7 @@ function createCellBefore(
 function createCellAppend(
   state: NotebookModel,
   action: actionTypes.CreateCellAppend
-) {
+): RecordOf<DocumentRecordProps> {
   const { cellType } = action.payload;
   const notebook: ImmutableNotebook = state.get("notebook");
   const cellOrder: List<CellId> = notebook.get("cellOrder", List());
@@ -558,7 +578,7 @@ function acceptPayloadMessage(
 function sendExecuteRequest(
   state: NotebookModel,
   action: actionTypes.SendExecuteRequest
-) {
+): RecordOf<DocumentRecordProps> {
   const id = action.payload.id ? action.payload.id : state.cellFocused;
   const contentRef = action.payload.contentRef;
   if (!id) {
@@ -584,7 +604,7 @@ function sendExecuteRequest(
 function setInCell(
   state: NotebookModel,
   action: actionTypes.SetInCell<string>
-) {
+): RecordOf<DocumentRecordProps> {
   return state.setIn(
     ["notebook", "cellMap", action.payload.id].concat(action.payload.path),
     action.payload.value
@@ -594,7 +614,7 @@ function setInCell(
 function toggleCellOutputVisibility(
   state: NotebookModel,
   action: actionTypes.ToggleCellOutputVisibility
-) {
+): RecordOf<DocumentRecordProps> {
   const id = action.payload.id ? action.payload.id : state.cellFocused;
   if (!id) {
     return state;
@@ -606,12 +626,16 @@ function toggleCellOutputVisibility(
   );
 }
 
-function unhideAll(state: NotebookModel, action: actionTypes.UnhideAll) {
+function unhideAll(
+  state: NotebookModel,
+  action: actionTypes.UnhideAll
+): RecordOf<DocumentRecordProps> {
   return state.updateIn(["notebook", "cellMap"], cellMap =>
     cellMap.map((cell: ImmutableCell) => {
       if ((cell as any).get("cell_type") === "code") {
         return cell.mergeIn(["metadata"], {
-          // TODO: Verify that we convert to one namespace for hidden input/output
+          // TODO: Verify that we convert to one namespace
+          // for hidden input/output
           outputHidden: action.payload.outputHidden,
           inputHidden: action.payload.inputHidden
         });
@@ -624,7 +648,7 @@ function unhideAll(state: NotebookModel, action: actionTypes.UnhideAll) {
 function toggleCellInputVisibility(
   state: NotebookModel,
   action: actionTypes.ToggleCellInputVisibility
-) {
+): RecordOf<DocumentRecordProps> {
   const id = action.payload.id ? action.payload.id : state.cellFocused;
   if (!id) {
     return state;
@@ -639,7 +663,7 @@ function toggleCellInputVisibility(
 function updateCellStatus(
   state: NotebookModel,
   action: actionTypes.UpdateCellStatus
-) {
+): RecordOf<DocumentRecordProps> {
   const { id, status } = action.payload;
   return state.setIn(["transient", "cellMap", id, "status"], status);
 }
@@ -647,7 +671,7 @@ function updateCellStatus(
 function updateOutputMetadata(
   state: NotebookModel,
   action: actionTypes.UpdateOutputMetadata
-) {
+): RecordOf<DocumentRecordProps> {
   const { id, metadata, index, mediaType } = action.payload;
   const currentOutputs = state.getIn(["notebook", "cellMap", id, "outputs"]);
 
@@ -666,7 +690,7 @@ function updateOutputMetadata(
 function setLanguageInfo(
   state: NotebookModel,
   action: actionTypes.SetLanguageInfo
-) {
+): RecordOf<DocumentRecordProps> {
   const langInfo = fromJS(action.payload.langInfo);
   return state.setIn(["notebook", "metadata", "language_info"], langInfo);
 }
@@ -674,7 +698,7 @@ function setLanguageInfo(
 function setKernelspecInfo(
   state: NotebookModel,
   action: actionTypes.SetKernelspecInfo
-) {
+): RecordOf<DocumentRecordProps> {
   const { kernelInfo } = action.payload;
   return state
     .setIn(
@@ -691,19 +715,22 @@ function setKernelspecInfo(
 function overwriteMetadataField(
   state: NotebookModel,
   action: actionTypes.OverwriteMetadataField
-) {
+): RecordOf<DocumentRecordProps> {
   const { field, value } = action.payload;
   return state.setIn(["notebook", "metadata", field], fromJS(value));
 }
 function deleteMetadataField(
   state: NotebookModel,
   action: actionTypes.DeleteMetadataField
-) {
+): RecordOf<DocumentRecordProps> {
   const { field } = action.payload;
   return state.deleteIn(["notebook", "metadata", field]);
 }
 
-function copyCell(state: NotebookModel, action: actionTypes.CopyCell) {
+function copyCell(
+  state: NotebookModel,
+  action: actionTypes.CopyCell
+): RecordOf<DocumentRecordProps> {
   const id = action.payload.id || state.cellFocused;
 
   const cell = state.getIn(["notebook", "cellMap", id]);
@@ -713,7 +740,10 @@ function copyCell(state: NotebookModel, action: actionTypes.CopyCell) {
   return state.set("copied", cell);
 }
 
-function cutCell(state: NotebookModel, action: actionTypes.CutCell) {
+function cutCell(
+  state: NotebookModel,
+  action: actionTypes.CutCell
+): RecordOf<DocumentRecordProps> {
   const id = action.payload.id ? action.payload.id : state.cellFocused;
   if (!id) {
     return state;
@@ -733,7 +763,7 @@ function cutCell(state: NotebookModel, action: actionTypes.CutCell) {
     );
 }
 
-function pasteCell(state: NotebookModel) {
+function pasteCell(state: NotebookModel): RecordOf<DocumentRecordProps> {
   const copiedCell = state.get("copied");
 
   const pasteAfter = state.cellFocused;
@@ -754,7 +784,7 @@ function pasteCell(state: NotebookModel) {
 function changeCellType(
   state: NotebookModel,
   action: actionTypes.ChangeCellType
-) {
+): RecordOf<DocumentRecordProps> {
   const id = action.payload.id ? action.payload.id : state.cellFocused;
   if (!id) {
     return state;
@@ -815,7 +845,7 @@ function changeCellType(
 function toggleOutputExpansion(
   state: NotebookModel,
   action: actionTypes.ToggleCellExpansion
-) {
+): RecordOf<DocumentRecordProps> {
   const id = action.payload.id ? action.payload.id : state.cellFocused;
   if (!id) {
     return state;
@@ -879,7 +909,7 @@ const defaultDocument: NotebookModel = makeDocumentRecord({
 export function notebook(
   state: NotebookModel = defaultDocument,
   action: DocumentAction
-) {
+): RecordOf<DocumentRecordProps> {
   switch (action.type) {
     case actionTypes.TOGGLE_TAG_IN_CELL:
       return toggleTagInCell(state, action);

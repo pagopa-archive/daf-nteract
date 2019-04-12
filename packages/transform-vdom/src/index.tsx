@@ -33,8 +33,8 @@ export default class VDOM extends React.PureComponent<Partial<Props>> {
 
   render(): React.ReactElement<any> {
     try {
-      // objectToReactElement is mutatitve so we'll clone our object
       if (this.props.data && this.props.onVDOMEvent) {
+        // objectToReactElement is mutatitve so we'll clone our object
         const obj = cloneDeep(this.props.data);
         return objectToReactElement(obj, this.props.onVDOMEvent);
       } else {

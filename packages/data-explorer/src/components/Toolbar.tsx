@@ -24,6 +24,8 @@ interface Props {
   dimensions: object[];
   setView: (view: View) => void;
   currentView: string;
+  // How we tell the root DataExplorer to pass toolbar props to this component:
+  componentType: "toolbar";
 }
 
 const ToolbarWrapper = styled.div`
@@ -33,12 +35,21 @@ const ToolbarWrapper = styled.div`
   padding: 5px;
 `;
 
-export const Toolbar = ({
+Toolbar.defaultProps = {
+  componentType: "toolbar",
+  currentView: "",
+  dimensions: [],
+  setGrid: () => null,
+  setView: () => null
+};
+
+export function Toolbar({
   dimensions,
   setGrid,
   setView,
-  currentView
-}: Props) => {
+  currentView,
+  componentType
+}: Props) {
   return (
     <ToolbarWrapper className="dx-button-bar">
       <IconButton
@@ -123,4 +134,4 @@ export const Toolbar = ({
       </IconButton>
     </ToolbarWrapper>
   );
-};
+}
