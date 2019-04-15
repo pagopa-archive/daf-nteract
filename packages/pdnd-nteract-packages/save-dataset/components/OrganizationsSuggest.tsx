@@ -46,7 +46,7 @@ const filterItem = (
 
 const OrganizationsSuggest = ({ organizations }) => (
   <FormGroup
-    label="Dataset's Organization"
+    label="Dataset Organization"
     labelFor="save_dataset_organization"
     labelInfo="*"
   >
