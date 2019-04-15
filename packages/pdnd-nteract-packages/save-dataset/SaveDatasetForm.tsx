@@ -44,7 +44,7 @@ const SaveDatasetForm: FunctionComponent<
   return (
     <form onSubmit={handleSubmit}>
       <div style={rowStyle}>
-        <H3 style={{ color: "hsl(210, 100%, 40%)" }}>Pdnd Dataset Saver</H3>
+        <H3 style={{ color: "hsl(210, 100%, 40%)" }}>PDND Save Dataset</H3>
         <Button
           intent={Intent.PRIMARY}
           icon={IconNames.FLOPPY_DISK}
@@ -55,7 +55,7 @@ const SaveDatasetForm: FunctionComponent<
       </div>
       <FormField
         helperText="Please enter the cell's variable that contains"
-        label="Dataset Cell's Variable"
+        label="Dataset Cell Variable"
         labelFor="save_dataset_variable"
         labelInfo="*"
         // intent={}
@@ -65,7 +65,7 @@ const SaveDatasetForm: FunctionComponent<
       />
       <FormField
         helperText="Please enter a value"
-        label="Dataset's Name"
+        label="Dataset Name"
         labelFor="save_dataset_name"
         labelInfo="*"
         // intent={}
@@ -76,7 +76,7 @@ const SaveDatasetForm: FunctionComponent<
       />
       <FormField
         helperText="Please enter a value"
-        label="Dataset's Description"
+        label="Dataset Description"
         labelFor="save_dataset_description"
         labelInfo="*"
         // intent={}
