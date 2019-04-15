@@ -82,7 +82,7 @@ class ThemesSuggest extends PureComponent {
     return (
       <Fragment>
         <FormGroup
-          label="Dataset's Theme"
+          label="Dataset Theme"
           labelFor="save_dataset_theme"
           labelInfo="*"
           style={{ marginRight: "15px" }}
@@ -106,7 +106,7 @@ class ThemesSuggest extends PureComponent {
           />
         </FormGroup>
         <FormGroup
-          label="Dataset's Subtheme"
+          label="Dataset Subtheme"
           labelFor="save_dataset_subtheme"
           labelInfo="*"
         >

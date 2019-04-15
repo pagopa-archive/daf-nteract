@@ -122,22 +122,22 @@ const makeDatasetSaveSnippet = ({ dataset, basicToken }): string => {
     subtheme,
     organization
   } = dataset;
-  return `data = pd.DataFrame.from_dict(data)
+  return `data = pd.DataFrame.from_dict(${variable})
 if 'processing_dttm' in data.columns:
   data.drop('processing_dttm', axis=1, inplace=True)
 
 data.columns = data.columns.str.replace(' ', '_')
-data.to_csv("test_creation_11.csv", sep=';', encoding='utf-8', index=False)
+data.to_csv("${organization}_${name}.csv", sep=';', encoding='utf-8', index=False)
 
-url = "http://localhost:5000/save"
+url = "http://localhost:8080/pdnd-openapi/dataset/save"
 
-file = open('./test_creation_11.csv', 'rb').read()
+file = open('./${organization}_${name}.csv', 'rb').read()
 
 files = [
-  ("file", ("test_creation_11", file, "text/csv")),
+  ("file", ("${organization}_${name}", file, "text/csv")),
 ]
 
-data = {
+metadata = {
   'name' : '${name}',
   'theme' : '${theme}',
   'subtheme' : '${subtheme}',
@@ -148,7 +148,7 @@ data = {
 
 headers = {'authorization': 'Basic ${basicToken}'}
 
-response = requests.request("POST", url, data=data, files=files, headers=headers)
+response = requests.request("POST", url, data=metadata, files=files, headers=headers)
 print(response.text)`;
 };
 
