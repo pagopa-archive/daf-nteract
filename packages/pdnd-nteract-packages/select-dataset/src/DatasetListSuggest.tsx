@@ -60,7 +60,7 @@ const DatasetListSuggest = ({
   error
 }): JSX.Element => (
   <Fragment>
-    <H3 style={{ color: "hsl(210, 100%, 40%)" }}>Pdnd Dataset Loader</H3>
+    <H3 style={{ color: "hsl(210, 100%, 40%)" }}>PDND Load Dataset</H3>
     <FormGroup
       // helperText="Please enter a value"
       label="Search Dataset"
