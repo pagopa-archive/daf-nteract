@@ -35,7 +35,7 @@ const SaveDatasetForm: FunctionComponent<
     ].reduce(
       (accumulator, [key, value]) => ({
         ...accumulator,
-        [key.replace(idPrefix, "")]: value
+        [key.replace(idPrefix, "")]: value.replace(/ /gi, '_')
       }),
       {}
     );
