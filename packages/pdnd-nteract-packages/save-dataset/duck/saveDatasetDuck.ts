@@ -149,6 +149,7 @@ metadata = {
 headers = {'authorization': 'Basic ${basicToken}'}
 
 response = requests.request("POST", url, data=metadata, files=files, headers=headers)
+os.remove('./${organization}_${name}.csv')
 print(response.text)`;
 };
 
