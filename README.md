@@ -10,6 +10,9 @@ the user can search dataset from [PDND - DAF](https://dataportal.daf.teamdigital
 
 Once installed on you local machine, you can read a simple [tutorial](https://github.com/teamdigitale/nteract/blob/daf-develop/pdnd-tutorials/pdnd-nteract-tutorial.md) for understanding the basic functionalities implemented. In the next releases we will provide more functionalities and tutorials. If you want to contribute with only suggestions use this repo, opening issues and following our [project](https://github.com/teamdigitale/nteract/projects) and [milestone](https://github.com/teamdigitale/nteract/milestones).
 
+
+- [Video Tutorial](https://www.youtube.com/watch?v=nlZnYcz66YE)
+
 ## Getting Started
 
 There are three ways to get you a copy of the project up and running on your local machine depending on your purpose:
