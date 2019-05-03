@@ -112,7 +112,7 @@ const saveDatasetSelectors = {
 };
 
 // operations
-const makeDatasetSaveSnippet = ({ dataset, basicToken }): string => {
+const makeDatasetSaveSnippet = ({ dataset, basicToken, bearerToken }): string => {
   const {
     user,
     variable,
@@ -146,9 +146,10 @@ metadata = {
   'description' : '${description}'
 }
 
-headers = {'authorization': 'Basic ${basicToken}'}
+headers = {'authorization': 'Bearer ${bearerToken}'}
 
 response = requests.request("POST", url, data=metadata, files=files, headers=headers)
+os.remove('./${organization}_${name}.csv')
 print(response.text)`;
 };
 
@@ -165,7 +166,7 @@ const datasetSaveEpic = (action$, state$) =>
       (focusedCell, savedDataset) => {
         const state = state$.value;
         const { contentRef, id } = focusedCell.payload;
-        const { basicToken } = { ...tokensSelector(state) };
+        const { basicToken, bearerToken } = { ...tokensSelector(state) };
         const { username } = { ...usernameSelector(state) };
         const value =
           cellByIdSelector(modelSelector(state, { contentRef }), {
@@ -177,7 +178,8 @@ const datasetSaveEpic = (action$, state$) =>
               user: username,
               ...savedDataset.payload
             },
-            basicToken
+            basicToken,
+            bearerToken
           });
 
         return updateCellSource({ id, value, contentRef });

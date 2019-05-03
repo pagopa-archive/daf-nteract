@@ -1,0 +1,3 @@
+[console_scripts]
+jupyter-nteract = nteract_on_jupyter.nteractapp:main
+

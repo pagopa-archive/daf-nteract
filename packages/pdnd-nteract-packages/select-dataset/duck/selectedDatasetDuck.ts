@@ -88,13 +88,13 @@ const datasetMetaSelector = createSelector(
 const selectedDatasetSelectors = { datasetSelector, datasetMetaSelector };
 
 // operations
-const makeDatasetSnippet = ({ datasetURI, basicToken }): string =>
+const makeDatasetSnippet = ({ datasetURI, basicToken, bearerToken }): string =>
   `url = "https://api.daf.teamdigitale.it/dataset-manager/v1/dataset/${encodeURIComponent(
     datasetURI
   )}?format=json"
 payload = ""
 
-headers = {'authorization': 'Basic ${basicToken}'}
+headers = {'authorization': 'Bearer ${bearerToken}'}
 response = requests.request("GET", url, data=payload, headers=headers)
 data = pd.read_json(StringIO(response.text))
 data`;
@@ -112,7 +112,7 @@ const datasetEpic = (action$, state$) =>
       (focusedCell, selectedDataset) => {
         const state = state$.value;
         const { contentRef, id } = focusedCell.payload;
-        const { basicToken } = { ...tokensSelector(state) };
+        const { basicToken, bearerToken } = { ...tokensSelector(state) };
         const value =
           cellByIdSelector(modelSelector(state, { contentRef }), {
             id
@@ -120,7 +120,8 @@ const datasetEpic = (action$, state$) =>
           "\n" +
           makeDatasetSnippet({
             datasetURI: selectedDataset.payload,
-            basicToken
+            basicToken,
+            bearerToken
           });
 
         return updateCellSource({ id, value, contentRef });
