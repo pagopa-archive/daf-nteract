@@ -10,6 +10,9 @@ import { cellById as cellByIdSelector } from "@nteract/selectors/src/notebook";
 import { model as modelSelector } from "@nteract/selectors/src";
 import { tokensSelector } from "../../login/duck/loginDuck";
 
+//TODO check if is better another way
+import { selectors } from "@nteract/core";
+
 // actionTypes
 const appName = "nteract-pdnd";
 const reducerName = "selectedDataset";
@@ -99,7 +102,55 @@ response = requests.request("GET", url, data=payload, headers=headers)
 data = pd.read_json(StringIO(response.text))
 data`;
 
-//// epics
+const makeDatasetSnippetByKernel = 
+   ({ datasetURI, basicToken, bearerToken, kernelName }): string => {
+      if(kernelName == 'Python 3') {
+       return `url = "https://api.daf.teamdigitale.it/dataset-manager/v1/dataset/${encodeURIComponent(
+          datasetURI
+        )}?format=json"
+payload = ""
+headers = {'authorization': 'Bearer ${bearerToken}'}
+response = requests.request("GET", url, data=payload, headers=headers)
+data = pd.read_json(StringIO(response.text))
+data`;
+      } else if(kernelName == 'Scala'){
+       return `import ammonite.ops._, scalaj.http._
+val resp = Http("https://api.daf.teamdigitale.it/dataset-manager/v1/dataset/${encodeURIComponent(
+        datasetURI)}?format=json")
+.headers(Seq("Authorization" -> ("Bearer ${bearerToken}"),
+"content-Type" -> "application/json"))
+.asString
+val parsed  = ujson.read(resp.body).asInstanceOf[ujson.Js.Arr]
+      `
+      } else if(kernelName == 'R'){
+        return `library(httr)
+library(ggplot2)
+library(IRdisplay)
+data <- GET("https://api.daf.teamdigitale.it/dataset-manager/v1/dataset/${encodeURIComponent(
+  datasetURI)}?format=csv"), 
+  add_headers(Authorization = "Bearer ${bearerToken}"))
+content <- content(data)
+csv <- read.csv(text=content, header=TRUE, sep=",")
+csv`
+      }else if(kernelName == 'Julia'){
+        return `using Pkg
+Pkg.add("HTTP");
+Pkg.add("DataFrames");
+Pkg.add("CSV");
+Pkg.add("Plots")
+using Plots;
+using HTTP;
+using CSV;
+res = HTTP.request("GET",
+  "https://api.daf.teamdigitale.it/dataset-manager/v1/dataset/${encodeURIComponent(
+    datasetURI)}?format=csv",
+  [("Authorization", "Bearer ${bearerToken}")]);
+mycsv = CSV.read(IOBuffer(res.body));
+mycsv
+`        
+      }else return "kernel not supported yet"
+    }
+/// epics
 const datasetEpic = (action$, state$) =>
   action$.pipe(
     ofType(FOCUS_CELL),
@@ -113,15 +164,20 @@ const datasetEpic = (action$, state$) =>
         const state = state$.value;
         const { contentRef, id } = focusedCell.payload;
         const { basicToken, bearerToken } = { ...tokensSelector(state) };
+        
+        const model = selectors.model(state, { contentRef });
+        const kernelName = selectors.notebook.displayName(model)
+        
         const value =
           cellByIdSelector(modelSelector(state, { contentRef }), {
             id
           }).get("source", "") +
           "\n" +
-          makeDatasetSnippet({
+          makeDatasetSnippetByKernel({
             datasetURI: selectedDataset.payload,
             basicToken,
-            bearerToken
+            bearerToken,
+            kernelName
           });
 
         return updateCellSource({ id, value, contentRef });
