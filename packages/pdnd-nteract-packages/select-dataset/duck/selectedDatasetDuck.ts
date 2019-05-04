@@ -124,10 +124,11 @@ val parsed  = ujson.read(resp.body).asInstanceOf[ujson.Js.Arr]
       `
       } else if(kernelName == 'R'){
         return `library(httr)
+#install.packages("ggplot2")
 library(ggplot2)
 library(IRdisplay)
 data <- GET("https://api.daf.teamdigitale.it/dataset-manager/v1/dataset/${encodeURIComponent(
-  datasetURI)}?format=csv"), 
+  datasetURI)}?format=csv", 
   add_headers(Authorization = "Bearer ${bearerToken}"))
 content <- content(data)
 csv <- read.csv(text=content, header=TRUE, sep=",")
