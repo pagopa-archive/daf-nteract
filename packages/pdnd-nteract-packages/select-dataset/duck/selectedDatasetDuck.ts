@@ -153,12 +153,21 @@ mycsv
       } else if (kernelName == 'PySpark') {
         const physicalUrl = metacatalog.operational.physical_uri
         const name = metacatalog.dcatapit.name
+        if(metacatalog.operational.ext_opendata === null || 
+          metacatalog.operational.ext_opendata === undefined){
+          return `path_dataset = "${physicalUrl}"
+dataset = (spark.read.format("parquet") 
+.option("inferSchema", "true") 
+.load(path_dataset)
+)`
+        } else {
         return `path_dataset = "${physicalUrl}/${name}.csv"
 dataset = (spark.read.format("csv") 
 .option("inferSchema", "true") 
 .option("header", "true")
 .load(path_dataset)
 )`
+        }
       }else {
         return "kernel not supported yet"
       }
