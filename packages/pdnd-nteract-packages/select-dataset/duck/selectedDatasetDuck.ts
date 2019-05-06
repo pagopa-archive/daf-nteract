@@ -106,7 +106,7 @@ data`;
 const makeDatasetSnippetByKernel = 
    ({ datasetURI, basicToken, bearerToken, kernelName, metacatalog }): string => {
       if(kernelName == 'Python 3') {
-        const dataVar = metacatalog.dcatapit.name //.substring(0, 20);
+        const dataVar = metacatalog.dcatapit.name // .substring(0, 20);
        return `url = "https://api.daf.teamdigitale.it/dataset-manager/v1/dataset/${encodeURIComponent(
           datasetURI
         )}?format=json"
