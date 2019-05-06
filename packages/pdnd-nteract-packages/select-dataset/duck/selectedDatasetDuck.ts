@@ -33,6 +33,7 @@ const selectedDatasetInitialState = ImmutableMap({
   data: ImmutableList(),
   meta: ImmutableMap({ error: false, isLoading: false, hasLoaded: false })
 });
+
 const selectedDataset = (
   state = selectedDatasetInitialState,
   { type, payload, error, meta }
@@ -103,7 +104,7 @@ data = pd.read_json(StringIO(response.text))
 data`;
 
 const makeDatasetSnippetByKernel = 
-   ({ datasetURI, basicToken, bearerToken, kernelName }): string => {
+   ({ datasetURI, basicToken, bearerToken, kernelName, metacatalog }): string => {
       if(kernelName == 'Python 3') {
        return `url = "https://api.daf.teamdigitale.it/dataset-manager/v1/dataset/${encodeURIComponent(
           datasetURI
@@ -124,10 +125,11 @@ val parsed  = ujson.read(resp.body).asInstanceOf[ujson.Js.Arr]
       `
       } else if(kernelName == 'R'){
         return `library(httr)
+#install.packages("ggplot2")
 library(ggplot2)
 library(IRdisplay)
 data <- GET("https://api.daf.teamdigitale.it/dataset-manager/v1/dataset/${encodeURIComponent(
-  datasetURI)}?format=csv"), 
+  datasetURI)}?format=csv", 
   add_headers(Authorization = "Bearer ${bearerToken}"))
 content <- content(data)
 csv <- read.csv(text=content, header=TRUE, sep=",")
@@ -148,7 +150,18 @@ res = HTTP.request("GET",
 mycsv = CSV.read(IOBuffer(res.body));
 mycsv
 `        
-      }else return "kernel not supported yet"
+      } else if (kernelName == 'PySpark') {
+        const physicalUrl = metacatalog.operational.physical_uri
+        const name = metacatalog.dcatapit.name
+        return `path_dataset = "${physicalUrl}/${name}.csv"
+dataset = (spark.read.format("csv") 
+.option("inferSchema", "true") 
+.option("header", "true")
+.load(path_dataset)
+)`
+      }else {
+        return "kernel not supported yet"
+      }
     }
 /// epics
 const datasetEpic = (action$, state$) =>
@@ -174,10 +187,11 @@ const datasetEpic = (action$, state$) =>
           }).get("source", "") +
           "\n" +
           makeDatasetSnippetByKernel({
-            datasetURI: selectedDataset.payload,
+            datasetURI: selectedDataset.payload.operational.logical_uri,
             basicToken,
             bearerToken,
             kernelName
+            metacatalog: selectedDataset.payload
           });
 
         return updateCellSource({ id, value, contentRef });
@@ -199,7 +213,8 @@ const requestDatasetEpic = action$ => {
           Authorization: "Basic " // + basicSecret
         })
         .pipe(
-          map(({ response }) => response.operational.logical_uri),
+        //  map(({ response }) => response.operational.logical_uri),
+          map(({ response }) => response),
           map(mappedResponse => fulfillDataset(mappedResponse)),
           catchError(error => of(rejectDataset(error)))
         )
