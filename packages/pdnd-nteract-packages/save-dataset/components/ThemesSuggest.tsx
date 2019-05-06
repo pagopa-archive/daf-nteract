@@ -94,7 +94,7 @@ class ThemesSuggest extends PureComponent {
             inputValueRenderer={renderInputItem}
             onItemSelect={theme => selectTheme(theme)}
             popoverProps={{
-              position: Position.RIGHT
+              position: Position.TOP
             }}
             inputProps={{
               id: "save_dataset_theme",
@@ -117,14 +117,15 @@ class ThemesSuggest extends PureComponent {
             inputValueRenderer={renderInputItem}
             onItemSelect={subtheme => selectSubtheme(subtheme)}
             selectedItem={selectedSubtheme}
-            popoverProps={{ position: Position.LEFT }}
+            popoverProps={{ position: Position.TOP }}
             inputProps={{
               id: "save_dataset_subtheme",
               name: "save_dataset_subtheme",
               leftIcon: IconNames.LIST_COLUMNS,
               placeholder: "Produzione Agricola",
               required: true,
-              disabled: subthemes.length === 0
+              disabled: subthemes.length === 0,
+              autocomplete: "off"
             }}
           />
         </FormGroup>
