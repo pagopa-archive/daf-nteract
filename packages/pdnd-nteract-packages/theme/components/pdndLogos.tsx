@@ -6,7 +6,7 @@ interface IPdndWideLogoProps {
 }
 
 const PdndWideLogo: FunctionComponent<IPdndWideLogoProps> = ({
-  height = 24,
+  height = 29,
   width = 29
 }) => (
   <svg
