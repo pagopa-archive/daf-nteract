@@ -61,10 +61,11 @@ const OrganizationsSuggest = ({ organizations }) => (
         id: "save_dataset_organization",
         name: "save_dataset_organization",
         leftIcon: IconNames.DIAGRAM_TREE,
-        required: true
+        required: true,
+        autocomplete: "off"
       }}
       popoverProps={{
-        position: Position.LEFT,
+        position: Position.TOP,
         targetProps: { style: { width: "100%" } }
       }}
     />
