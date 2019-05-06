@@ -106,14 +106,15 @@ data`;
 const makeDatasetSnippetByKernel = 
    ({ datasetURI, basicToken, bearerToken, kernelName, metacatalog }): string => {
       if(kernelName == 'Python 3') {
+        const dataVar = metacatalog.dcatapit.name //.substring(0, 20);
        return `url = "https://api.daf.teamdigitale.it/dataset-manager/v1/dataset/${encodeURIComponent(
           datasetURI
         )}?format=json"
 payload = ""
 headers = {'authorization': 'Bearer ${bearerToken}'}
 response = requests.request("GET", url, data=payload, headers=headers)
-data = pd.read_json(StringIO(response.text))
-data`;
+${dataVar} = pd.read_json(StringIO(response.text))
+${dataVar}`;
       } else if(kernelName == 'Scala'){
        return `import ammonite.ops._, scalaj.http._
 val resp = Http("https://api.daf.teamdigitale.it/dataset-manager/v1/dataset/${encodeURIComponent(
@@ -199,7 +200,7 @@ const datasetEpic = (action$, state$) =>
             datasetURI: selectedDataset.payload.operational.logical_uri,
             basicToken,
             bearerToken,
-            kernelName
+            kernelName,
             metacatalog: selectedDataset.payload
           });
 
