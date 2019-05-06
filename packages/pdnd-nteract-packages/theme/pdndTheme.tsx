@@ -1,6 +1,6 @@
 import React, { FunctionComponent, Fragment } from "react";
 import styled, { StyledComponent } from "styled-components";
-import { H4 as BlueprintH4, H3, Classes, Divider } from "@blueprintjs/core";
+import { H4 as BlueprintH4, H3, H6, Classes } from "@blueprintjs/core";
 
 import { PdndWideLogo } from "./components/pdndLogos";
 
@@ -18,6 +18,7 @@ const H4: FunctionComponent = props => (
 );
 
 const TimeAgoTD: StyledComponent<"td", any, {}, never> = styled.td`
+  display: inline-flex;
   color: #f5f8fa;
 `;
 
@@ -30,12 +31,16 @@ const ThemedLogo = ({
     marginLeft: "10px",
     marginBottom: 0,
     marginRight: "20px"
-  }
+  },
+  subheadingStyle = { marginBottom: 0 }
 }) => (
   <div style={wrapperStyle}>
     <PdndWideLogo />
     <H3 className={Classes.DARK} style={headingStyle}>
       PDND Explorer
+      <H6 style={subheadingStyle}>forked from{" "}
+        <a href="https://github.com/nteract/nteract">nteract/nteract</a>
+      </H6>
     </H3>
   </div>
 );
