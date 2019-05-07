@@ -37,6 +37,9 @@ import { CellId, OnDiskOutput } from "@nteract/commutable";
 import * as selectors from "@nteract/selectors";
 import { AppState, ContentRef, PayloadMessage } from "@nteract/types";
 
+// TODO ale
+import { tokensSelector } from "../../pdnd-nteract-packages/login/duck/loginDuck";
+
 const Immutable = require("immutable");
 
 /**
@@ -58,6 +61,7 @@ export function executeCellStream(
   if (!channels || !channels.pipe) {
     return throwError(new Error("kernel not connected"));
   }
+
 
   const executeRequest = message;
 
@@ -135,6 +139,8 @@ export function createExecuteCellStream(
 ): Observable<any> {
   const kernel = selectors.currentKernel(state);
 
+  const { basicToken, bearerToken } = { ...tokensSelector(state) };
+
   const channels = kernel ? kernel.channels : null;
 
   const kernelConnected =
@@ -150,6 +156,9 @@ export function createExecuteCellStream(
       })
     );
   }
+  
+  message.content.code = 
+    message.content.code.replace('YOU_MUST_BE_LOGGEDIN', bearerToken)
 
   const cellStream = executeCellStream(channels, id, message, contentRef).pipe(
     takeUntil(
