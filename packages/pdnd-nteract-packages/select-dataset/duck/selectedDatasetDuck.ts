@@ -105,37 +105,37 @@ data`;
 
 const makeDatasetSnippetByKernel = 
    ({ datasetURI, basicToken, bearerToken, kernelName, metacatalog }): string => {
-      if(kernelName == 'Python 3') {
+      if(kernelName == 'python3') {
         const dataVar = metacatalog.dcatapit.name // .substring(0, 20);
        return `url = "https://api.daf.teamdigitale.it/dataset-manager/v1/dataset/${encodeURIComponent(
           datasetURI
-        )}?format=json"
+        )}?format=json" 
 payload = ""
 headers = {'authorization': 'Bearer YOU_MUST_BE_LOGGEDIN'}
 response = requests.request("GET", url, data=payload, headers=headers)
 ${dataVar} = pd.read_json(StringIO(response.text))
 ${dataVar}`;
-      } else if(kernelName == 'Scala'){
+      } else if(kernelName == 'scala'){
        return `import ammonite.ops._, scalaj.http._
 val resp = Http("https://api.daf.teamdigitale.it/dataset-manager/v1/dataset/${encodeURIComponent(
         datasetURI)}?format=json")
-.headers(Seq("Authorization" -> ("Bearer ${bearerToken}"),
+.headers(Seq("Authorization" -> ("Bearer YOU_MUST_BE_LOGGEDIN"),
 "content-Type" -> "application/json"))
 .asString
-val parsed  = ujson.read(resp.body).asInstanceOf[ujson.Js.Arr]
+val ${metacatalog.dcatapit.name}  = ujson.read(resp.body).asInstanceOf[ujson.Js.Arr]
       `
-      } else if(kernelName == 'R'){
+      } else if(kernelName == 'ir'){
         return `library(httr)
 #install.packages("ggplot2")
 library(ggplot2)
 library(IRdisplay)
 data <- GET("https://api.daf.teamdigitale.it/dataset-manager/v1/dataset/${encodeURIComponent(
   datasetURI)}?format=csv", 
-  add_headers(Authorization = "Bearer ${bearerToken}"))
+  add_headers(Authorization = "Bearer YOU_MUST_BE_LOGGEDIN"))
 content <- content(data)
-csv <- read.csv(text=content, header=TRUE, sep=",")
-csv`
-      }else if(kernelName == 'Julia'){
+${metacatalog.dcatapit.name} <- read.csv(text=content, header=TRUE, sep=",")
+${metacatalog.dcatapit.name}`
+      }else if(kernelName == 'julia'){
         return `using Pkg
 Pkg.add("HTTP");
 Pkg.add("DataFrames");
@@ -147,27 +147,29 @@ using CSV;
 res = HTTP.request("GET",
   "https://api.daf.teamdigitale.it/dataset-manager/v1/dataset/${encodeURIComponent(
     datasetURI)}?format=csv",
-  [("Authorization", "Bearer ${bearerToken}")]);
-mycsv = CSV.read(IOBuffer(res.body));
-mycsv
+  [("Authorization", "Bearer YOU_MUST_BE_LOGGEDIN")]);
+${metacatalog.dcatapit.name} = CSV.read(IOBuffer(res.body));
+${metacatalog.dcatapit.name}
 `        
-      } else if (kernelName == 'PySpark') {
+      } else if (kernelName == 'pysparkkernel') {
         const physicalUrl = metacatalog.operational.physical_uri
         const name = metacatalog.dcatapit.name
         if(metacatalog.operational.ext_opendata === null || 
           metacatalog.operational.ext_opendata === undefined){
           return `path_dataset = "${physicalUrl}"
-dataset = (spark.read.format("parquet") 
+${metacatalog.dcatapit.name} = (spark.read.format("parquet") 
 .option("inferSchema", "true") 
 .load(path_dataset)
-)`
+)
+${metacatalog.dcatapit.name}`
         } else {
         return `path_dataset = "${physicalUrl}/${name}.csv"
-dataset = (spark.read.format("csv") 
+${metacatalog.dcatapit.name} = (spark.read.format("csv") 
 .option("inferSchema", "true") 
 .option("header", "true")
 .load(path_dataset)
-)`
+)
+${metacatalog.dcatapit.name}`
         }
       }else {
         return "kernel not supported yet"
@@ -189,10 +191,12 @@ const datasetEpic = (action$, state$) =>
         const { basicToken, bearerToken } = { ...tokensSelector(state) };
         
         const model = selectors.model(state, { contentRef });
-        const kernelName = selectors.notebook.displayName(model)
+        // Is not correct when switch kernel
+        //const kernelName = selectors.notebook.displayName(model)
         // Use this instead of kernelName
         const kernel = selectors.currentKernel(state);
-        
+        const kernelSpec = kernel.kernelSpecName;
+
         const value =
           cellByIdSelector(modelSelector(state, { contentRef }), {
             id
@@ -202,7 +206,7 @@ const datasetEpic = (action$, state$) =>
             datasetURI: selectedDataset.payload.operational.logical_uri,
             basicToken,
             bearerToken,
-            kernelName,
+            kernelName: kernelSpec,
             metacatalog: selectedDataset.payload
           });
 
