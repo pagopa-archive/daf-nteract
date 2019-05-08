@@ -62,7 +62,7 @@ test("binder", async () => {
   const liveSource =
     sources["https://mybinder.org/build/gh/nteract/vdom/master"];
 
-  for (var message of messages) {
+  for (const message of messages) {
     liveSource.onmessage({
       data: JSON.stringify(message)
     });

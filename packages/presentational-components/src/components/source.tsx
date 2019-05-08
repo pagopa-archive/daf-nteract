@@ -1,15 +1,16 @@
 import * as React from "react";
 
+import styled from "styled-components";
 import Highlighter from "../syntax-highlighter";
 
-export type SourceProps = {
-  language: string;
-  children: React.ReactNode;
-  className: string;
-  theme: "light" | "dark";
-};
+export interface SourceProps {
+  language?: string;
+  children?: React.ReactNode;
+  className?: string;
+  theme?: "light" | "dark";
+}
 
-export class Source extends React.Component<SourceProps> {
+class BareSource extends React.Component<SourceProps> {
   static defaultProps = {
     children: "",
     language: "text",
@@ -25,14 +26,29 @@ export class Source extends React.Component<SourceProps> {
     if (typeof this.props.children === "string") {
       return (
         <Highlighter
-          language={this.props.language}
-          className={this.props.className}
+          // NOTE: To get around styled-components & defaultProps not lining up,
+          // this defaults to "text" for us https://github.com/DefinitelyTyped/DefinitelyTyped/issues/29540
+          language={this.props.language || "text"}
+          className={this.props.className || "input"}
         >
           {this.props.children}
         </Highlighter>
       );
     }
     // Otherwise assume they have their own editor component
-    return <div className="input">{this.props.children}</div>;
+    return <div className={this.props.className}>{this.props.children}</div>;
   }
 }
+
+export const Source = styled(BareSource)<SourceProps>``;
+
+Source.defaultProps = {
+  children: "",
+  language: "text",
+  className: "input",
+  theme: "light"
+};
+
+Source.displayName = "Source";
+
+export default Source;

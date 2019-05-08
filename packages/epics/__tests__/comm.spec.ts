@@ -1,14 +1,14 @@
 import { of, Subject } from "rxjs";
 import { toArray } from "rxjs/operators";
 
-import {
-  createCommMessage,
-  createCommCloseMessage,
-  createCommOpenMessage,
-  commActionObservable
-} from "../src/comm";
 import * as actions from "@nteract/actions";
-import { COMM_OPEN, COMM_MESSAGE } from "@nteract/actions";
+import { COMM_MESSAGE, COMM_OPEN } from "@nteract/actions";
+import {
+  commActionObservable,
+  createCommCloseMessage,
+  createCommMessage,
+  createCommOpenMessage
+} from "../src/comm";
 
 describe("createCommMessage", () => {
   test("creates a comm_msg", () => {

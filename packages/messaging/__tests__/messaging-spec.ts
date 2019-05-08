@@ -1,25 +1,25 @@
-import { from, of } from "rxjs";
-import { map, tap, count, toArray } from "rxjs/operators";
 import { cloneDeep } from "lodash";
+import { from, of } from "rxjs";
+import { count, map, tap, toArray } from "rxjs/operators";
 
 import {
-  ofMessageType,
   childOf,
-  createMessage,
-  createExecuteRequest,
   convertOutputMessageToNotebookFormat,
-  outputs,
-  payloads,
+  createExecuteRequest,
+  createMessage,
   executionCounts,
+  JupyterMessage,
   kernelStatuses,
-  JupyterMessage
+  ofMessageType,
+  outputs,
+  payloads
 } from "../src";
 import {
-  executeInput,
   displayData,
-  status,
+  executeInput,
   executeReply,
-  message
+  message,
+  status
 } from "../src/messages";
 
 describe("createMessage", () => {

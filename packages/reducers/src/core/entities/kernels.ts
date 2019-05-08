@@ -1,25 +1,23 @@
-import { combineReducers } from "redux-immutable";
-import { Action } from "redux";
-import * as Immutable from "immutable";
-
-import {
-  makeKernelNotStartedRecord,
-  makeLocalKernelRecord,
-  makeRemoteKernelRecord,
-  makeKernelsRecord
-} from "@nteract/types";
-import {
-  makeKernelInfoRecord,
-  makeHelpLinkRecord,
-  HelpLink
-} from "@nteract/types";
+// Vendor modules
 import * as actionTypes from "@nteract/actions";
-import { JSONObject } from "@nteract/commutable/src";
+import { JSONObject } from "@nteract/commutable";
+import {
+  HelpLink,
+  makeHelpLinkRecord,
+  makeKernelInfoRecord,
+  makeKernelNotStartedRecord,
+  makeKernelsRecord,
+  makeLocalKernelRecord,
+  makeRemoteKernelRecord
+} from "@nteract/types";
+import { List, Map } from "immutable";
+import { Action, Reducer } from "redux";
+import { combineReducers } from "redux-immutable";
 
 // TODO: we need to clean up references to old kernels at some point. Listening
 // for KILL_KERNEL_SUCCESSFUL seems like a good candidate, but I think you can
 // also end up with a dead kernel if that fails and you hit KILL_KERNEL_FAILED.
-const byRef = (state = Immutable.Map(), action: Action) => {
+const byRef = (state = Map(), action: Action): Map<{}, {}> => {
   let typedAction;
   switch (action.type) {
     case actionTypes.SET_LANGUAGE_INFO:
@@ -76,7 +74,7 @@ const byRef = (state = Immutable.Map(), action: Action) => {
           // already set as we want it
           break;
         case "object":
-          codemirrorMode = Immutable.Map(codemirrorMode as JSONObject);
+          codemirrorMode = Map(codemirrorMode as JSONObject);
           break;
         default:
           // any other case results in falling back to language name
@@ -84,12 +82,12 @@ const byRef = (state = Immutable.Map(), action: Action) => {
       }
 
       const helpLinks = typedAction.payload.info.helpLinks
-        ? Immutable.List(
-            (typedAction.payload.info.helpLinks as Array<HelpLink>).map(
+        ? List(
+            (typedAction.payload.info.helpLinks as HelpLink[]).map(
               makeHelpLinkRecord
             )
           )
-        : Immutable.List();
+        : List();
 
       return state.setIn(
         [typedAction.payload.kernelRef, "info"],
@@ -127,4 +125,9 @@ const byRef = (state = Immutable.Map(), action: Action) => {
   }
 };
 
-export const kernels = combineReducers({ byRef }, makeKernelsRecord as any);
+export const kernels: Reducer<
+  {
+    byRef: Map<{}, {}>;
+  },
+  Action<any>
+> = combineReducers({ byRef }, makeKernelsRecord as any);

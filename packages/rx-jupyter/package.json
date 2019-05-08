@@ -1,18 +1,10 @@
 {
   "name": "rx-jupyter",
-  "version": "4.0.0-alpha.0",
+  "version": "5.0.2",
   "description": "RxJS 5 bindings for the Jupyter Notebook API",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
-  "scripts": {
-    "prepare": "npm run build",
-    "prepublishOnly": "npm run build",
-    "build": "npm run build:clean && npm run build:lib",
-    "build:clean": "tsc -b --clean",
-    "build:lib": "tsc -b",
-    "build:lib:watch": "tsc -b --watch",
-    "build:watch": "npm run build:clean && npm run build:lib:watch"
-  },
+  "scripts": {},
   "repository": "https://github.com/nteract/nteract/tree/master/packages/rx-jupyter",
   "keywords": [
     "jupyter",
@@ -26,14 +18,16 @@
     "url": "https://github.com/nteract/nteract/issues"
   },
   "dependencies": {
-    "@types/js-cookie": "^2.2.0",
+    "@nteract/commutable": "^7.0.2",
+    "@nteract/messaging": "^6.0.2",
     "js-cookie": "^2.2.0",
     "rxjs": "^6.3.3",
     "url-join": "^4.0.0",
     "url-search-params": "^1.0.0"
   },
   "devDependencies": {
-    "@types/url-join": "^0.8.2",
-    "@types/url-search-params": "^0.10.2"
+    "@types/js-cookie": "^2.2.0",
+    "@types/url-join": "^4.0.0",
+    "@types/url-search-params": "^1.0.0"
   }
 }

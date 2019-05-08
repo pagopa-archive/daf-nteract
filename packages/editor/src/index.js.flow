@@ -1,5 +1,0 @@
-// @flow
-/* eslint-disable */
-
-declare var Editor: any;
-export default Editor;

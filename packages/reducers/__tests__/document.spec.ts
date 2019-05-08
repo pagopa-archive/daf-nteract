@@ -1,24 +1,25 @@
 /* eslint-disable max-len */
 
-import uuid from "uuid/v4";
 import {
+  appendCellToNotebook,
   emptyCodeCell,
   emptyMarkdownCell,
-  appendCellToNotebook,
   emptyNotebook,
   makeDisplayData,
+  makeErrorOutput,
   makeStreamOutput
 } from "@nteract/commutable";
 import * as Immutable from "immutable";
+import uuid from "uuid/v4";
 
 import * as actions from "@nteract/actions";
-import {
-  notebook as reducers,
-  reduceOutputs,
-  cleanCellTransient
-} from "../src/core/entities/contents/notebook";
-import { makeDocumentRecord } from "@nteract/types";
 import { fixtureCommutable } from "@nteract/fixtures";
+import { makeDocumentRecord } from "@nteract/types";
+import {
+  cleanCellTransient,
+  notebook as reducers,
+  reduceOutputs
+} from "../src/core/entities/contents/notebook";
 
 const initialDocument = Immutable.Map();
 const monocellDocument = initialDocument
@@ -30,8 +31,8 @@ const firstCellId = monocellDocument.getIn(["notebook", "cellOrder"]).first();
 describe("reduceOutputs", () => {
   test("puts new outputs at the end by default", () => {
     const outputs = Immutable.List([
-      Immutable.Map({ output_type: "stream", name: "stdout", text: "Woo" }),
-      Immutable.Map({
+      makeStreamOutput({ output_type: "stream", name: "stdout", text: "Woo" }),
+      makeErrorOutput({
         output_type: "error",
         ename: "well",
         evalue: "actually",
@@ -44,29 +45,31 @@ describe("reduceOutputs", () => {
       metadata: {}
     });
 
-    expect(JSON.stringify(newOutputs)).toEqual(
-      JSON.stringify(
-        Immutable.List([
-          Immutable.Map({ output_type: "stream", name: "stdout", text: "Woo" }),
-          Immutable.Map({
-            output_type: "error",
-            ename: "well",
-            evalue: "actually",
-            traceback: Immutable.List()
-          }),
-          Immutable.Map({
-            output_type: "display_data",
-            data: Immutable.Map(),
-            metadata: Immutable.Map()
-          })
-        ])
-      )
+    expect(newOutputs).toEqual(
+      Immutable.List([
+        makeStreamOutput({
+          output_type: "stream",
+          name: "stdout",
+          text: "Woo"
+        }),
+        makeErrorOutput({
+          output_type: "error",
+          ename: "well",
+          evalue: "actually",
+          traceback: Immutable.List()
+        }),
+        makeDisplayData({
+          output_type: "display_data",
+          data: {},
+          metadata: Immutable.Map()
+        })
+      ])
     );
   });
 
   test("handles the case of a single stream output", () => {
-    const outputs = Immutable.fromJS([
-      { name: "stdout", text: "hello", output_type: "stream" }
+    const outputs = Immutable.List([
+      makeStreamOutput({ name: "stdout", text: "hello" })
     ]);
     const newOutputs = reduceOutputs(outputs, {
       name: "stdout",
@@ -74,12 +77,14 @@ describe("reduceOutputs", () => {
       output_type: "stream"
     });
 
-    expect(JSON.stringify(newOutputs)).toBe(
-      JSON.stringify(
-        Immutable.fromJS([
-          { name: "stdout", text: "hello world", output_type: "stream" }
-        ])
-      )
+    expect(newOutputs).toEqual(
+      Immutable.List([
+        makeStreamOutput({
+          name: "stdout",
+          text: "hello world",
+          output_type: "stream"
+        })
+      ])
     );
   });
 
@@ -91,46 +96,56 @@ describe("reduceOutputs", () => {
       text: "hello",
       output_type: "stream"
     });
-    expect(
-      Immutable.is(
-        outputs,
-        Immutable.fromJS([makeStreamOutput({ name: "stdout", text: "hello" })])
-      )
-    ).toBe(true);
+
+    expect(outputs).toEqual(
+      Immutable.List([makeStreamOutput({ name: "stdout", text: "hello" })])
+    );
 
     outputs = reduceOutputs(outputs, {
       name: "stdout",
       text: " world",
       output_type: "stream"
     });
-    expect(
-      Immutable.is(
-        outputs,
-        Immutable.fromJS([
-          makeStreamOutput({ name: "stdout", text: "hello world" })
-        ])
-      )
-    ).toBe(true);
+    expect(outputs).toEqual(
+      Immutable.List([
+        makeStreamOutput({ name: "stdout", text: "hello world" })
+      ])
+    );
   });
 
   test("keeps respective streams together", () => {
-    const outputs = Immutable.fromJS([
-      { name: "stdout", text: "hello", output_type: "stream" },
-      { name: "stderr", text: "errors are", output_type: "stream" }
+    const outputs = Immutable.List([
+      makeStreamOutput({
+        name: "stdout",
+        text: "hello",
+        output_type: "stream"
+      }),
+      makeStreamOutput({
+        name: "stderr",
+        text: "errors are",
+        output_type: "stream"
+      })
     ]);
+
     const newOutputs = reduceOutputs(outputs, {
       name: "stdout",
       text: " world",
       output_type: "stream"
     });
 
-    expect(JSON.stringify(newOutputs)).toBe(
-      JSON.stringify(
-        Immutable.fromJS([
-          { name: "stdout", text: "hello world", output_type: "stream" },
-          { name: "stderr", text: "errors are", output_type: "stream" }
-        ])
-      )
+    expect(newOutputs).toEqual(
+      Immutable.List([
+        makeStreamOutput({
+          name: "stdout",
+          text: "hello world",
+          output_type: "stream"
+        }),
+        makeStreamOutput({
+          name: "stderr",
+          text: "errors are",
+          output_type: "stream"
+        })
+      ])
     );
 
     const evenNewerOutputs = reduceOutputs(newOutputs, {
@@ -138,18 +153,17 @@ describe("reduceOutputs", () => {
       text: " informative",
       output_type: "stream"
     });
-    expect(JSON.stringify(evenNewerOutputs)).toBe(
-      JSON.stringify(
-        Immutable.fromJS([
-          { name: "stdout", text: "hello world", output_type: "stream" },
-          {
-            name: "stderr",
-
-            text: "errors are informative",
-            output_type: "stream"
-          }
-        ])
-      )
+    expect(evenNewerOutputs).toEqual(
+      Immutable.fromJS([
+        makeStreamOutput({
+          name: "stdout",
+          text: "hello world"
+        }),
+        makeStreamOutput({
+          name: "stderr",
+          text: "errors are informative"
+        })
+      ])
     );
   });
 });
@@ -427,7 +441,7 @@ describe("clearOutputs", () => {
     const notebook = appendCellToNotebook(emptyNotebook, emptyMarkdownCell);
 
     const originalState = makeDocumentRecord({
-      notebook: notebook,
+      notebook,
       filename: "test.ipynb"
     });
 
@@ -792,17 +806,14 @@ describe("appendOutput", () => {
     });
 
     const state = reducers(originalState, action);
-    expect(
-      Immutable.is(
-        state.getIn(["notebook", "cellMap", id, "outputs"]),
-        Immutable.fromJS([
-          makeDisplayData({
-            output_type: "display_data",
-            data: Immutable.Map({ "text/html": "<marquee>wee</marquee>" })
-          })
-        ])
-      )
-    ).toBe(true);
+    expect(state.getIn(["notebook", "cellMap", id, "outputs"])).toEqual(
+      Immutable.List([
+        makeDisplayData({
+          output_type: "display_data",
+          data: { "text/html": "<marquee>wee</marquee>" }
+        })
+      ])
+    );
 
     expect(state.getIn(["transient", "keyPathsForDisplays"])).toEqual(
       Immutable.Map()
@@ -811,10 +822,10 @@ describe("appendOutput", () => {
   test("appends output and tracks display IDs", () => {
     const originalState = monocellDocument;
 
-    const id = originalState.getIn(["notebook", "cellOrder", 2]);
+    const cellId = originalState.getIn(["notebook", "cellOrder", 2]);
 
     const action = actions.appendOutput({
-      id,
+      id: cellId,
       output: {
         output_type: "display_data",
         data: { "text/html": "<marquee>wee</marquee>" },
@@ -823,20 +834,20 @@ describe("appendOutput", () => {
     });
 
     const state = reducers(originalState, action);
-    expect(state.getIn(["notebook", "cellMap", id, "outputs"])).toEqual(
-      Immutable.fromJS([
+    expect(state.getIn(["notebook", "cellMap", cellId, "outputs"])).toEqual(
+      Immutable.List([
         makeDisplayData({
-          data: Immutable.Map({ "text/html": "<marquee>wee</marquee>" })
+          data: { "text/html": "<marquee>wee</marquee>" }
         })
       ])
     );
 
-    expect(
-      Immutable.is(
-        state.getIn(["transient", "keyPathsForDisplays", "1234"]),
-        Immutable.fromJS([["notebook", "cellMap", id, "outputs", 0]])
-      )
-    ).toBe(true);
+    expect(state.getIn(["transient", "keyPathsForDisplays", "1234"])).toEqual(
+      // we expect a list of keypaths (which are lists of strings + numbers)
+      Immutable.List([
+        Immutable.List(["notebook", "cellMap", cellId, "outputs", 0])
+      ])
+    );
   });
 });
 
@@ -873,7 +884,7 @@ describe("updateDisplay", () => {
       Immutable.List([
         makeDisplayData({
           output_type: "display_data",
-          data: Immutable.Map({ "text/html": "<marquee>WOO</marquee>" }),
+          data: { "text/html": "<marquee>WOO</marquee>" },
           metadata: Immutable.Map({})
         })
       ])
@@ -998,5 +1009,37 @@ describe("acceptPayloadMessage", () => {
     expect(
       nextState.getIn(["notebook", "cellMap", firstCellId, "source"])
     ).toEqual("this is now the text");
+  });
+});
+
+describe("updateOutputMetadata", () => {
+  test("updates the metadata of an output by cell ID & index", () => {
+    const originalState = monocellDocument.set(
+      "notebook",
+      appendCellToNotebook(
+        fixtureCommutable,
+        emptyCodeCell.set("outputs", Immutable.fromJS([{ empty: "output" }]))
+      )
+    );
+
+    const newOutputMetadata = Immutable.Map({ meta: "data" });
+
+    const id: string = originalState.getIn(["notebook", "cellOrder"]).last();
+
+    const state = reducers(
+      originalState,
+      actions.updateOutputMetadata({
+        id,
+        metadata: newOutputMetadata,
+        index: 0,
+        mediaType: "test/mediatype"
+      })
+    );
+    expect(state.getIn(["notebook", "cellMap", id, "outputs", 0])).toEqual(
+      Immutable.Map({
+        empty: "output",
+        metadata: Immutable.Map({ "test/mediatype": newOutputMetadata })
+      })
+    );
   });
 });

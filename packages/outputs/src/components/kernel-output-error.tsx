@@ -1,34 +1,28 @@
-import * as React from "react";
 import Ansi from "ansi-to-react";
+import * as React from "react";
+import styled from "styled-components";
 
-type Props = {
-  /**
-   *  The name of the exception. This value is returned by the kernel.
-   */
-  ename: string;
-  /**
-   * The value of the exception. This value is returned by the kernel.
-   */
-  evalue: string;
-  /**
-   * The output type passed to the Output component. This should be `error`
-   * if you would like to render a KernelOutputError component.
-   */
-  outputType: string;
-  /**
-   * The tracebook of the exception. This value is returned by the kernel.
-   */
-  traceback: Array<string>;
-};
+import { ImmutableErrorOutput } from "@nteract/commutable";
 
-export const KernelOutputError = (props: Props) => {
-  const { ename, evalue, traceback } = props;
+interface Props {
+  className?: string;
+  output: ImmutableErrorOutput;
+  output_type: "error";
+}
 
-  const joinedTraceback = Array.isArray(traceback)
-    ? traceback.join("\n")
-    : traceback;
+const PlainKernelOutputError = (props: Partial<Props>) => {
+  const { output } = props;
+  if (!output) {
+    return null;
+  }
 
-  let kernelOutputError = [];
+  const { ename, evalue, traceback } = output;
+
+  // Allow traceback to be Immutable.List or Array
+  const joinedTraceback =
+    typeof traceback.join === "function" ? traceback.join("\n") : traceback;
+
+  const kernelOutputError = [];
 
   if (joinedTraceback) {
     kernelOutputError.push(joinedTraceback);
@@ -39,22 +33,20 @@ export const KernelOutputError = (props: Props) => {
   }
 
   return (
-    <React.Fragment>
-      <div className="kernel-output-error">
-        <Ansi linkify={false}>{kernelOutputError.join("\n")}</Ansi>
-        <style jsx>{`
-          .kernel-output-error :global(code) {
-            white-space: pre-wrap;
-          }
-        `}</style>
-      </div>
-    </React.Fragment>
+    <Ansi className={props.className} linkify={false}>
+      {kernelOutputError.join("\n")}
+    </Ansi>
   );
 };
 
+export const KernelOutputError = styled(PlainKernelOutputError)`
+  white-space: pre-wrap;
+`;
+
 KernelOutputError.defaultProps = {
-  outputType: "error",
-  ename: "",
-  evalue: "",
-  traceback: []
+  output_type: "error"
 };
+
+KernelOutputError.displayName = "KernelOutputError";
+
+export default KernelOutputError;

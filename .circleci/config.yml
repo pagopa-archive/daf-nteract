@@ -6,7 +6,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/node:10
+      - image: circleci/python:3.7.2-node
 
     working_directory: ~/nteract
 
@@ -20,6 +20,9 @@ jobs:
             # fallback to using the latest cache if no exact match is found
             - yarn-packages-
 
+      - run: echo 'export PATH=/home/circleci/.local/bin:$PATH' >> $BASH_ENV
+      - run: pip install --user setuptools
+      - run: pip install --user jupyter
       - run: yarn
 
       - save_cache:
@@ -29,9 +32,9 @@ jobs:
 
       # run tests!
       - run: yarn run test:lint
-      - run: yarn run build:packages:ci
+      # build all packages and applications
+      - run: yarn build:all:ci
       - run: yarn run test --maxWorkers 1
-      - run: yarn run test:flow
 
       - run:
           name: Build Docs
@@ -42,14 +45,12 @@ jobs:
           destination: styleguide
 
       - run:
-          name: Build Commuter
-          command: npx lerna run build --scope @nteract/commuter
-          no_output_timeout: 20m
-      - run:
-          name: Build Play
-          command: npx lerna run build --scope @nteract/play
-          no_output_timeout: 20m
-      - run:
           name: Build Jupyter Extension
           command: npx lerna run build:asap --scope nteract-on-jupyter
           no_output_timeout: 30m
+
+      - run:
+          name: Lint Jupyter Extension
+          command: |
+            pip install --user black
+            cd ./applications/jupyter-extension && black --config ./pyproject.toml .

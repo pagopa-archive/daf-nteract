@@ -1,7 +1,12 @@
 /**
  * @module actions
  */
-import { CellId, MimeBundle, Output, JSONObject } from "@nteract/commutable";
+import {
+  CellId,
+  JSONObject,
+  MediaBundle,
+  OnDiskOutput
+} from "@nteract/commutable";
 
 import * as actionTypes from "../actionTypes";
 
@@ -68,7 +73,9 @@ export function setNotificationSystem(
 ): actionTypes.SetNotificationSystemAction {
   return {
     type: actionTypes.SET_NOTIFICATION_SYSTEM,
-    notificationSystem
+    payload: {
+      notificationSystem
+    }
   };
 }
 
@@ -77,7 +84,9 @@ export function setGithubToken(
 ): actionTypes.SetGithubTokenAction {
   return {
     type: actionTypes.SET_GITHUB_TOKEN,
-    githubToken
+    payload: {
+      githubToken
+    }
   };
 }
 
@@ -87,8 +96,10 @@ export function setConfigAtKey<T>(
 ): actionTypes.SetConfigAction<T> {
   return {
     type: actionTypes.SET_CONFIG_AT_KEY,
-    key,
-    value
+    payload: {
+      key,
+      value
+    }
   };
 }
 
@@ -118,9 +129,11 @@ export const doneSavingConfig = () => ({
   type: actionTypes.DONE_SAVING_CONFIG
 });
 
-export const configLoaded = (config: any) => ({
-  type: actionTypes.MERGE_CONFIG,
-  config
+export const configLoaded = (payload: {
+  config: object;
+}): actionTypes.MergeConfigAction => ({
+  payload,
+  type: actionTypes.MERGE_CONFIG
 });
 
 /**
@@ -165,7 +178,7 @@ export function commMessageAction(message: any) {
 
 export function appendOutput(payload: {
   id: CellId;
-  output: Output;
+  output: OnDiskOutput;
   contentRef: ContentRef;
 }): actionTypes.AppendOutput {
   return {
@@ -189,7 +202,7 @@ export function acceptPayloadMessage(payload: {
 
 export function updateDisplay(payload: {
   content: {
-    data: MimeBundle;
+    data: MediaBundle;
     metadata: JSONObject;
     transient: { display_id: string };
   };
@@ -228,6 +241,24 @@ export function publishGist(payload: {
 }): actionTypes.PublishGist {
   return {
     type: actionTypes.PUBLISH_GIST,
+    payload
+  };
+}
+
+export function removeTransform(
+  payload: actionTypes.RemoveTransform["payload"]
+): actionTypes.RemoveTransform {
+  return {
+    type: actionTypes.REMOVE_TRANSFORM,
+    payload
+  };
+}
+
+export function addTransform(
+  payload: actionTypes.AddTransform["payload"]
+): actionTypes.AddTransform {
+  return {
+    type: actionTypes.ADD_TRANSFORM,
     payload
   };
 }

@@ -1,5 +1,0 @@
-// @flow
-/* eslint-disable */
-
-declare var NotebookApp: any;
-export default NotebookApp;

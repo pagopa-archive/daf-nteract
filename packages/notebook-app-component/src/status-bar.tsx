@@ -1,16 +1,41 @@
+import * as selectors from "@nteract/selectors";
+import { AppState, ContentRef, KernelRef } from "@nteract/types";
+import distanceInWordsToNow from "date-fns/distance_in_words_to_now";
 import React from "react";
 import { connect } from "react-redux";
-import distanceInWordsToNow from "date-fns/distance_in_words_to_now";
-import * as selectors from "@nteract/selectors";
-import { ContentRef, AppState, KernelRef } from "@nteract/types";
 
-type Props = {
+interface Props {
   lastSaved?: Date | null;
   kernelSpecDisplayName: string;
   kernelStatus: string;
-};
+}
 
 const NOT_CONNECTED = "not connected";
+
+import styled from "styled-components";
+
+export const LeftStatus = styled.div`
+  float: left;
+  display: block;
+  padding-left: 10px;
+`;
+export const RightStatus = styled.div`
+  float: right;
+  padding-right: 10px;
+  display: block;
+`;
+
+export const Bar = styled.div`
+  padding-top: 8px;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  font-size: 12px;
+  line-height: 0.5em;
+  background: var(--status-bar);
+  z-index: 99;
+`;
 
 export class StatusBar extends React.Component<Props> {
   shouldComponentUpdate(nextProps: Props): boolean {
@@ -27,78 +52,76 @@ export class StatusBar extends React.Component<Props> {
     const name = this.props.kernelSpecDisplayName || "Loading...";
 
     return (
-      <div className="status-bar">
-        <span className="pull-right">
+      <Bar>
+        <RightStatus>
           {this.props.lastSaved ? (
             <p> Last saved {distanceInWordsToNow(this.props.lastSaved)} </p>
           ) : (
             <p> Not saved yet </p>
           )}
-        </span>
-        <span className="pull-left">
+        </RightStatus>
+        <LeftStatus>
           <p>
             {name} | {this.props.kernelStatus}
           </p>
-        </span>
-        <style jsx>{`
-          .status-bar {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            font-size: 12px;
-            line-height: 0.5em;
-            background: var(--status-bar);
-            z-index: 99;
-          }
-
-          .pull-right {
-            float: right;
-            padding-right: 10px;
-          }
-
-          .pull-left {
-            display: block;
-            padding-left: 10px;
-          }
-        `}</style>
-      </div>
+        </LeftStatus>
+      </Bar>
     );
   }
 }
 
-const mapStateToProps = (
-  state: AppState,
-  ownProps: { contentRef: ContentRef; kernelRef?: KernelRef | null }
-): Props => {
-  const { contentRef, kernelRef } = ownProps;
-  const content = selectors.content(state, { contentRef });
-  const kernel =
-    // check for undefined or null kernelRef (using double equal)
-    kernelRef == null ? selectors.kernel(state, { kernelRef }) : null;
+interface InitialProps {
+  contentRef: ContentRef;
+}
 
-  const lastSaved = content && content.lastSaved ? content.lastSaved : null;
+const makeMapStateToProps = (
+  initialState: AppState,
+  initialProps: InitialProps
+): ((state: AppState) => Props) => {
+  const { contentRef } = initialProps;
 
-  const kernelStatus =
-    kernel != null && kernel.status != null ? kernel.status : NOT_CONNECTED;
+  const mapStateToProps = (state: AppState) => {
+    const content = selectors.content(state, { contentRef });
 
-  // TODO: We need kernels associated to the kernelspec they came from
-  //       so we can pluck off the display_name and provide it here
-  let kernelSpecDisplayName = " ";
-  if (kernelStatus === NOT_CONNECTED) {
-    kernelSpecDisplayName = "no kernel";
-  } else if (kernel != null && kernel.kernelSpecName != null) {
-    kernelSpecDisplayName = kernel.kernelSpecName;
-  } else if (content != null && content.type === "notebook") {
-    kernelSpecDisplayName =
-      selectors.notebook.displayName(content.model) || " ";
-  }
+    if (!content || content.type !== "notebook") {
+      return {
+        kernelStatus: NOT_CONNECTED,
+        kernelSpecDisplayName: "no kernel",
+        lastSaved: null
+      };
+    }
 
-  return {
-    lastSaved,
-    kernelStatus,
-    kernelSpecDisplayName
+    const kernelRef = content.model.kernelRef;
+    let kernel = null;
+    if (kernelRef) {
+      kernel = selectors.kernel(state, { kernelRef });
+    }
+
+    const lastSaved = content && content.lastSaved ? content.lastSaved : null;
+
+    const kernelStatus =
+      kernel != null && kernel.status != null ? kernel.status : NOT_CONNECTED;
+
+    // TODO: We need kernels associated to the kernelspec they came from
+    //       so we can pluck off the display_name and provide it here
+    let kernelSpecDisplayName = " ";
+    if (kernelStatus === NOT_CONNECTED) {
+      kernelSpecDisplayName = "no kernel";
+    } else if (kernel != null && kernel.kernelSpecName != null) {
+      kernelSpecDisplayName = kernel.kernelSpecName;
+    } else if (content !== undefined && content.type === "notebook") {
+      kernelSpecDisplayName =
+        selectors.notebook.displayName(content.model) || " ";
+    }
+
+    return {
+      kernelSpecDisplayName,
+      kernelStatus,
+      lastSaved
+    };
   };
+
+  return mapStateToProps;
 };
 
-export default connect(mapStateToProps)(StatusBar);
+export default connect(makeMapStateToProps)(StatusBar);

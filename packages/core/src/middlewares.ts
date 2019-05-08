@@ -4,18 +4,20 @@
 import { isCollection } from "immutable";
 import { createLogger } from "redux-logger";
 
+import { Middleware } from "redux";
+
 import * as selectors from "@nteract/selectors";
 
-type ErrorAction = {
+interface ErrorAction {
   type: string;
   error?: boolean;
   payload?: any;
-};
+}
 
 export const errorMiddleware = (store: any, console = global.console) => (
   next: any
 ) => (action: ErrorAction) => {
-  if (!(action.type.includes("ERROR") || (action as ErrorAction).error)) {
+  if (!(action.type.includes("ERROR") || action.error)) {
     return next(action);
   }
   console.error(action);
@@ -38,7 +40,7 @@ export const errorMiddleware = (store: any, console = global.console) => (
   const notificationSystem = selectors.notificationSystem(state);
   if (notificationSystem) {
     notificationSystem.addNotification({
-      title: (action as ErrorAction).type,
+      title: action.type,
       message: errorText,
       dismissible: true,
       position: "tr",
@@ -48,7 +50,7 @@ export const errorMiddleware = (store: any, console = global.console) => (
   return next(action);
 };
 
-export function logger() {
+export function logger(): Middleware {
   const craftedLogger = createLogger({
     // predicate: (getState, action) => action.type.includes('COMM'),
     stateTransformer: (state: any) =>

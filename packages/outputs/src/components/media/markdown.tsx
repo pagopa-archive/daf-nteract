@@ -1,7 +1,7 @@
-import * as React from "react";
 import MarkdownComponent from "@nteract/markdown";
+import * as React from "react";
 
-type Props = {
+interface Props {
   /**
    * Markdown text.
    */
@@ -11,7 +11,7 @@ type Props = {
    * For more on media types, see: https://www.w3.org/TR/CSS21/media.html%23media-types.
    */
   mediaType: "text/markdown";
-};
+}
 
 export class Markdown extends React.PureComponent<Props> {
   static defaultProps = {
@@ -23,3 +23,5 @@ export class Markdown extends React.PureComponent<Props> {
     return <MarkdownComponent source={this.props.data} />;
   }
 }
+
+export default Markdown;

@@ -1,22 +1,19 @@
-// @flow
 import * as React from "react";
 
-import { ServerConfig, LocalHostStorage } from "../host-storage";
+import { LocalHostStorage, ServerConfig } from "../host-storage";
 
 const { Provider, Consumer } = React.createContext<ServerConfig | null>(null);
 
 export { Consumer };
 
-type HostProps = {
+interface HostProps {
   children?: React.ReactNode;
   repo: string;
   gitRef?: string;
   binderURL?: string;
-};
+}
 
-class Host extends React.Component<HostProps, ServerConfig> {
-  private lhs?: LocalHostStorage;
-
+export default class Host extends React.Component<HostProps, ServerConfig> {
   static Consumer = Consumer;
 
   static defaultProps = {
@@ -24,6 +21,8 @@ class Host extends React.Component<HostProps, ServerConfig> {
     gitRef: "master",
     binderURL: "https://mybinder.org"
   };
+
+  private lhs?: LocalHostStorage;
 
   allocate = () => {
     if (!this.lhs) {
@@ -62,5 +61,3 @@ class Host extends React.Component<HostProps, ServerConfig> {
     return <Provider value={this.state}>{this.props.children}</Provider>;
   }
 }
-
-export default Host;

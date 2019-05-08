@@ -7,6 +7,7 @@ export type MessageType =
   | "execute_request"
   | "inspect_request"
   | "kernel_info_request"
+  | "kernel_info_reply"
   | "complete_request"
   | "history_request"
   | "is_complete_request"

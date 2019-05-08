@@ -5,48 +5,132 @@
 // TODO: Fix up a11y eslint here
 // TODO: All the `<li>` below that have role button should just be `<button>` with proper styling
 
-import * as React from "react";
-import { connect } from "react-redux";
-import { Dispatch } from "redux";
-import * as actions from "@nteract/actions";
-import { ContentRef } from "@nteract/types";
 import {
+  DropdownContent,
   DropdownMenu,
-  DropdownTrigger,
-  DropdownContent
+  DropdownTrigger
 } from "@nteract/dropdown-menu";
 import {
-  TrashOcticon,
   ChevronDownOcticon,
+  TrashOcticon,
   TriangleRightOcticon
 } from "@nteract/octicons";
+import { ContentRef } from "@nteract/types";
+import * as React from "react";
 
-export type PureToolbarProps = {
-  type: "markdown" | "code" | "raw";
-  executeCell?: () => void;
-  deleteCell?: () => void;
-  clearOutputs?: () => void;
-  toggleParameterCell?: () => void;
-  toggleCellInputVisibility?: () => void;
-  toggleCellOutputVisibility?: () => void;
-  toggleOutputExpansion?: () => void;
-  changeCellType?: () => void;
+import styled, { StyledComponent } from "styled-components";
+
+import { CellType } from "@nteract/commutable";
+
+import SelectDataset from "../../pdnd-nteract-packages/select-dataset";
+import SaveDataset from "../../pdnd-nteract-packages/save-dataset";
+
+export interface PureToolbarProps {
+  type: CellType;
+  executeCell: () => void;
+  deleteCell: () => void;
+  clearOutputs: () => void;
+  toggleParameterCell: () => void;
+  toggleCellInputVisibility: () => void;
+  toggleCellOutputVisibility: () => void;
+  toggleOutputExpansion: () => void;
+  changeCellType: () => void;
+  cellFocused: boolean;
   sourceHidden: boolean;
-  contentRef: ContentRef;
-};
+}
 
-export class PureToolbar extends React.Component<PureToolbarProps> {
+export const CellToolbar = styled.div`
+  background-color: var(--theme-cell-toolbar-bg);
+  opacity: 0.4;
+  transition: opacity 0.4s;
+
+  & > div {
+    display: inline-block;
+  }
+
+  :hover {
+    opacity: 1;
+  }
+
+  button {
+    display: inline-block;
+
+    width: 22px;
+    height: 20px;
+    padding: 0px 4px;
+
+    text-align: center;
+
+    border: none;
+    outline: none;
+    background: none;
+  }
+
+  span {
+    font-size: 15px;
+    line-height: 1;
+    color: var(--theme-cell-toolbar-fg);
+  }
+
+  button span:hover {
+    color: var(--theme-cell-toolbar-fg-hover);
+  }
+
+  .octicon {
+    transition: color 0.5s;
+  }
+
+  span.spacer {
+    display: inline-block;
+    vertical-align: middle;
+    margin: 1px 5px 3px 5px;
+    height: 11px;
+  }
+`;
+
+interface CellToolbarMaskProps {
+  sourceHidden: boolean;
+  cellFocused: boolean;
+}
+
+export const CellToolbarMask = styled.div.attrs<CellToolbarMaskProps>(
+  props => ({
+    style: {
+      display: props.cellFocused
+        ? "block"
+        : props.sourceHidden
+        ? "block"
+        : "none"
+    }
+  })
+)`
+  z-index: 9999;
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  height: 34px;
+
+  /* Set the left padding to 50px to give users extra room to move their
+              mouse to the toolbar without causing the cell to go out of focus and thus
+              hide the toolbar before they get there. */
+  padding: 0px 0px 0px 50px;
+` as StyledComponent<"div", any, CellToolbarMaskProps, never>;
+
+export class PureToolbar extends React.PureComponent<PureToolbarProps> {
   static defaultProps: Partial<PureToolbarProps> = {
     type: "code"
   };
 
   render() {
-    const { type, executeCell, deleteCell, sourceHidden } = this.props;
+    const { executeCell, deleteCell, sourceHidden } = this.props;
 
     return (
-      <div className="cell-toolbar-mask">
-        <div className="cell-toolbar">
-          {type !== "markdown" && (
+      <CellToolbarMask
+        sourceHidden={sourceHidden}
+        cellFocused={this.props.cellFocused}
+      >
+        <CellToolbar>
+          {this.props.type !== "markdown" && (
             <button
               onClick={executeCell}
               title="execute cell"
@@ -57,6 +141,8 @@ export class PureToolbar extends React.Component<PureToolbarProps> {
               </span>
             </button>
           )}
+          <SelectDataset />
+          <SaveDataset />
           <DropdownMenu>
             <DropdownTrigger>
               <button title="show additional actions">
@@ -65,7 +151,7 @@ export class PureToolbar extends React.Component<PureToolbarProps> {
                 </span>
               </button>
             </DropdownTrigger>
-            {type === "code" ? (
+            {this.props.type === "code" ? (
               <DropdownContent>
                 <li
                   onClick={this.props.clearOutputs}
@@ -146,123 +232,10 @@ export class PureToolbar extends React.Component<PureToolbarProps> {
               <TrashOcticon />
             </span>
           </button>
-        </div>
-
-        <style jsx>{`
-          .cell-toolbar > div {
-            display: inline-block;
-          }
-
-          .cell-toolbar {
-            background-color: var(--theme-cell-toolbar-bg);
-            opacity: 0.4;
-            transition: opacity 0.4s;
-          }
-
-          .cell-toolbar:hover {
-            opacity: 1;
-          }
-
-          .cell-toolbar button {
-            display: inline-block;
-
-            width: 22px;
-            height: 20px;
-            padding: 0px 4px;
-
-            text-align: center;
-
-            border: none;
-            outline: none;
-            background: none;
-          }
-
-          .cell-toolbar span {
-            font-size: 15px;
-            line-height: 1;
-            color: var(--theme-cell-toolbar-fg);
-          }
-
-          .cell-toolbar button span:hover {
-            color: var(--theme-cell-toolbar-fg-hover);
-          }
-
-          .cell-toolbar-mask {
-            z-index: 9999;
-            display: ${sourceHidden ? "block" : "none"};
-            position: absolute;
-            top: 0px;
-            right: 0px;
-            height: 34px;
-
-            /* Set the left padding to 50px to give users extra room to move their
-              mouse to the toolbar without causing the cell to go out of focus and thus
-              hide the toolbar before they get there. */
-            padding: 0px 0px 0px 50px;
-          }
-
-          .octicon {
-            transition: color 0.5s;
-          }
-
-          .cell-toolbar span.spacer {
-            display: inline-block;
-            vertical-align: middle;
-            margin: 1px 5px 3px 5px;
-            height: 11px;
-          }
-        `}</style>
-      </div>
+        </CellToolbar>
+      </CellToolbarMask>
     );
   }
 }
 
-// eslint-disable-next-line no-unused-vars
-type ConnectedProps = {
-  id: string;
-  type: "markdown" | "code" | "raw";
-  executeCell: () => void;
-  deleteCell: () => void;
-  clearOutputs: () => void;
-  toggleCellOutputVisibility: () => void;
-  toggleCellInputVisibility: () => void;
-  changeCellType: () => void;
-  toggleOutputExpansion: () => void;
-};
-
-const mapDispatchToProps = (
-  dispatch: Dispatch,
-  {
-    id,
-    type,
-    contentRef
-  }: { id: string; type: "markdown" | "code" | "raw"; contentRef: ContentRef }
-) => ({
-  toggleParameterCell: () =>
-    dispatch(actions.toggleParameterCell({ id, contentRef })),
-  deleteCell: () => dispatch(actions.deleteCell({ id, contentRef })),
-  executeCell: () => dispatch(actions.executeCell({ id, contentRef })),
-  clearOutputs: () => dispatch(actions.clearOutputs({ id, contentRef })),
-  toggleCellOutputVisibility: () =>
-    dispatch(actions.toggleCellOutputVisibility({ id, contentRef })),
-  toggleCellInputVisibility: () =>
-    dispatch(actions.toggleCellInputVisibility({ id, contentRef })),
-  changeCellType: () =>
-    dispatch(
-      actions.changeCellType({
-        id,
-        to: type === "markdown" ? "code" : "markdown",
-        contentRef
-      })
-    ),
-  toggleOutputExpansion: () =>
-    dispatch(actions.toggleOutputExpansion({ id, contentRef }))
-});
-
-// TODO: This toolbar could easily make use of ownProps (contentRef, cellId)
-//       and pluck exactly the state it wants
-// $FlowFixMe: react-redux typings
-export default connect(
-  null,
-  mapDispatchToProps
-)(PureToolbar);
+export default PureToolbar;

@@ -1,3 +1,6 @@
+/**
+ * @module types
+ */
 export type HostId = string;
 export type KernelId = string;
 export type SessionId = string;

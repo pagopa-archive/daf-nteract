@@ -1,6 +1,6 @@
 # @nteract/directory-listing
 
-This package contains components that can be used to create a listing of items within a directory. To see this package in action, you can view the source code for the [nteract commuter application](https://github.com/nteract/nteract/tree/master/applications/commuter).
+This package contains components that can be used to create a listing of items within a directory. To see this package in action, you can view the source code for the [nteract commuter application](https://github.com/nteract/commuter).
 
 ## Installation
 

@@ -1,0 +1,14 @@
+Metadata-Version: 2.1
+Name: nteract-on-jupyter
+Version: 2.0.7
+Summary: Extension for the jupyter notebook server and nteract
+Home-page: https://github.com/nteract/nteract
+Author: nteract contributors
+Author-email: jupyter@googlegroups.com
+License: UNKNOWN
+Platform: UNKNOWN
+Requires-Dist: notebook
+
+UNKNOWN
+
+

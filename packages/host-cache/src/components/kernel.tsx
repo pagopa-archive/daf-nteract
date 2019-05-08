@@ -1,4 +1,3 @@
-// @flow
 import * as React from "react";
 // NOTE: This could use the sessions API so these kernels aren't "on the loose"
 import { kernels } from "rx-jupyter";
@@ -7,17 +6,17 @@ import { ServerConfig } from "../host-storage";
 
 import Host from "./host";
 
-type KernelAllocatorProps = {
+interface KernelAllocatorProps {
   children?: React.ReactNode;
   host: ServerConfig;
   kernelName: string;
   cwd: string;
-};
+}
 
-type KernelAllocatorState = {
-  channels: Object | null;
+interface KernelAllocatorState {
+  channels: object | null;
   error: boolean;
-};
+}
 
 const { Provider, Consumer } = React.createContext<KernelAllocatorState | null>(
   null
@@ -100,16 +99,16 @@ class KernelAllocator extends React.Component<
   }
 }
 
-type KernelProps = {
+interface KernelProps {
   children?: React.ReactNode;
   repo: string;
   gitRef?: string;
   binderURL?: string;
   kernelName: string;
   cwd: string;
-};
+}
 
-class Kernel extends React.Component<KernelProps, null> {
+export default class Kernel extends React.Component<KernelProps> {
   static Consumer = Consumer;
 
   static defaultProps = {
@@ -150,5 +149,3 @@ class Kernel extends React.Component<KernelProps, null> {
     );
   }
 }
-
-export default Kernel;

@@ -1,7 +1,6 @@
-// @flow
+import { mount, shallow } from "enzyme";
 import React from "react";
 import renderer from "react-test-renderer";
-import { shallow, mount } from "enzyme";
 
 import { PureNotebookMenu } from "../src/notebook-menu";
 import { MENU_ITEM_ACTIONS, MENUS } from "../src/notebook-menu/constants";
@@ -10,7 +9,7 @@ describe("PureNotebookMenu ", () => {
   describe("snapshots", () => {
     test("renders the default", () => {
       const component = renderer.create(<PureNotebookMenu />);
-      let tree = component.toJSON();
+      const tree = component.toJSON();
       expect(tree).toMatchSnapshot();
     });
   });
@@ -243,6 +242,7 @@ describe("PureNotebookMenu ", () => {
       restartKernelItem.simulate("click");
       expect(props.restartKernel).toHaveBeenCalledTimes(1);
       expect(props.restartKernel).toHaveBeenCalledWith({
+        outputHandling: "None",
         contentRef: props.currentContentRef,
         kernelRef: props.currentKernelRef
       });
@@ -276,7 +276,8 @@ describe("PureNotebookMenu ", () => {
       killKernelItem.simulate("click");
       expect(props.killKernel).toHaveBeenCalledTimes(1);
       expect(props.killKernel).toHaveBeenCalledWith({
-        kernelRef: props.currentKernelRef
+        kernelRef: props.currentKernelRef,
+        restarting: false
       });
     });
   });

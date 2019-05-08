@@ -1,10 +1,10 @@
-import * as React from "react";
 import { mount } from "enzyme";
 import toJson from "enzyme-to-json";
+import * as React from "react";
 
 jest.mock("../src/load-script");
-import loadScript from "../src/load-script";
 import { Node, Provider, Text } from "../src";
+import loadScript from "../src/load-script";
 
 const mathJaxUrl =
   "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";

@@ -5,21 +5,9 @@
 // With new packages, we'll want to run this again, and add to ignores
 // Instead of opting for a fully discovered setup from the monorepo, I've opted
 // for this package to work when used outside of the monorepo.
-//
-// Developers still have to use the same babel setup as us.
 
 module.exports = {
   lernaModules: [
-    {
-      name: "@nteract/commuter",
-      version: "5.7.0",
-      private: false
-    },
-    {
-      name: "@nteract/play",
-      version: "1.6.14",
-      private: false
-    },
     {
       name: "ansi-to-react",
       version: "4.0.0-alpha.0",
@@ -46,11 +34,6 @@ module.exports = {
       private: false
     },
     {
-      name: "@nteract/display-area",
-      version: "5.0.0-alpha.0",
-      private: false
-    },
-    {
       name: "@nteract/dropdown-menu",
       version: "0.5.7",
       private: false
@@ -68,11 +51,6 @@ module.exports = {
     {
       name: "fs-observable",
       version: "3.0.2",
-      private: false
-    },
-    {
-      name: "@nteract/gatsby-transformer-ipynb",
-      version: "3.0.0-alpha.0",
       private: false
     },
     {
@@ -121,16 +99,6 @@ module.exports = {
       private: false
     },
     {
-      name: "@nteract/notebook-preview",
-      version: "11.0.0-alpha.0",
-      private: false
-    },
-    {
-      name: "@nteract/notebook-render",
-      version: "5.0.0-alpha.0",
-      private: false
-    },
-    {
       name: "@nteract/octicons",
       version: "1.0.0-alpha.0",
       private: false
@@ -143,11 +111,6 @@ module.exports = {
     {
       name: "@nteract/presentational-components",
       version: "2.0.0-alpha.0",
-      private: false
-    },
-    {
-      name: "@nteract/records",
-      version: "1.0.0-alpha.0",
       private: false
     },
     {
@@ -176,12 +139,7 @@ module.exports = {
       private: false
     },
     {
-      name: "@nteract/styles",
-      version: "1.2.5",
-      private: false
-    },
-    {
-      name: "@nteract/transform-dataresource",
+      name: "@nteract/data-explorer",
       version: "5.0.0-alpha.0",
       private: false
     },
@@ -208,16 +166,6 @@ module.exports = {
     {
       name: "@nteract/transform-vega",
       version: "4.0.0-alpha.0",
-      private: false
-    },
-    {
-      name: "@nteract/transforms-full",
-      version: "7.0.0-alpha.0",
-      private: false
-    },
-    {
-      name: "@nteract/transforms",
-      version: "5.0.0-alpha.0",
       private: false
     },
     {

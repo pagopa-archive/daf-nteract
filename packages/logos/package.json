@@ -1,19 +1,11 @@
 {
   "name": "@nteract/logos",
-  "version": "0.1.5",
+  "version": "1.0.0",
   "description": "logos for nteract apps",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "nteractDesktop": "src/index.tsx",
-  "scripts": {
-    "prepare": "npm run build",
-    "prepublishOnly": "npm run build",
-    "build": "npm run build:clean && npm run build:lib",
-    "build:clean": "tsc -b --clean",
-    "build:lib": "tsc -b",
-    "build:lib:watch": "tsc -b --watch",
-    "build:watch": "npm run build:clean && npm run build:lib:watch"
-  },
+  "scripts": {},
   "repository": "https://github.com/nteract/nteract/tree/master/packages/logos",
   "keywords": [
     "nteract",
@@ -26,8 +18,7 @@
   },
   "peerDependencies": {
     "react": "^16.3.2",
-    "react-dom": "^16.3.2",
-    "styled-jsx": "^3.1.0"
+    "react-dom": "^16.3.2"
   },
   "author": "Kyle Kelley <rgbkrk@gmail.com>",
   "license": "BSD-3-Clause"

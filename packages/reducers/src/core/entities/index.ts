@@ -1,12 +1,14 @@
+// Vendor modules
+import { makeEntitiesRecord } from "@nteract/types";
 import { combineReducers } from "redux-immutable";
 
-import { makeEntitiesRecord } from "@nteract/types";
-
+// Local modules
 import { contents } from "./contents";
 import { hosts } from "./hosts";
 import { kernels } from "./kernels";
 import { kernelspecs } from "./kernelspecs";
 import { modals } from "./modals";
+import { transforms } from "./transforms";
 
 export const entities = combineReducers(
   {
@@ -14,7 +16,8 @@ export const entities = combineReducers(
     hosts,
     kernels,
     kernelspecs,
-    modals
+    modals,
+    transforms
   },
   makeEntitiesRecord as any
 );

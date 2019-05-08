@@ -1,10 +1,10 @@
-import * as React from "react";
 import * as MathJax from "@nteract/mathjax";
+import * as React from "react";
 
-type Props = {
+interface Props {
   data: string;
   mediaType: "text/latex";
-};
+}
 
 export class LaTeX extends React.PureComponent<Props> {
   static defaultProps = {
@@ -16,3 +16,5 @@ export class LaTeX extends React.PureComponent<Props> {
     return <MathJax.Text>{this.props.data}</MathJax.Text>;
   }
 }
+
+export default LaTeX;

@@ -1,27 +1,18 @@
 {
   "name": "@nteract/core",
-  "version": "9.0.0-alpha.0",
+  "version": "10.1.1",
   "description": "core modules and components for nteract apps",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "nteractDesktop": "src/index.ts",
-  "scripts": {
-    "prepare": "npm run build",
-    "prepublishOnly": "npm run:build",
-    "build": "npm run build:clean && npm run build:lib",
-    "build:clean": "tsc -b --clean",
-    "build:lib": "tsc -b",
-    "build:lib:watch": "tsc -b --watch",
-    "build:watch": "npm run build:clean && npm run build:lib:watch"
-  },
+  "scripts": {},
   "dependencies": {
-    "@nteract/actions": "^1.0.0",
-    "@nteract/commutable": "^6.0.0-alpha.0",
-    "@nteract/epics": "^1.0.0",
-    "@nteract/messaging": "^5.0.0-alpha.0",
-    "@nteract/reducers": "^1.0.0",
-    "@nteract/selectors": "^1.0.0",
-    "@nteract/types": "^3.1.0",
+    "@nteract/actions": "^2.1.1",
+    "@nteract/commutable": "^7.0.2",
+    "@nteract/epics": "^2.1.1",
+    "@nteract/reducers": "^2.1.1",
+    "@nteract/selectors": "^2.0.2",
+    "@nteract/types": "^4.0.2",
     "redux-logger": "^3.0.6"
   },
   "peerDependencies": {

@@ -1,0 +1,38 @@
+html {
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+*,
+*::before,
+*::after {
+  -webkit-box-sizing: inherit;
+  box-sizing: inherit;
+}
+
+body {
+  font-family: "Source Sans Pro";
+  font-size: 16px;
+  background-color: var(--theme-app-bg);
+  color: var(--theme-app-fg);
+  margin: 0;
+}
+
+#app {
+  padding-top: 20px;
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+div#loading {
+  animation-name: fadeOut;
+  animation-duration: 0.25s;
+  animation-fill-mode: forwards;
+}

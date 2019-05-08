@@ -1,6 +1,6 @@
 import * as actions from "@nteract/actions";
-import * as reducers from "../src";
 import * as stateModule from "@nteract/types";
+import * as reducers from "../src";
 
 describe("save", () => {
   test("should set isSaving to true", () => {
@@ -43,7 +43,11 @@ describe("setNotificationSystem", () => {
   test("returns the same originalState if notificationSystem is undefined", () => {
     const originalState = stateModule.makeAppRecord();
 
-    const action = { type: actions.SET_NOTIFICATION_SYSTEM };
+    const action = {
+      type: actions.SET_NOTIFICATION_SYSTEM,
+      payload: {}
+      // Override action type to test reducer handling old behavior
+    } as actions.SetNotificationSystemAction;
 
     const state = reducers.app(originalState, action);
     expect(state.notificationSystem).toEqual(originalState.notificationSystem);
@@ -53,11 +57,13 @@ describe("setNotificationSystem", () => {
 
     const action = {
       type: actions.SET_NOTIFICATION_SYSTEM,
-      notificationSystem: ""
+      payload: {
+        notificationSystem: { test: true }
+      }
     };
 
-    const state = reducers.app(originalState, action);
-    expect(state.notificationSystem).toBe("");
+    const state = reducers.app(originalState, (action as unknown) as any);
+    expect(state.notificationSystem).toBe(action.payload.notificationSystem);
   });
 });
 
@@ -67,9 +73,12 @@ describe("setGithubToken", () => {
       githubToken: null
     });
 
-    const action = { type: actions.SET_GITHUB_TOKEN, githubToken: "TOKEN" };
+    const action = {
+      type: actions.SET_GITHUB_TOKEN,
+      payload: { githubToken: "TOKEN" }
+    };
 
-    const state = reducers.app(originalState, action);
+    const state = reducers.app(originalState, (action as unknown) as any);
     expect(state.githubToken).toBe("TOKEN");
   });
 });

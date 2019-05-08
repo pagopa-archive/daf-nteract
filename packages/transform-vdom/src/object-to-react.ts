@@ -32,7 +32,7 @@
  */
 
 import * as React from "react";
-import { serializeEvent, SerializedEvent } from "./event-to-object";
+import { SerializedEvent, serializeEvent } from "./event-to-object";
 
 export { SerializedEvent } from "./event-to-object";
 
@@ -77,7 +77,7 @@ export function objectToReactElement(
     Array.isArray(obj.attributes) ||
     typeof obj.attributes !== "object"
   ) {
-    throw new Error(`Attributes must exist on a VDOM Object as an object`);
+    throw new Error("Attributes must exist on a VDOM Object as an object");
   }
 
   // style must be an object (non-array)
@@ -89,8 +89,12 @@ export function objectToReactElement(
     typeof obj.attributes.style !== "object"
   ) {
     throw new Error(
-      `Style attribute must be an object like { 'backgroundColor': 'DeepPink' }`
+      "Style attribute must be an object like { 'backgroundColor': 'DeepPink' }"
     );
+  }
+
+  if (obj.attributes.dangerouslySetInnerHTML) {
+    delete obj.attributes.dangerouslySetInnerHTML;
   }
 
   // Add event handlers to attributes.
@@ -100,12 +104,14 @@ export function objectToReactElement(
   // `onVDOMEvent` will send a comm message to a comm channel of target name
   // with a body of serialized event and vdom on kernel will handle the event.
   if (obj.eventHandlers) {
-    for (let eventType in obj.eventHandlers) {
-      const targetName = obj.eventHandlers[eventType];
-      obj.attributes[eventType] = (event: React.SyntheticEvent<any>) => {
-        const serializedEvent = serializeEvent(event);
-        onVDOMEvent(targetName, serializedEvent);
-      };
+    for (const eventType in obj.eventHandlers) {
+      if (obj.eventHandlers.hasOwnProperty(eventType)) {
+        const targetName = obj.eventHandlers[eventType];
+        obj.attributes[eventType] = (event: React.SyntheticEvent<any>) => {
+          const serializedEvent = serializeEvent(event);
+          onVDOMEvent(targetName, serializedEvent);
+        };
+      }
     }
   }
 
@@ -146,10 +152,10 @@ export function objectToReactElement(
  * @return {Array}     - The array of mixed values.
  */
 function arrayToReactChildren(
-  arr: Array<VDOMEl>,
+  arr: VDOMEl[],
   onVDOMEvent: (targetName: string, event: SerializedEvent<any>) => void
 ): React.ReactNodeArray {
-  let result: React.ReactNodeArray = [];
+  const result: React.ReactNodeArray = [];
 
   // iterate through the `children`
   for (let i = 0, len = arr.length; i < len; i++) {

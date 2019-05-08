@@ -1,44 +1,61 @@
 /**
  * @module rx-jupyter
  */
-import { ajax } from "rxjs/ajax";
-import querystring from "querystring";
-import urljoin from "url-join";
-import { ServerConfig, createAJAXSettings } from "./base";
 import { Notebook } from "@nteract/commutable";
+import querystring from "querystring";
+import { Observable } from "rxjs";
+import { ajax, AjaxRequest } from "rxjs/ajax";
+import urljoin from "url-join";
+import { createAJAXSettings, JupyterAjaxResponse, ServerConfig } from "./base";
 
 const formURI = (path: string) => urljoin("/api/contents/", path);
 
 const formCheckpointURI = (path: string, checkpointID: string) =>
   urljoin("/api/contents/", path, "checkpoints", checkpointID);
 
+export type FileType = "directory" | "file" | "notebook";
+
+/*********************************************
+ * Contents API request and response payloads
+ *********************************************/
+
 /**
- * Explicit typing of the payloads for content
- *
- * name (string): Name of file or directory, equivalent to the last part of the path ,
- * path (string): Full path for file or directory ,
- * type (string): Type of content = ['directory', 'file', 'notebook']
- *                stringEnum:"directory", "file", "notebook",
- * writable (boolean): indicates whether the requester has permission to edit the file ,
- * created (string): Creation timestamp ,
- * last_modified (string): Last modified timestamp ,
- * mimetype (string): The mimetype of a file. If content is not null, and type is 'file',
- *                    this will contain the mimetype of the file, otherwise this will be null. ,
- * content (string): The content, if requested (otherwise null). Will be an array
- *                   if type is 'directory' ,
- * format (string): Format of content (one of null, 'text', 'base64', 'json')
+ * Just the Stat call portion of the contents API
+ * (no content property)
  */
-export type Payload = {
+export interface IStatContent<FT extends FileType = FileType> {
   name: string;
   path: string;
-  type: "directory" | "file" | "notebook";
+  type: FT;
   writable: boolean;
   created: string;
   last_modified: string;
   mimetype: string;
-  content: string | Notebook;
   format: string;
-};
+}
+
+/**
+ * For directory listings and when a GET is performed against content with ?content=0
+ * the content field is null
+ */
+export interface IEmptyContent<FT extends FileType = FileType>
+  extends IStatContent<FT> {
+  content: null;
+}
+
+/**
+ * Full Payloads from the contents API
+ */
+export interface IContent<FT extends FileType = FileType>
+  extends IStatContent<FT> {
+  content: FT extends "file"
+    ? string
+    : FT extends "notebook"
+    ? Notebook
+    : FT extends "directory"
+    ? Array<IEmptyContent<FT>>
+    : null;
+}
 
 /**
  * Creates an AjaxObservable for removing content.
@@ -55,10 +72,10 @@ export const remove = (serverConfig: ServerConfig, path: string) =>
     })
   );
 
-interface GetParams {
-  type?: "file" | "directory" | "notebook";
-  format?: "text" | "base64" | string;
-  content?: 0 | 1;
+interface IGetParams {
+  type: "file" | "directory" | "notebook";
+  format: "text" | "base64" | string;
+  content: 0 | 1;
 }
 
 /**
@@ -73,18 +90,23 @@ interface GetParams {
  *
  * @returns An Observable with the request response
  */
-export const get = (
+export function get(
   serverConfig: ServerConfig,
   path: string,
-  params: GetParams = {}
-) => {
+  params: Partial<IGetParams> = {}
+) {
   let uri = formURI(path);
   const query = querystring.stringify(params);
   if (query.length > 0) {
     uri = `${uri}?${query}`;
   }
-  return ajax(createAJAXSettings(serverConfig, uri));
-};
+
+  // NOTE: If the user requests with params.content === 0
+  // Then the response is IEmptyContent
+  return ajax(
+    createAJAXSettings(serverConfig, uri, { cache: false })
+  ) as Observable<JupyterAjaxResponse<IContent<FileType>>>;
+}
 
 /**
  * Creates an AjaxObservable for renaming a file.
@@ -95,20 +117,21 @@ export const get = (
  *
  * @returns An Observable with the request response
  */
-export const update = (
+export function update<FT extends FileType>(
   serverConfig: ServerConfig,
   path: string,
-  model: Payload
-) =>
-  ajax(
+  model: Partial<IContent>
+) {
+  return ajax(
     createAJAXSettings(serverConfig, formURI(path), {
+      body: model,
       headers: {
         "Content-Type": "application/json"
       },
-      method: "PATCH",
-      body: model
+      method: "PATCH"
     })
   );
+}
 
 /**
  * Creates an AjaxObservable for creating content
@@ -119,20 +142,21 @@ export const update = (
  *
  * @returns An Observable with the request response
  */
-export const create = (
+export function create<FT extends FileType>(
   serverConfig: ServerConfig,
   path: string,
-  model: Payload
-) =>
-  ajax(
+  model: Partial<IContent<FT>> & { type: FT }
+) {
+  return ajax(
     createAJAXSettings(serverConfig, formURI(path), {
+      body: model,
       headers: {
         "Content-Type": "application/json"
       },
-      method: "POST",
-      body: model
+      method: "POST"
     })
   );
+}
 
 /**
  * Creates an AjaxObservable for saving the file in the location specified by
@@ -144,20 +168,23 @@ export const create = (
  *
  * @returns An Observable with the request response
  */
-export const save = (
+export function save<FT extends FileType>(
   serverConfig: ServerConfig,
   path: string,
-  model: Partial<Payload>
-) =>
-  ajax(
+  model: Partial<IContent<FT>>
+) {
+  return ajax(
     createAJAXSettings(serverConfig, formURI(path), {
+      body: model,
       headers: {
         "Content-Type": "application/json"
       },
-      method: "PUT",
-      body: model
+      method: "PUT"
     })
-  );
+  ) as Observable<
+    JupyterAjaxResponse<{ path: string; [property: string]: string }>
+  >;
+}
 
 /**
  * Creates an AjaxObservable for listing checkpoints for a given file.
@@ -170,6 +197,7 @@ export const save = (
 export const listCheckpoints = (serverConfig: ServerConfig, path: string) =>
   ajax(
     createAJAXSettings(serverConfig, formCheckpointURI(path, ""), {
+      cache: false,
       method: "GET"
     })
   );

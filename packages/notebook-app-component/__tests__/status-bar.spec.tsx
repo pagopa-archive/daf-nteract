@@ -1,6 +1,6 @@
-import React from "react";
-import { shallow } from "enzyme";
 import { fixtureCommutable } from "@nteract/fixtures";
+import { shallow } from "enzyme";
+import React from "react";
 
 import { StatusBar } from "../src/status-bar";
 

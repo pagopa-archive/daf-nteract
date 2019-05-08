@@ -2,14 +2,14 @@ import * as React from "react";
 
 export interface MathJaxObject {
   Hub: {
-    getJaxFor(node: HTMLElement): any;
-    Config(options: object): void;
     Register: {
       StartupHook(str: string, cb: () => void): void;
       MessageHook(str: string, cb: (msg: string) => void): void;
     };
-    Queue(elements: Array<any>, onRender?: Function): void;
     processSectionDelay: number;
+    getJaxFor(node: HTMLElement): any;
+    Config(options: object): void;
+    Queue(elements: any[], onRender?: () => void): void;
   };
 }
 

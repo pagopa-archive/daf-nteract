@@ -1,6 +1,6 @@
+import * as MathJax from "@nteract/mathjax";
 import React from "react";
 import ReactMarkdown from "react-markdown";
-import * as MathJax from "@nteract/mathjax";
 
 import RemarkMathPlugin from "./remark-math";
 

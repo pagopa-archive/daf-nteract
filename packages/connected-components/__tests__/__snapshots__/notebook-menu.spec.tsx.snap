@@ -3,7 +3,7 @@
 exports[`PureNotebookMenu  snapshots renders the default 1`] = `
 <ul
   aria-activedescendant=""
-  className="rc-menu  rc-menu-root rc-menu-horizontal"
+  className="rc-menu sc-htpNat iSedcs rc-menu-root rc-menu-horizontal"
   onKeyDown={[Function]}
   role="menu"
   style={Object {}}

@@ -19,7 +19,7 @@ As we've expanded our scope to include web applications that assist people with 
 nteract originally started out with many many repos for each individual module and component we wanted to build. This proved to be extremely painstaking for both us and collaborators when we wanted to publish and upgrade any given dependency that other packages were relying on. Fast forward to now, we now keep both packages and applications managed in a [Monorepo](./monorepo).
 
 `packages/` includes all libraries and components (that aren't app specific)
-`applications/` includes the desktop app, the jupyter extension, play, and commuter
+`applications/` includes the desktop app, the jupyter extension, and play.
 
 ## Frontend Architecture
 
@@ -27,9 +27,9 @@ nteract originally started out with many many repos for each individual module a
 
 Much of the complexity in a frontend application is handling asynchronous code and events. One way that people have been managing this is with Redux, which forces several principles:
 
-* Central state tree, encapsulated in a store
-* The next state is based on an event (action) and the previous state (called a reducer)
-* All events go through the same dispatch function
+- Central state tree, encapsulated in a store
+- The next state is based on an event (action) and the previous state (called a reducer)
+- All events go through the same dispatch function
 
 #### Managing Asynchronous Resources
 
@@ -47,9 +47,9 @@ The way in which we approach [building epics is in its own separate document](./
 
 Each state is an immutable object. We've chosen to use immutable data structures for these reasons:
 
-* Minimizes the need to copy or cache data
-* Comparison between immutable objects is fast
-* Enforces strict contracts between functions (keep them pure, no side effects on state)
+- Minimizes the need to copy or cache data
+- Comparison between immutable objects is fast
+- Enforces strict contracts between functions (keep them pure, no side effects on state)
 
 We've chosen to use [Immutable.JS](http://facebook.github.io/immutable-js/docs/#/) for our immutable data structures.
 
@@ -59,8 +59,8 @@ This document attempts to specify the goal for an nteract core package that can
 provide generic/core state management to all notebook-y applications. Right now
 this is focused on these apps:
 
-* `ref` - an internal _reference_ to an entity upon _recognition_, e.g. kernels, hosts, kernelspec collections, etc.
-* `id` - likely an external identifier, e.g. with /api/kernels/9092, 9092 is the id
+- `ref` - an internal _reference_ to an entity upon _recognition_, e.g. kernels, hosts, kernelspec collections, etc.
+- `id` - likely an external identifier, e.g. with /api/kernels/9092, 9092 is the id
 
 We use the term _recognition_ over _creation_ because we want to have a way to
 reference an entity _before_ we get a response from some api. A good example is

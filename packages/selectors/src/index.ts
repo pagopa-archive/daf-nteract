@@ -5,8 +5,8 @@ import { createSelector } from "reselect";
 
 import {
   AppState,
-  JupyterHostRecord,
   ContentRef,
+  JupyterHostRecord,
   KernelRef,
   KernelspecsByRefRecord
 } from "@nteract/types";
@@ -89,6 +89,15 @@ export const content = (
   state: AppState,
   { contentRef }: { contentRef: ContentRef }
 ) => contentByRef(state).get(contentRef);
+
+export const transformsById = (state: AppState) =>
+  state.core.entities.transforms.byId;
+
+export const displayOrder = (state: AppState) =>
+  state.core.entities.transforms.displayOrder;
+
+export const transform = (state: AppState, { id }: { id: string }) =>
+  transformsById(state).get(id);
 
 /**
  * Returns the model within the ContenteRecrd specified by contentRef.
@@ -192,8 +201,10 @@ export const kernelsByRef = (state: AppState) =>
  */
 export const kernel = (
   state: AppState,
-  { kernelRef }: { kernelRef?: KernelRef | null }
-) => (kernelRef ? kernelsByRef(state).get(kernelRef) : null);
+  { kernelRef }: { kernelRef?: KernelRef }
+) => {
+  return kernelRef ? kernelsByRef(state).get(kernelRef, null) : null;
+};
 
 /**
  * Returns the KernelRef for the kernel the nteract application is currently
@@ -350,28 +361,3 @@ export const notificationSystem = createSelector(
   (state: AppState) => state.app.get("notificationSystem"),
   identity
 );
-
-/**
- * Returns a Map of comms data keyed by the content refs in the current
- * application state.
- *
- * @param   state   The state of the nteract application
- *
- * @returns          Comms data keyed by content refs
- */
-export const communicationByRef = (state: AppState) =>
-  state.core.communication.contents.byRef;
-
-/**
- * Returns the comms data associated with a particular content object, such
- * as a notebook, in the nteract application.
- *
- * @param   state   The state of the nteract application
- * @param           The content ref
- *
- * @returns         The comms data associated with a content
- */
-export const communication = (
-  state: AppState,
-  { contentRef }: { contentRef: ContentRef }
-) => communicationByRef(state).get(contentRef);

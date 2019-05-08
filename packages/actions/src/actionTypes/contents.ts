@@ -3,19 +3,52 @@
  */
 import { ContentRef, KernelRef, KernelspecInfo } from "@nteract/types";
 
+export const CHANGE_CONTENT_NAME = "CORE/CHANGE_CONTENT_NAME";
+export interface ChangeContentName {
+  type: "CORE/CHANGE_CONTENT_NAME";
+  payload: {
+    contentRef: ContentRef;
+    filepath: string;
+    prevFilePath: string;
+  };
+}
+
+export const CHANGE_CONTENT_NAME_FULFILLED =
+  "CORE/CHANGE_CONTENT_NAME_FULFILLED";
+export interface ChangeContentNameFulfilled {
+  type: "CORE/CHANGE_CONTENT_NAME_FULFILLED";
+  payload: {
+    contentRef: ContentRef;
+    filepath: string;
+    prevFilePath: string;
+  };
+}
+
+export const CHANGE_CONTENT_NAME_FAILED = "CORE/CHANGE_CONTENT_NAME_FAILED";
+export interface ChangeContentNameFailed {
+  type: "CORE/CHANGE_CONTENT_NAME_FAILED";
+  payload: {
+    basepath: string;
+    contentRef: ContentRef;
+    error: Error;
+    filepath: string;
+    prevFilePath: string;
+  };
+}
+
 export const FETCH_CONTENT = "CORE/FETCH_CONTENT";
-export type FetchContent = {
+export interface FetchContent {
   type: "CORE/FETCH_CONTENT";
   payload: {
     filepath: string;
-    params: Object;
+    params: object;
     kernelRef: KernelRef;
     contentRef: ContentRef;
   };
-};
+}
 
 export const FETCH_CONTENT_FULFILLED = "CORE/FETCH_CONTENT_FULFILLED";
-export type FetchContentFulfilled = {
+export interface FetchContentFulfilled {
   type: "CORE/FETCH_CONTENT_FULFILLED";
   payload: {
     filepath: string;
@@ -25,10 +58,10 @@ export type FetchContentFulfilled = {
     created?: Date | null;
     lastSaved?: Date | null;
   };
-};
+}
 
 export const FETCH_CONTENT_FAILED = "CORE/FETCH_CONTENT_FAILED";
-export type FetchContentFailed = {
+export interface FetchContentFailed {
   type: "CORE/FETCH_CONTENT_FAILED";
   payload: {
     filepath: string;
@@ -37,67 +70,67 @@ export type FetchContentFailed = {
     contentRef: ContentRef;
   };
   error: true;
-};
+}
 
 export const DOWNLOAD_CONTENT = "CORE/DOWNLOAD_CONTENT";
-export type DownloadContent = {
+export interface DownloadContent {
   type: "CORE/DOWNLOAD_CONTENT";
   payload: {
     contentRef: ContentRef;
   };
-};
+}
 
 export const DOWNLOAD_CONTENT_FAILED = "CORE/DOWNLOAD_CONTENT_FAILED";
-export type DownloadContentFailed = {
+export interface DownloadContentFailed {
   type: "CORE/DOWNLOAD_CONTENT_FAILED";
   payload: { contentRef: ContentRef };
-};
+}
 
 export const DOWNLOAD_CONTENT_FULFILLED = "CORE/DOWNLOAD_CONTENT_FULFILLED";
-export type DownloadContentFulfilled = {
+export interface DownloadContentFulfilled {
   type: "CORE/DOWNLOAD_CONTENT_FULFILLED";
   payload: { contentRef: ContentRef };
-};
+}
 
 export const SAVE = "SAVE";
-export type Save = {
+export interface Save {
   type: "SAVE";
   payload: {
     contentRef: ContentRef;
   };
-};
+}
 
 export const SAVE_AS = "SAVE_AS";
-export type SaveAs = {
+export interface SaveAs {
   type: "SAVE_AS";
   payload: {
     filepath: string;
     contentRef: ContentRef;
   };
-};
+}
 
 export const SAVE_FAILED = "SAVE_FAILED";
-export type SaveFailed = {
+export interface SaveFailed {
   type: "SAVE_FAILED";
   payload: {
     contentRef: ContentRef;
     error: Error;
   };
   error: true;
-};
+}
 
 export const SAVE_FULFILLED = "SAVE_FULFILLED";
-export type SaveFulfilled = {
+export interface SaveFulfilled {
   type: "SAVE_FULFILLED";
   payload: {
     contentRef: ContentRef;
     // Literal response from contents API, for use with
     model: any;
   };
-};
+}
 
 export const NEW_NOTEBOOK = "NEW_NOTEBOOK";
-export type NewNotebook = {
+export interface NewNotebook {
   type: "NEW_NOTEBOOK";
   payload: {
     cwd: string;
@@ -105,13 +138,13 @@ export type NewNotebook = {
     kernelRef: KernelRef;
     contentRef: ContentRef;
   };
-};
+}
 
 export const UPDATE_FILE_TEXT = "UPDATE_FILE_TEXT";
-export type UpdateFileText = {
+export interface UpdateFileText {
   type: "UPDATE_FILE_TEXT";
   payload: {
     text: string;
     contentRef: ContentRef;
   };
-};
+}

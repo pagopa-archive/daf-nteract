@@ -1,15 +1,15 @@
 import * as React from "react";
 
-type Props = {
+interface Props {
   data: string;
   mediaType: "application/x-nteract-model-debug+json";
-  models: { [modelID: string]: Object };
+  models: { [modelID: string]: object };
   modelID: string;
-};
+}
 
 const mediaType = "application/x-nteract-model-debug+json";
 
-class ModelDebug extends React.Component<Props> {
+class ModelDebug extends React.Component<Partial<Props>> {
   static MIMETYPE = mediaType;
 
   static defaultProps = {
@@ -21,11 +21,11 @@ class ModelDebug extends React.Component<Props> {
   }
 
   render() {
-    const { models, data, modelID } = this.props; // eslint-disable-line no-unused-vars
+    const { models, data /*, modelID*/ } = this.props;
     // TODO: Provide model IDs on transient field
     // For now, if modelID is not provided (or model does not exist),
     // show all the models
-    const model = models.modelID || models;
+    const model = models ? models.modelID || models : null;
     return (
       <React.Fragment>
         <h1>{JSON.stringify(data, null, 2)}</h1>

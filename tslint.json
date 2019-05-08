@@ -1,0 +1,66 @@
+{
+  "defaultSeverity": "error",
+  "extends": [
+    "tslint:recommended",
+    "tslint-react",
+    "tslint-react-a11y",
+    "tslint-react-perf",
+    "tslint-config-prettier",
+    "tslint-eslint-rules"
+  ],
+  "rules": {
+    "interface-name": false,
+    "jsdoc-format": {
+      "options": true,
+      "severity": "warn"
+    },
+    "jsx-boolean-value": [true, "never"],
+    "max-classes-per-file": false,
+    "max-line-length": {
+      "options": {
+        "limit": 80,
+        "ignore-pattern": "^import |^export {(.*?)}"
+      },
+      "severity": "warn"
+    },
+    "member-access": false,
+    "no-bitwise": false,
+    "no-console": false,
+    "no-constant-condition": true,
+    "no-debugger": true,
+    "no-duplicate-switch-case": true,
+    "no-shadowed-variable": {
+      "options": true,
+      "severity": "warn"
+    },
+    "no-sparse-arrays": true,
+    "no-switch-case-fall-through": true,
+    "no-unnecessary-callback-wrapper": false,
+    "no-unnecessary-type-assertion": true,
+    "no-var-requires": {
+      "severity": "warn"
+    },
+    "object-literal-sort-keys": {
+      "options": "match-declaration-order",
+      "severity": "warn"
+    },
+    "only-arrow-functions": [true, "allow-declarations"],
+    "ordered-imports": true,
+    "prefer-template": true,
+    "quotemark": [true, "double", "avoid-escape", "avoid-template"],
+    "react-a11y-anchors": {
+      "severity": "warn"
+    },
+    "react-a11y-titles": {
+      "severity": "warn"
+    },
+    "strict-type-predicates": true,
+    "typedef": [
+      true,
+      "call-signature",
+      "parameter",
+      "member-variable-declaration"
+    ],
+    "variable-name": [true, "ban-keywords"]
+  }
+}

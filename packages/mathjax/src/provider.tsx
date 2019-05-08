@@ -1,10 +1,7 @@
 import * as React from "react";
 
+import MathJaxContext, { MathJaxContextValue, MathJaxObject } from "./context";
 import loadScript from "./load-script";
-import MathJaxContext, {
-  MathJaxObject, // eslint-disable-line no-unused-vars
-  MathJaxContextValue
-} from "./context";
 
 // MathJax expected to be a global and may be undefined
 declare var MathJax: MathJaxObject | undefined;
@@ -12,13 +9,13 @@ declare var MathJax: MathJaxObject | undefined;
 interface Props {
   src?: string;
   children: React.ReactNode;
-  didFinishTypeset?(): void;
-  onLoad?(): void;
   input: "ascii" | "tex";
   delay: number;
   options: object;
   loading: React.ReactNode;
   noGate: boolean;
+  didFinishTypeset?(): void;
+  onLoad?(): void;
   onError(err: Error): void;
 }
 
@@ -27,7 +24,7 @@ type State = MathJaxContextValue;
 /**
  * MathJax Provider
  */
-class Provider extends React.Component<Props, State> {
+export default class Provider extends React.Component<Props, State> {
   static defaultProps = {
     src:
       "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML",
@@ -43,6 +40,13 @@ class Provider extends React.Component<Props, State> {
     }
   };
 
+  static getDerivedStateFromProps(props: Props, state: State) {
+    if (state.input !== props.input) {
+      return { ...state, input: props.input };
+    }
+    return null;
+  }
+
   constructor(props: Props) {
     super(props);
 
@@ -53,17 +57,10 @@ class Provider extends React.Component<Props, State> {
     };
   }
 
-  static getDerivedStateFromProps(props: Props, state: State) {
-    if (state.input !== props.input) {
-      return { ...state, input: props.input };
-    }
-    return null;
-  }
-
   componentDidMount() {
     const src = this.props.src;
 
-    if (src == null) {
+    if (src === undefined) {
       return this.onLoad();
     }
     if (typeof MathJax === "undefined" || !MathJax || !MathJax.Hub) {
@@ -125,5 +122,3 @@ class Provider extends React.Component<Props, State> {
     );
   }
 }
-
-export default Provider;

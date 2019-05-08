@@ -1,6 +1,6 @@
 import * as fs from "fs";
 
-import { Observable, bindNodeCallback } from "rxjs";
+import { bindNodeCallback, Observable } from "rxjs";
 import { mergeMap } from "rxjs/operators";
 
 import mkdirp from "mkdirp";
@@ -46,7 +46,7 @@ export const mkdirpObservable = bindNodeCallback(mkdirp);
  */
 export function readdirObservable(
   path: string,
-  options: { encoding?: string | null } | string | null
+  options?: { encoding?: string | null } | string | null
 ) {
   return new Observable(observer => {
     const cb = (err: Error | null = null, files: string[] | Buffer[]) => {

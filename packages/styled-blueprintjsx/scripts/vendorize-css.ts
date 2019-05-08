@@ -1,12 +1,10 @@
 /**
- * This script is used to create styled-jsx css`` strings for use by components.
- *
- * One problem though -- this doesn't solve the issue of loading fonts. We still have to tackle that.
+ * This script is used to create styled-components createGlobalStyle`` strings for use by components.
  */
 
 import * as fs from "fs";
-import * as util from "util";
 import * as path from "path";
+import * as util from "util";
 
 const readFile = util.promisify(fs.readFile);
 const writeFile = util.promisify(fs.writeFile);
@@ -15,52 +13,40 @@ const mkdirp = util.promisify(require("mkdirp"));
 async function loadCSS(filename: string): Promise<string> {
   const rawCSS = await readFile(filename);
 
-  const loader = require(require("styled-jsx/webpack").loader);
+  const cssInJS = `
+  import { createGlobalStyle } from "styled-components"
 
-  const cssInJS = await new Promise<string>((resolve, reject) => {
-    loader.call(
-      // Abusing styled-jsx's webpack API just to get the CSS we need
-      {
-        query: "?type=global",
-        addDependency: () => {},
-        callback: (err: Error | null, data: string) => {
-          if (err) {
-            reject(err);
-            return;
-          }
-          resolve(data);
-        }
-      },
-      rawCSS.toString()
-    );
-  });
+  const css = createGlobalStyle\`${rawCSS}\`;
+  export default css;
+  `;
 
   return cssInJS;
 }
 
 type Manifest = Array<{
   cssIn: string;
-  jsOut: string;
+  tsOut: string;
 }>;
 
 async function processManifest(manifest: Manifest) {
-  for (var entry of manifest) {
+  for (const entry of manifest) {
     console.log(`Processing CSS of ${entry.cssIn}`);
+
     const result = await loadCSS(entry.cssIn);
-    await mkdirp(path.dirname(entry.jsOut));
-    await writeFile(entry.jsOut, result);
-    console.log(`Wrote CSS for ${entry.cssIn} to ${entry.jsOut}`);
+    await mkdirp(path.dirname(entry.tsOut));
+    await writeFile(entry.tsOut, result);
+    console.log(`Wrote CSS for ${entry.cssIn} to ${entry.tsOut}`);
   }
 }
 
-var manifest = [
+const manifest = [
   {
     cssIn: require.resolve("@blueprintjs/core/lib/css/blueprint.css"),
-    jsOut: path.join(__dirname, "..", "src/vendor/blueprint-css.ts")
+    tsOut: path.join(__dirname, "..", "src/vendor/blueprint-css.ts")
   },
   {
     cssIn: require.resolve("@blueprintjs/select/lib/css/blueprint-select.css"),
-    jsOut: path.join(__dirname, "..", "src/vendor/blueprint-select-css.ts")
+    tsOut: path.join(__dirname, "..", "src/vendor/blueprint-select-css.ts")
   }
 ];
 

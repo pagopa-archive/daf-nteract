@@ -1,19 +1,11 @@
 {
   "name": "@nteract/dropdown-menu",
-  "version": "0.5.7",
+  "version": "1.0.0",
   "description": "Dropdown Menu for nteract apps",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "nteractDesktop": "src/index.tsx",
-  "scripts": {
-    "prepare": "npm run build",
-    "prepublishOnly": "npm run build",
-    "build": "npm run build:clean && npm run build:lib",
-    "build:clean": "tsc -b --clean",
-    "build:lib": "tsc -b",
-    "build:lib:watch": "tsc -b --watch",
-    "build:watch": "npm run build:clean && npm run build:lib:watch"
-  },
+  "scripts": {},
   "repository": "https://github.com/nteract/nteract/tree/master/packages/dropdown-menu",
   "keywords": [
     "nteract",
@@ -26,7 +18,7 @@
   },
   "dependencies": {
     "react-hot-loader": "^4.1.2",
-    "styled-jsx": "^3.1.0"
+    "styled-components": "^4.1.3"
   },
   "peerDependencies": {
     "react": "^16.3.2",

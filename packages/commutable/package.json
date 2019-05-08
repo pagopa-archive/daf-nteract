@@ -1,19 +1,11 @@
 {
   "name": "@nteract/commutable",
-  "version": "6.0.0-alpha.0",
+  "version": "7.0.2",
   "description": "library for immutable notebook operations",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "nteractDesktop": "src/index.ts",
-  "scripts": {
-    "prepare": "npm run build",
-    "prepublishOnly": "npm run build",
-    "build": "npm run build:clean && npm run build:lib",
-    "build:clean": "tsc -b --clean",
-    "build:lib": "tsc -b",
-    "build:lib:watch": "tsc -b --watch",
-    "build:watch": "npm run build:clean && npm run build:lib:watch"
-  },
+  "scripts": {},
   "repository": "https://github.com/nteract/nteract/tree/master/packages/commutable",
   "keywords": [
     "commutable",

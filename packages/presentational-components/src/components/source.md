@@ -47,7 +47,7 @@ You can use the `className` prop to add your own CSS-based styles to the highlig
 
 ### Bring your own editor
 
-You can ass React component(s) inside of `<Source />` to provide your own editor. For example, here we use a styled `textarea` to render some Python text.
+You can pass React component(s) inside of `<Source />` to provide your own editor. For example, here we use a styled `textarea` to render some Python text.
 
 ```js
 <Source>

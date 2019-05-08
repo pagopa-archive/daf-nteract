@@ -1,6 +1,6 @@
 import * as actions from "@nteract/actions";
 
-import { makeKernelsRecord } from "@nteract/types";
+import { KernelsRecordProps, makeKernelsRecord } from "@nteract/types";
 import { kernels } from "../../../src/core/entities/kernels";
 
 describe("LAUNCH_KERNEL reducers", () => {
@@ -13,8 +13,8 @@ describe("LAUNCH_KERNEL reducers", () => {
       selectNextKernel: false,
       contentRef: "contentRef"
     });
-    const state = kernels(originalState, action);
-    expect(state.byRef.get("kernelRef").type).toBe("unknown");
-    expect(state.byRef.get("kernelRef").status).toBe("launching");
+    const state = kernels(originalState, action) as KernelsRecordProps;
+    expect(state.byRef.get("kernelRef")!.type).toBe("unknown");
+    expect(state.byRef.get("kernelRef")!.status).toBe("launching");
   });
 });

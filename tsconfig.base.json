@@ -5,20 +5,20 @@
     "strict": true,
     "declaration": true,
     "esModuleInterop": true,
+    "composite": true,
     "lib": ["esnext", "dom"],
     "target": "es2017",
-    "jsx": "react",
-    "typeRoots": ["./node_modules/@types", "types"],
-    "baseUrl": ".",
+    "module": "commonjs",
     "moduleResolution": "node",
-    "paths": {
-      // Attempt to allow our namespace packages to get resolved
-      "@nteract/*": ["./packages/*/src"],
-      "@mybinder/*": ["./packages/*/src"],
-      "rx-jupyter": ["./packages/rx-jupyter/src"],
-      "rx-binder": ["./packages/rx-binder/src"],
-      "enchannel-zmq-backend": ["./packages/enchannel-zmq-backend/src"],
-      "fs-observable": ["./packages/fs-observable/src"]
-    }
+    "skipLibCheck": true,
+    "noImplicitAny": true,
+    "plugins": [
+      { "name": "typescript-styled-plugin" },
+      { "name": "typescript-tslint-plugin" }
+    ],
+    "resolveJsonModule": true,
+    "preserveWatchOutput": true,
+    "jsx": "react",
+    "typeRoots": ["./node_modules/@types", "types"]
   }
 }

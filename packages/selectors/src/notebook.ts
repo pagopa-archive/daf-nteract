@@ -1,10 +1,10 @@
 /**
  * @module selectors
  */
-import * as Immutable from "immutable";
 import * as commutable from "@nteract/commutable";
+import * as Immutable from "immutable";
 
-import { ImmutableCell, CellId } from "@nteract/commutable";
+import { CellId, ImmutableCell } from "@nteract/commutable";
 
 // All these selectors expect a NotebookModel as the top level state
 import { NotebookModel } from "@nteract/types";

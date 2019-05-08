@@ -171,7 +171,6 @@ export function serializeEvent<T>(
       return {};
     // Image events
     case "load":
-    case "error":
       return {};
     // Animation events
     case "animationstart":
