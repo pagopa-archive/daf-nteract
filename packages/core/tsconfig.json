@@ -1,7 +1,16 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "outDir": "lib"
+    "outDir": "lib",
+    "rootDir": "src"
   },
-  "include": ["src"]
+  "include": ["src"],
+  "references": [
+    { "path": "../actions" },
+    { "path": "../commutable" },
+    { "path": "../epics" },
+    { "path": "../reducers" },
+    { "path": "../selectors" },
+    { "path": "../types" }
+  ]
 }

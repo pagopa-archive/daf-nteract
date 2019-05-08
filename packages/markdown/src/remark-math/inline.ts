@@ -6,8 +6,7 @@ const ESCAPED_INLINE_MATH = /^\\\$/;
 const INLINE_MATH = /^\$((?:\\\$|[^$])+)\$/;
 const INLINE_MATH_DOUBLE = /^\$\$((?:\\\$|[^$])+)\$\$/;
 
-// eslint-disable-next-line no-unused-vars
-export function inlinePlugin(this: any, opts: object) {
+export default function inlinePlugin(this: any, _opts: object) {
   function inlineTokenizer(eat: any, value: string, silent: boolean) {
     let isDouble = true;
     let match = INLINE_MATH_DOUBLE.exec(value);
@@ -31,7 +30,7 @@ export function inlinePlugin(this: any, opts: object) {
     if (value.slice(-2) === "\\$") {
       return eat(value)({
         type: "text",
-        value: value.slice(0, -2) + "$"
+        value: `${value.slice(0, -2)}$`
       });
     }
 
@@ -105,10 +104,8 @@ export function inlinePlugin(this: any, opts: object) {
   // Stringify for math inline
   if (Compiler != null) {
     const visitors = Compiler.prototype.visitors;
-    visitors.inlineMath = function(node: any) {
-      return "$" + node.value + "$";
+    visitors.inlineMath = (node: any) => {
+      return `$${node.value}$`;
     };
   }
 }
-
-export default inlinePlugin;

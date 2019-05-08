@@ -11,7 +11,7 @@ import Provider from "./provider";
 interface Props {
   inline: boolean;
   children: string;
-  onRender?: Function;
+  onRender?: () => void;
 }
 
 class MathJaxNode_ extends React.Component<Props & MathJaxContextValue> {
@@ -92,7 +92,9 @@ class MathJaxNode_ extends React.Component<Props & MathJaxContextValue> {
       this.setScriptText(text);
     }
 
-    if (!this.script) return;
+    if (!this.script) {
+      return;
+    }
 
     const reprocess = ["Reprocess", MathJax.Hub, this.script];
 
@@ -130,7 +132,7 @@ class MathJaxNode_ extends React.Component<Props & MathJaxContextValue> {
   }
 }
 
-class MathJaxNode extends React.PureComponent<Props> {
+export default class MathJaxNode extends React.PureComponent<Props> {
   static defaultProps = {
     inline: false,
     onRender: null
@@ -169,5 +171,3 @@ class MathJaxNode extends React.PureComponent<Props> {
     );
   }
 }
-
-export default MathJaxNode;

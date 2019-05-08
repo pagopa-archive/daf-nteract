@@ -9,8 +9,10 @@ describe("setKey", () => {
 
     const state = reducers(initialState, {
       type: actionTypes.SET_CONFIG_AT_KEY,
-      key: "theme",
-      value: "light"
+      payload: {
+        key: "theme",
+        value: "light"
+      }
     });
     expect(state.get("theme")).toBe("light");
   });
@@ -23,7 +25,7 @@ describe("mergeConfig", () => {
     const config = { theme: "dark" };
     const state = reducers(initialState, {
       type: actionTypes.MERGE_CONFIG,
-      config
+      payload: { config }
     });
     expect(state.get("theme")).toBe("dark");
   });

@@ -11,12 +11,15 @@ steps:
     inputs:
       versionSpec: "10.x"
     displayName: "Install Node.js"
+
+  - script: |
+      pip3 install wheel
+      pip3 install setuptools
+      pip3 install jupyter
+      pip3 install ipykernel 
+      pip3 install bookstore
+      python3 -m ipykernel install --user
+    displayName: "Install Jupyter"
+
   - script: |
       yarn
-      yarn test
-    displayName: "yarn install and test"
-  - task: PublishTestResults@2
-    displayName: 'Publish Test Results'
-    inputs:
-      testResultsFiles: '**junit*.xml'
-      testRunTitle: TestRun ${{ parameters.name }} $(node_version)

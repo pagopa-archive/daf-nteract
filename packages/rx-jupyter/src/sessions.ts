@@ -14,7 +14,7 @@ import { createAJAXSettings, ServerConfig } from "./base";
  * @returns An Observable with the request response
  */
 export const list = (serverConfig: ServerConfig): Observable<AjaxResponse> =>
-  ajax(createAJAXSettings(serverConfig, "/api/sessions"));
+  ajax(createAJAXSettings(serverConfig, "/api/sessions", { cache: false }));
 
 /**
  * Creates an AjaxObservable for getting a particular session's information.
@@ -24,8 +24,15 @@ export const list = (serverConfig: ServerConfig): Observable<AjaxResponse> =>
  *
  * @returns An Observable with the request/response
  */
-export const get = (serverConfig: ServerConfig, sessionID: string): Observable<AjaxResponse> =>
-  ajax(createAJAXSettings(serverConfig, `/api/sessions/${sessionID}`));
+export const get = (
+  serverConfig: ServerConfig,
+  sessionID: string
+): Observable<AjaxResponse> =>
+  ajax(
+    createAJAXSettings(serverConfig, `/api/sessions/${sessionID}`, {
+      cache: false
+    })
+  );
 
 /**
  * Creates an AjaxObservable for destroying a particular session.
@@ -35,7 +42,10 @@ export const get = (serverConfig: ServerConfig, sessionID: string): Observable<A
  *
  * @returns An Observable with the request/response
  */
-export const destroy = (serverConfig: ServerConfig, sessionID: string): Observable<AjaxResponse> =>
+export const destroy = (
+  serverConfig: ServerConfig,
+  sessionID: string
+): Observable<AjaxResponse> =>
   ajax(
     createAJAXSettings(serverConfig, `/api/sessions/${sessionID}`, {
       method: "DELETE"
@@ -73,10 +83,13 @@ export const update = (
  * @param serverConfig  The server configuration
  * @param body Payload containing kernel name, kernel_id, session
  * name, and path for creation of a new session.
- * 
+ *
  * @returns An Observable with the request/response
  */
-export const create = (serverConfig: ServerConfig, body: object): Observable<AjaxResponse> =>
+export const create = (
+  serverConfig: ServerConfig,
+  body: object
+): Observable<AjaxResponse> =>
   ajax(
     createAJAXSettings(serverConfig, "/api/sessions", {
       method: "POST",

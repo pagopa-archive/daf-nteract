@@ -1,35 +1,18 @@
-import * as React from "react";
+import styled from "styled-components";
 
-type NameProps = {
-  children: React.ReactNode;
-};
+export const Name = styled.span`
+  vertical-align: middle;
 
-export class Name extends React.Component<NameProps> {
-  static defaultProps = {
-    children: null
-  };
-
-  render() {
-    return (
-      <td className="name">
-        {this.props.children}
-        <style jsx>{`
-          .name {
-            vertical-align: middle;
-            font-size: 0.9em;
-            padding: 8px;
-          }
-
-          .name :global(a) {
-            text-decoration: none;
-          }
-
-          .name :global(a:hover) {
-            text-decoration: underline;
-            outline-width: 0;
-          }
-        `}</style>
-      </td>
-    );
+  a {
+    text-decoration: none;
   }
-}
+
+  a:hover {
+    text-decoration: underline;
+    outline-width: 0;
+  }
+`;
+
+Name.displayName = "Name";
+
+export default Name;

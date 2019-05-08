@@ -1,0 +1,8 @@
+{
+  "name": "@pdnd-nteract-packages/types",
+  "version": "0.2.0",
+  "main": "pdndTypes.ts",
+  "author": "and0111",
+  "license": "BSD-3-Clause",
+  "private": true
+}

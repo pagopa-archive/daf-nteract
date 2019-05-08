@@ -1,3 +1,0 @@
-declare export var LoadingIcon: (props: any) => JSX.Element;
-declare export var SavingIcon: (props: any) => JSX.Element;
-declare export var ErrorIcon: (props: any) => JSX.Element;

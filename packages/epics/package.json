@@ -1,6 +1,6 @@
 {
   "name": "@nteract/epics",
-  "version": "1.0.0",
+  "version": "2.1.1",
   "description": "Redux-Observable epics for nteract apps",
   "keywords": [
     "jupyter",
@@ -11,6 +11,8 @@
   "homepage": "https://github.com/nteract/nteract/tree/master/packages/epics#readme",
   "license": "BSD-3-Clause",
   "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "nteractDesktop": "src/index.ts",
   "directories": {
     "lib": "lib",
     "test": "__tests__"
@@ -25,22 +27,20 @@
     "type": "git",
     "url": "git+https://github.com/nteract/nteract.git"
   },
-  "scripts": {
-    "prepare": "npm run build",
-    "prepublishOnly": "npm run build",
-    "build": "npm run build:clean && npm run build:lib",
-    "build:clean": "tsc -b --clean",
-    "build:lib": "tsc -b",
-    "build:lib:watch": "tsc -b --watch",
-    "build:watch": "npm run build:clean && npm run build:lib:watch"
-  },
+  "scripts": {},
   "bugs": {
     "url": "https://github.com/nteract/nteract/issues"
   },
   "dependencies": {
+    "@nteract/actions": "^2.1.1",
+    "@nteract/commutable": "^7.0.2",
+    "@nteract/messaging": "^6.0.2",
+    "@nteract/selectors": "^2.0.2",
+    "@nteract/types": "^4.0.2",
     "file-saver": "^2.0.0",
     "redux": "^4.0.1",
     "redux-observable": "^1.0.0",
+    "rx-jupyter": "^5.0.2",
     "rxjs": "^6.3.3"
   }
 }

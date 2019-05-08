@@ -3,11 +3,11 @@
 
 import * as React from "react";
 
-type HijackScrollProps = {
+interface HijackScrollProps {
   focused: boolean;
   onClick: () => void;
   children: React.ReactNode;
-};
+}
 
 export class HijackScroll extends React.Component<HijackScrollProps> {
   el: HTMLDivElement | null = null;
@@ -27,10 +27,11 @@ export class HijackScroll extends React.Component<HijackScrollProps> {
       !hovered
     ) {
       if (this.el && "scrollIntoViewIfNeeded" in this.el) {
-        // $FlowFixMe: This is only valid in Chrome, WebKit
+        // This is only valid in Chrome, WebKit
         (this.el as any).scrollIntoViewIfNeeded();
-      } else {
-        // TODO: Polyfill as best we can for the webapp version
+      } else if (this.el) {
+        // Make a best guess effort for older platforms
+        this.el.scrollIntoView();
       }
     }
   }

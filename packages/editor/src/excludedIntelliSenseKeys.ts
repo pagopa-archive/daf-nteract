@@ -1,5 +1,4 @@
-/* eslint-disable quote-props */
-const excludedIntelliSenseTriggerKeys: {[keycode: string]: string} = {
+export const excludedIntelliSenseTriggerKeys: { [keycode: string]: string } = {
   "8": "backspace",
   "9": "tab",
   "13": "enter",
@@ -49,6 +48,3 @@ const excludedIntelliSenseTriggerKeys: {[keycode: string]: string} = {
   "220": "backslash",
   "222": "quote"
 };
-
-export default excludedIntelliSenseTriggerKeys;
-/* eslint-enable quote-props */

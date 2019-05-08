@@ -1,5 +1,0 @@
-// @flow
-
-declare export var DropdownContent: (props: any) => any;
-declare export var DropdownTrigger: (props: any) => any;
-declare export var DropdownMenu: (props: any) => any;

@@ -13,6 +13,7 @@ export GH_TOKEN="<YOUR_TOKEN_HERE>"
 In order to build a signed copy with working auto-update, you will need to join the Apple developer program and get a certificate. The [Electron docs have a document on submitting your app to the app store](https://github.com/electron/electron/blob/master/docs/tutorial/mac-app-store-submission-guide.md), you only have to get through to the certificate step.
 
 ## Release Process
+**Note: Make sure that your remote origin is set as `git@github.com:nteract/nteract.git`.**
 
 1.  Make sure the release is working by running `yarn dist` and testing the built app inside the `./applications/desktop/dist/` folder. You can build for all platforms using `yarn dist:all`.
 

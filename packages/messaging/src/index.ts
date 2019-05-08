@@ -1,15 +1,15 @@
 /**
  * @module messaging
  */
-import { Observable, from, Subscriber } from "rxjs";
-import { filter, map, mergeMap } from "rxjs/operators";
-import { message, executeRequest } from "./messages";
-import { JupyterMessage, ExecuteRequest, MessageType } from "./types";
 import { PayloadMessage } from "@nteract/types";
+import { from, Observable, Subscriber } from "rxjs";
+import { filter, map, mergeMap } from "rxjs/operators";
+import { executeRequest, message } from "./messages";
+import { ExecuteRequest, JupyterMessage, MessageType } from "./types";
 
 export * from "./types";
 
-interface CreateMessageFields extends Partial<JupyterMessage> {
+export interface CreateMessageFields extends Partial<JupyterMessage> {
   header?: never;
 }
 
@@ -35,34 +35,36 @@ export function createExecuteRequest(code: string = ""): ExecuteRequest {
  * @returns A function that takes an Observable of kernel messages and returns
  * messages that are children of parentMessage.
  */
-export const childOf = (parentMessage: JupyterMessage) => (
-  source: Observable<JupyterMessage>
-) => {
-  const parentMessageID = parentMessage.header.msg_id;
-  return Observable.create((subscriber: Subscriber<JupyterMessage>) =>
-    source.subscribe(
-      msg => {
-        // strictly speaking, in order for the message to be a child of the
-        // parent message, it has to both be a message and have a parent to
-        // begin with
-        if (!msg || !msg.parent_header || !msg.parent_header.msg_id) {
-          if (process.env.DEBUG === "true") {
-            console.warn("no parent_header.msg_id on message", msg);
+export function childOf(
+  parentMessage: JupyterMessage
+): (source: Observable<JupyterMessage<MessageType, any>>) => any {
+  return (source: Observable<JupyterMessage>) => {
+    const parentMessageID: string = parentMessage.header.msg_id;
+    return Observable.create((subscriber: Subscriber<JupyterMessage>) =>
+      source.subscribe(
+        msg => {
+          // strictly speaking, in order for the message to be a child of the
+          // parent message, it has to both be a message and have a parent to
+          // begin with
+          if (!msg || !msg.parent_header || !msg.parent_header.msg_id) {
+            if (process.env.DEBUG === "true") {
+              console.warn("no parent_header.msg_id on message", msg);
+            }
+            return;
           }
-          return;
-        }
 
-        if (parentMessageID === msg.parent_header.msg_id) {
-          subscriber.next(msg);
-        }
-      },
-      // be sure to handle errors and completions as appropriate and
-      // send them along
-      err => subscriber.error(err),
-      () => subscriber.complete()
-    )
-  );
-};
+          if (parentMessageID === msg.parent_header.msg_id) {
+            subscriber.next(msg);
+          }
+        },
+        // be sure to handle errors and completions as appropriate and
+        // send them along
+        err => subscriber.error(err),
+        () => subscriber.complete()
+      )
+    );
+  };
+}
 
 /**
  * ofMessageType is an Rx Operator that filters on msg.header.msg_type
@@ -109,10 +111,12 @@ export const ofMessageType = (
  *
  * @returns Message with the associated output type
  */
-export const convertOutputMessageToNotebookFormat = (msg: JupyterMessage) => ({
-  ...msg.content,
-  output_type: msg.header.msg_type
-});
+export function convertOutputMessageToNotebookFormat(msg: JupyterMessage) {
+  return {
+    ...msg.content,
+    output_type: msg.header.msg_type
+  };
+}
 
 /**
  * Convert raw Jupyter messages that are output messages into nbformat style

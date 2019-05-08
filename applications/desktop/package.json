@@ -1,6 +1,6 @@
 {
   "name": "nteract",
-  "version": "0.12.3",
+  "version": "1.0.2",
   "description": "Interactive literate coding notebook!",
   "main": "./lib/webpacked-main.js",
   "repository": "nteract/nteract",
@@ -113,13 +113,13 @@
     ]
   },
   "dependencies": {
-    "@nteract/examples": "3.0.0",
+    "@nteract/examples": "3.1.1",
     "ijavascript": "lgeiger/ijavascript",
     "jmp": "^2.0.0",
     "mathjax-electron": "^3.0.0",
     "nteract-assets": "^4.0.0"
   },
   "devDependencies": {
-    "electron": "3.0.10"
+    "electron": "3.1.7"
   }
 }

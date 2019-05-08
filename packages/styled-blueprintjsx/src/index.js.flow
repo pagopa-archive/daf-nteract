@@ -1,3 +1,0 @@
-// @flow
-declare export var blueprintCSS: string;
-declare export var blueprintSelectCSS: string;

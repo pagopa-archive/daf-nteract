@@ -1,39 +1,54 @@
-import * as Immutable from "immutable";
-import { fromJS } from "@nteract/commutable";
-import { combineReducers } from "redux-immutable";
-import { Action } from "redux";
-
+// Vendor modules
 import * as actionTypes from "@nteract/actions";
+import { fromJS } from "@nteract/commutable";
 import {
+  ContentModel,
   ContentRecord,
-  makeFileContentRecord,
-  makeFileModelRecord,
-  makeDummyContentRecord,
+  ContentRef,
+  ContentsRecord,
+  createContentRef,
+  DummyContentRecordProps,
   makeContentsRecord,
   makeDirectoryContentRecord,
   makeDirectoryModel,
   makeDocumentRecord,
+  makeDummyContentRecord,
+  makeFileContentRecord,
+  makeFileModelRecord,
   makeNotebookContentRecord
 } from "@nteract/types";
-import { createContentRef, DummyContentRecordProps } from "@nteract/types";
+import { List, Map, RecordOf } from "immutable";
+import { Action } from "redux";
 
-import { notebook } from "./notebook";
+// Local modules
 import { file } from "./file";
+import { notebook } from "./notebook";
 
-const byRef = (state = Immutable.Map(), action: Action) => {
+const byRef = (
+  state: Map<ContentRef, ContentRecord>,
+  action: Action
+): Map<ContentRef, ContentRecord> => {
   switch (action.type) {
+    case actionTypes.CHANGE_CONTENT_NAME:
+      const changeContentNameAction = action as actionTypes.ChangeContentName;
+      const { contentRef, filepath } = changeContentNameAction.payload;
+      return state.setIn([contentRef, "filepath"], filepath);
+    case actionTypes.CHANGE_CONTENT_NAME_FAILED:
+      return state;
     case actionTypes.FETCH_CONTENT:
       // TODO: we might be able to get around this by looking at the
       // communication state first and not requesting this information until
       // the communication state shows that it should exist.
       const fetchContentAction = action as actionTypes.FetchContent;
-      return state.set(
-        fetchContentAction.payload.contentRef,
-        makeDummyContentRecord({
-          filepath: fetchContentAction.payload.filepath || ""
-          // TODO: we can set kernelRef when the content record uses it.
-        })
-      );
+      return state
+        .set(
+          fetchContentAction.payload.contentRef,
+          makeDummyContentRecord({
+            filepath: fetchContentAction.payload.filepath || ""
+            // TODO: we can set kernelRef when the content record uses it.
+          })
+        )
+        .setIn([fetchContentAction.payload.filepath, "loading"], true);
     case actionTypes.LAUNCH_KERNEL_SUCCESSFUL:
       // TODO: is this reasonable? We launched the kernel on behalf of this
       // content... so it makes sense to swap it, right?
@@ -56,7 +71,10 @@ const byRef = (state = Immutable.Map(), action: Action) => {
               filepath: fetchContentFulfilledAction.payload.filepath,
               model: makeFileModelRecord({
                 text: fetchContentFulfilledAction.payload.model.content
-              })
+              }),
+              loading: false,
+              saving: false,
+              error: null
             })
           );
         case "directory": {
@@ -68,7 +86,7 @@ const byRef = (state = Immutable.Map(), action: Action) => {
 
           // Create a map of <ContentRef, ContentRecord> that we merge into the
           // content refs state
-          const dummyRecords = Immutable.Map(
+          const dummyRecords = Map<ContentRef, ContentRecord>(
             fetchContentFulfilledAction.payload.model.content.map(
               (entry: any) => {
                 return [
@@ -87,16 +105,16 @@ const byRef = (state = Immutable.Map(), action: Action) => {
             )
           );
 
-          const items = Immutable.List(dummyRecords.keys());
-          const sorted = items.sort((aRef, bRef) => {
+          const items = List<ContentRef>(dummyRecords.keys());
+          const sorted: List<string> = items.sort((aRef, bRef) => {
             const a:
-              | Immutable.RecordOf<DummyContentRecordProps>
-              | undefined = dummyRecords.get(aRef) as Immutable.RecordOf<
+              | RecordOf<DummyContentRecordProps>
+              | undefined = dummyRecords.get(aRef) as RecordOf<
               DummyContentRecordProps
             >;
             const b:
-              | Immutable.RecordOf<DummyContentRecordProps>
-              | undefined = dummyRecords.get(bRef) as Immutable.RecordOf<
+              | RecordOf<DummyContentRecordProps>
+              | undefined = dummyRecords.get(bRef) as RecordOf<
               DummyContentRecordProps
             >;
 
@@ -104,7 +122,7 @@ const byRef = (state = Immutable.Map(), action: Action) => {
               return a.filepath.localeCompare(b.filepath);
             }
             return a.assumedType.localeCompare(b.assumedType);
-          }) as Immutable.List<string>;
+          });
 
           return (
             state
@@ -122,13 +140,16 @@ const byRef = (state = Immutable.Map(), action: Action) => {
                   filepath: fetchContentFulfilledAction.payload.filepath,
                   lastSaved:
                     fetchContentFulfilledAction.payload.model.last_modified,
-                  created: fetchContentFulfilledAction.payload.model.created
+                  created: fetchContentFulfilledAction.payload.model.created,
+                  loading: false,
+                  saving: false,
+                  error: null
                 })
               )
           );
         }
         case "notebook": {
-          const notebook = fromJS(
+          const immutableNotebook = fromJS(
             fetchContentFulfilledAction.payload.model.content
           );
 
@@ -139,14 +160,17 @@ const byRef = (state = Immutable.Map(), action: Action) => {
               lastSaved: fetchContentFulfilledAction.payload.lastSaved,
               filepath: fetchContentFulfilledAction.payload.filepath,
               model: makeDocumentRecord({
-                notebook,
-                savedNotebook: notebook,
-                transient: Immutable.Map({
-                  keyPathsForDisplays: Immutable.Map(),
-                  cellMap: Immutable.Map()
+                notebook: immutableNotebook,
+                savedNotebook: immutableNotebook,
+                transient: Map({
+                  keyPathsForDisplays: Map(),
+                  cellMap: Map()
                 }),
-                cellFocused: notebook.getIn(["cellOrder", 0])
-              })
+                cellFocused: immutableNotebook.getIn(["cellOrder", 0])
+              }),
+              loading: false,
+              saving: false,
+              error: null
             })
           );
         }
@@ -166,21 +190,29 @@ const byRef = (state = Immutable.Map(), action: Action) => {
           })
       );
     }
-    case actionTypes.SAVE_FULFILLED:
+    case actionTypes.SAVE_FULFILLED: {
       const saveFulfilledAction = action as actionTypes.SaveFulfilled;
       return state
-        .updateIn([saveFulfilledAction.payload.contentRef, "model"], model => {
-          // Notebook ends up needing this because we store a last saved version of the notebook
-          // Alternatively, we could be storing a hash of the content to compare 🤔
-          if (model && model.type === "notebook") {
-            return notebook(model, saveFulfilledAction);
+        .updateIn(
+          [saveFulfilledAction.payload.contentRef, "model"],
+          (model: ContentModel) => {
+            // Notebook ends up needing this because we store a last
+            // saved version of the notebook Alternatively, we could
+            // be storing a hash of the content to compare 🤔
+            if (model && model.type === "notebook") {
+              return notebook(model, saveFulfilledAction);
+            }
+            return model;
           }
-          return model;
-        })
+        )
         .setIn(
           [saveFulfilledAction.payload.contentRef, "lastSaved"],
           saveFulfilledAction.payload.model.last_modified
-        );
+        )
+        .setIn([saveFulfilledAction.payload.contentRef, "loading"], false)
+        .setIn([saveFulfilledAction.payload.contentRef, "saving"], false)
+        .setIn([saveFulfilledAction.payload.contentRef, "error"], null);
+    }
     // Defer all notebook actions to the notebook reducer
     case actionTypes.SEND_EXECUTE_REQUEST:
     case actionTypes.FOCUS_CELL:
@@ -217,6 +249,7 @@ const byRef = (state = Immutable.Map(), action: Action) => {
     case actionTypes.CHANGE_CELL_TYPE:
     case actionTypes.TOGGLE_OUTPUT_EXPANSION:
     case actionTypes.TOGGLE_TAG_IN_CELL:
+    case actionTypes.UPDATE_OUTPUT_METADATA:
     case actionTypes.UNHIDE_ALL: {
       const cellAction = action as actionTypes.FocusCell;
       const path = [cellAction.payload.contentRef, "model"];
@@ -226,7 +259,7 @@ const byRef = (state = Immutable.Map(), action: Action) => {
     case actionTypes.UPDATE_FILE_TEXT: {
       const fileAction = action as actionTypes.UpdateFileText;
       const path = [fileAction.payload.contentRef, "model"];
-      const model = state.getIn(path);
+      const model: ContentModel = state.getIn(path);
       if (model && model.type === "file") {
         return state.setIn(path, file(model, fileAction));
       }
@@ -237,4 +270,11 @@ const byRef = (state = Immutable.Map(), action: Action) => {
   }
 };
 
-export const contents = combineReducers({ byRef }, makeContentsRecord as any);
+export const contents = (
+  state: ContentsRecord = makeContentsRecord(),
+  action: Action
+): ContentsRecord => {
+  return state.merge({
+    byRef: byRef(state.byRef, action)
+  });
+};

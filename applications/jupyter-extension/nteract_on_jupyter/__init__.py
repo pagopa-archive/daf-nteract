@@ -7,7 +7,6 @@ from .extension import load_jupyter_server_extension
 
 EXT_NAME = "nteract_on_jupyter"
 
+
 def _jupyter_server_extension_paths():
-    return [{
-        "module": EXT_NAME
-}]
+    return [{"module": EXT_NAME}]

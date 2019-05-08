@@ -1,7 +1,7 @@
+import { mount, shallow } from "enzyme";
 import React from "react";
-import { shallow, mount } from "enzyme";
 
-import { Vega2, Vega3, VegaLite1, VegaLite2, VegaEmbed } from "../src/";
+import { Vega2, Vega3, VegaEmbed, VegaLite1, VegaLite2 } from "../src/";
 
 const cars = require("../data/cars.json");
 

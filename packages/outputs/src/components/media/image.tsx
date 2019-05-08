@@ -1,12 +1,18 @@
 import React from "react";
+import styled from "styled-components";
 
-type Props = {
+interface Props {
   data: string;
   mediaType: "image/png" | "image/jpeg" | "image/gif";
-  metadata: any;
-};
+  metadata: { height?: number; width?: number };
+}
 
-export function Image(props: Props) {
+const ImageStyle = styled.img`
+  display: block;
+  max-width: 100%;
+`;
+
+export function Image(props: Partial<Props>) {
   let size = {};
 
   if (props.metadata) {
@@ -15,19 +21,11 @@ export function Image(props: Props) {
   }
 
   return (
-    <React.Fragment>
-      <img
-        alt=""
-        src={`data:${props.mediaType};base64,${props.data}`}
-        {...size}
-      />
-      <style jsx>{`
-        img {
-          display: block;
-          max-width: 100%;
-        }
-      `}</style>
-    </React.Fragment>
+    <ImageStyle
+      alt=""
+      src={`data:${props.mediaType};base64,${props.data}`}
+      {...size}
+    />
   );
 }
 
@@ -35,3 +33,5 @@ Image.defaultProps = {
   data: "",
   mediaType: "image/jpeg"
 };
+
+export default Image;

@@ -4,8 +4,8 @@ import { AjaxObservable } from "./types";
 describe("rx-jupyter", () => {
   // Mostly a dummy "have we exported all the things" test
   test("exports kernels and kernelspecs", () => {
-    expect(jupyter.kernels).not.toBeNull(); // eslint-disable-line no-unused-expressions
-    expect(jupyter.kernelspecs).not.toBeNull(); // eslint-disable-line no-unused-expressions
+    expect(jupyter.kernels).not.toBeNull();
+    expect(jupyter.kernelspecs).not.toBeNull();
   });
 
   describe("apiVersion", () => {

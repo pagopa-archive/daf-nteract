@@ -1,19 +1,11 @@
 {
   "name": "@nteract/editor",
-  "version": "8.0.0-alpha.0",
+  "version": "9.0.2",
   "description": "The editor that lives inside cells in nteract",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "nteractDesktop": "src/index.tsx",
-  "scripts": {
-    "prepare": "npm run build",
-    "prepublishOnly": "npm run build",
-    "build": "npm run build:clean && npm run build:lib",
-    "build:clean": "tsc -b --clean",
-    "build:lib": "tsc -b",
-    "build:lib:watch": "tsc -b --watch",
-    "build:watch": "npm run build:clean && npm run build:lib:watch"
-  },
+  "scripts": {},
   "repository": "https://github.com/nteract/nteract/tree/master/packages/editor",
   "keywords": [
     "nteract",
@@ -25,18 +17,16 @@
     "access": "public"
   },
   "dependencies": {
-    "@nteract/display-area": "^5.0.0-alpha.0",
-    "@nteract/messaging": "^5.0.0-alpha.0",
-    "@nteract/transforms": "^5.0.0-alpha.0",
-    "codemirror": "5.42.0",
+    "@nteract/messaging": "^6.0.2",
+    "codemirror": "5.44.0",
     "lodash": "^4.17.4",
-    "rxjs": "^6.3.3"
+    "rxjs": "^6.3.3",
+    "styled-components": "^4.1.3"
   },
   "peerDependencies": {
     "immutable": "^4.0.0-rc.12",
     "react": "^16.3.2",
-    "react-dom": "^16.3.2",
-    "styled-jsx": "^3.1.0"
+    "react-dom": "^16.3.2"
   },
   "author": "Kyle Kelley <rgbkrk@gmail.com>",
   "license": "BSD-3-Clause"

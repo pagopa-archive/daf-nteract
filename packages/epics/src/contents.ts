@@ -1,21 +1,91 @@
 /**
  * @module epics
  */
-import { empty, from, of, interval, Observable, ObservableInput } from "rxjs";
-import { tap, map, mergeMap, switchMap, catchError } from "rxjs/operators";
-import { ofType } from "redux-observable";
-import { sample } from "lodash";
-import FileSaver from "file-saver";
-import { ActionsObservable, StateObservable } from "redux-observable";
-import { Action } from "redux";
-import { contents, ServerConfig } from "rx-jupyter";
-import { toJS, stringifyNotebook } from "@nteract/commutable";
+import { stringifyNotebook, toJS } from "@nteract/commutable";
 import { Notebook } from "@nteract/commutable";
+import FileSaver from "file-saver";
+import { sample } from "lodash";
+import { Action } from "redux";
+import { ofType } from "redux-observable";
+import { ActionsObservable, StateObservable } from "redux-observable";
+import { contents, ServerConfig } from "rx-jupyter";
+import { empty, from, interval, Observable, ObservableInput, of } from "rxjs";
+import { catchError, map, mergeMap, switchMap, tap } from "rxjs/operators";
 
 import * as actions from "@nteract/actions";
 import * as selectors from "@nteract/selectors";
-import { ContentRef, AppState } from "@nteract/types";
+import { AppState, ContentRef } from "@nteract/types";
 import { AjaxResponse } from "rxjs/ajax";
+
+import urljoin from "url-join";
+
+export function updateContentEpic(
+  action$: ActionsObservable<actions.ChangeContentName>,
+  state$: StateObservable<AppState>
+) {
+  return action$.pipe(
+    ofType(actions.CHANGE_CONTENT_NAME),
+    switchMap(action => {
+      if (!action.payload || typeof action.payload.filepath !== "string") {
+        return of({
+          type: "ERROR",
+          error: true,
+          payload: { error: new Error("updating content needs a payload") }
+        }) as any;
+      }
+
+      const state: any = state$.value;
+      const host: any = selectors.currentHost(state);
+
+      // Dismiss any usage that isn't targeting a jupyter server
+      if (host.type !== "jupyter") {
+        return empty();
+      }
+
+      const { contentRef, filepath, prevFilePath } = action.payload;
+      const serverConfig: ServerConfig = selectors.serverConfig(host);
+
+      return contents
+        .update(serverConfig, prevFilePath, { path: filepath.slice(1) })
+        .pipe(
+          tap(xhr => {
+            if (xhr.status !== 200) {
+              throw new Error(xhr.response);
+            }
+          }),
+          map(() => {
+            /*
+             * Modifying the url's file name in the browser.
+             * This effects back button behavior.
+             * Is there a better way to accomplish this?
+             */
+            window.history.replaceState(
+              {},
+              filepath,
+              urljoin(host.basePath, `/nteract/edit${filepath}`)
+            );
+
+            return actions.changeContentNameFulfilled({
+              contentRef: action.payload.contentRef,
+              filepath: action.payload.filepath,
+              prevFilePath
+            });
+          }),
+          catchError((xhrError: any) =>
+            of(
+              actions.changeContentNameFailed({
+                basepath: host.basepath,
+                filepath: action.payload.filepath,
+                prevFilePath,
+                error: xhrError,
+                contentRef: action.payload.contentRef
+              })
+            )
+          )
+        );
+    })
+  );
+}
 
 export function fetchContentEpic(
   action$: ActionsObservable<
@@ -36,13 +106,14 @@ export function fetchContentEpic(
         }) as any;
       }
 
-      const state = state$.value;
+      const state: any = state$.value;
+      const host: any = selectors.currentHost(state);
 
-      const host = selectors.currentHost(state);
+      // Dismiss any usage that isn't targeting a jupyter server
       if (host.type !== "jupyter") {
-        // Dismiss any usage that isn't targeting a jupyter server
         return empty();
       }
+
       const serverConfig: ServerConfig = selectors.serverConfig(host);
 
       return contents
@@ -54,10 +125,14 @@ export function fetchContentEpic(
         .pipe(
           tap(xhr => {
             if (xhr.status !== 200) {
-              throw new Error(xhr.response);
+              throw new Error(xhr.response.toString());
             }
           }),
           map(xhr => {
+            if (typeof xhr.response === "string") {
+              throw new Error(`Invalid API response: ${xhr.response}`);
+            }
+
             return actions.fetchContentFulfilled({
               filepath: action.payload.filepath,
               model: xhr.response,
@@ -241,11 +316,11 @@ export function saveContentEpic(
           return empty();
         }
 
-        let filepath = content.filepath;
+        const filepath = content.filepath;
 
         // This could be object for notebook, or string for files
         let serializedData: Notebook | string;
-        let saveModel: Partial<contents.Payload> = {};
+        let saveModel: Partial<contents.IContent<"file" | "notebook">> = {};
         if (content.type === "notebook") {
           const appVersion = selectors.appVersion(state);
 
@@ -315,8 +390,14 @@ export function saveContentEpic(
               mergeMap(xhr => {
                 // TODO: What does it mean if we have a failed GET on the content
                 if (xhr.status !== 200) {
-                  throw new Error(xhr.response);
+                  throw new Error(xhr.response.toString());
                 }
+                if (typeof xhr.response === "string") {
+                  throw new Error(
+                    `jupyter server response invalid: ${xhr.response}`
+                  );
+                }
+
                 const model = xhr.response;
 
                 const diskDate = new Date(model.last_modified);
@@ -355,7 +436,7 @@ export function saveContentEpic(
             );
           }
           default:
-            // NOTE: Flow types and our ofType should prevent reaching here, this
+            // NOTE: Our ofType should prevent reaching here, this
             // is here merely as safety
             return empty();
         }

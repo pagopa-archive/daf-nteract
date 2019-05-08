@@ -1,5 +1,7 @@
 import * as React from "react";
 
+import styled from "styled-components";
+
 interface PromptProps {
   /**
    * Typically used to show what execution count the user is on. When working at
@@ -15,25 +17,27 @@ interface PromptProps {
    * ```
    *
    */
-  counter: number | null;
+  counter?: number | null;
   /**
    * Show that execution is currently happening related to this prompt
    */
-  running: boolean;
+  running?: boolean;
   /**
    * Show that execution is queued up
    */
-  queued: boolean;
+  queued?: boolean;
   /**
    * Create a prompt without the `[]`. Used with markdown cells.
    */
-  blank: boolean;
+  blank?: boolean;
+
+  className?: string;
 }
 
 /**
  * Generate what text goes inside the prompt based on the props to the prompt
  */
-export function promptText(props: PromptProps): string {
+function promptText(props: PromptProps): string {
   if (props.running) {
     return "[*]";
   }
@@ -46,38 +50,43 @@ export function promptText(props: PromptProps): string {
   return "[ ]";
 }
 
-export class Prompt extends React.Component<PromptProps, {}> {
-  static defaultProps = {
-    counter: null,
-    running: false,
-    queued: false,
-    blank: false
-  };
-
-  render() {
-    return (
-      <React.Fragment>
-        <div className="prompt">
-          {this.props.blank ? null : promptText(this.props)}
-        </div>
-        <style jsx>{`
-          .prompt {
-            font-family: monospace;
-            font-size: 12px;
-            line-height: 22px;
-
-            width: var(--prompt-width, 50px);
-            padding: 9px 0;
-
-            text-align: center;
-
-            color: var(--theme-cell-prompt-fg, black);
-            background-color: var(--theme-cell-prompt-bg, #fafafa);
-          }
-        `}</style>
-      </React.Fragment>
-    );
+const BarePrompt = (props: PromptProps) => {
+  if (props.blank) {
+    return null;
   }
-}
+  return <div className={props.className}>{promptText(props)}</div>;
+};
 
-export const PromptBuffer = () => <Prompt blank />;
+export const Prompt = styled(BarePrompt)`
+  font-family: monospace;
+  font-size: 12px;
+  line-height: 22px;
+  /* For creating a buffer area for <Prompt blank /> */
+  min-height: 22px;
+
+  color: black;
+
+  width: var(--prompt-width, 50px);
+  padding: 9px 0;
+
+  text-align: center;
+
+  color: var(--theme-cell-prompt-fg, black);
+  background-color: var(--theme-cell-prompt-bg, #fafafa);
+`;
+
+Prompt.defaultProps = {
+  counter: null,
+  running: false,
+  queued: false,
+  blank: false
+};
+
+Prompt.displayName = "Prompt";
+
+export const PromptBuffer = styled(Prompt)``;
+PromptBuffer.defaultProps = {
+  blank: true
+};
+
+export default Prompt;

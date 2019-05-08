@@ -1,8 +1,6 @@
-// @flow
-
+import * as Immutable from "immutable";
 import React from "react";
 import renderer from "react-test-renderer";
-import * as Immutable from "immutable";
 
 import { PureNewNotebookNavigation } from "../src/new-notebook-navigation";
 
@@ -55,7 +53,7 @@ describe("NewNotebookNavigation", () => {
         onClick={selectKernelspec}
       />
     );
-    let tree = component.toJSON();
+    const tree = component.toJSON();
     expect(tree).toMatchSnapshot();
   });
 });

@@ -27,15 +27,17 @@
 
 # -*- coding:utf-8 -*-
 import logging
+
 logger = logging.getLogger(__name__)
 import re
 
 SEMVER_SPEC_VERSION = '2.0.0'
 
 try:
-    string_type = basestring # Python 2
+    string_type = basestring  # Python 2
 except NameError:
-    string_type = str # Python 3
+    string_type = str  # Python 3
+
 
 class _R(object):
     def __init__(self, i):
@@ -67,6 +69,7 @@ def list_get(xs, i):
     except IndexError:
         return None
 
+
 R = _R(0)
 src = Extendlist()
 regexp = {}
@@ -95,26 +98,42 @@ src[NONNUMERICIDENTIFIER] = '\\d*[a-zA-Z-][a-zA-Z0-9-]*'
 # Three dot-separated numeric identifiers.
 
 MAINVERSION = R()
-src[MAINVERSION] = ('(' + src[NUMERICIDENTIFIER] + ')\\.' +
-                    '(' + src[NUMERICIDENTIFIER] + ')\\.' +
-                    '(' + src[NUMERICIDENTIFIER] + ')')
+src[MAINVERSION] = (
+    '('
+    + src[NUMERICIDENTIFIER]
+    + ')\\.'
+    + '('
+    + src[NUMERICIDENTIFIER]
+    + ')\\.'
+    + '('
+    + src[NUMERICIDENTIFIER]
+    + ')'
+)
 
 MAINVERSIONLOOSE = R()
-src[MAINVERSIONLOOSE] = ('(' + src[NUMERICIDENTIFIERLOOSE] + ')\\.' +
-                         '(' + src[NUMERICIDENTIFIERLOOSE] + ')\\.' +
-                         '(' + src[NUMERICIDENTIFIERLOOSE] + ')')
+src[MAINVERSIONLOOSE] = (
+    '('
+    + src[NUMERICIDENTIFIERLOOSE]
+    + ')\\.'
+    + '('
+    + src[NUMERICIDENTIFIERLOOSE]
+    + ')\\.'
+    + '('
+    + src[NUMERICIDENTIFIERLOOSE]
+    + ')'
+)
 
 
 # ## Pre-release Version Identifier
 # A numeric identifier, or a non-numeric identifier.
 
 PRERELEASEIDENTIFIER = R()
-src[PRERELEASEIDENTIFIER] = ('(?:' + src[NUMERICIDENTIFIER] +
-                             '|' + src[NONNUMERICIDENTIFIER] + ')')
+src[PRERELEASEIDENTIFIER] = '(?:' + src[NUMERICIDENTIFIER] + '|' + src[NONNUMERICIDENTIFIER] + ')'
 
 PRERELEASEIDENTIFIERLOOSE = R()
-src[PRERELEASEIDENTIFIERLOOSE] = ('(?:' + src[NUMERICIDENTIFIERLOOSE] +
-                                  '|' + src[NONNUMERICIDENTIFIER] + ')')
+src[PRERELEASEIDENTIFIERLOOSE] = (
+    '(?:' + src[NUMERICIDENTIFIERLOOSE] + '|' + src[NONNUMERICIDENTIFIER] + ')'
+)
 
 
 # ## Pre-release Version
@@ -122,12 +141,14 @@ src[PRERELEASEIDENTIFIERLOOSE] = ('(?:' + src[NUMERICIDENTIFIERLOOSE] +
 # identifiers.
 
 PRERELEASE = R()
-src[PRERELEASE] = ('(?:-(' + src[PRERELEASEIDENTIFIER] +
-                   '(?:\\.' + src[PRERELEASEIDENTIFIER] + ')*))')
+src[PRERELEASE] = (
+    '(?:-(' + src[PRERELEASEIDENTIFIER] + '(?:\\.' + src[PRERELEASEIDENTIFIER] + ')*))'
+)
 
 PRERELEASELOOSE = R()
-src[PRERELEASELOOSE] = ('(?:-?(' + src[PRERELEASEIDENTIFIERLOOSE] +
-                        '(?:\\.' + src[PRERELEASEIDENTIFIERLOOSE] + ')*))')
+src[PRERELEASELOOSE] = (
+    '(?:-?(' + src[PRERELEASEIDENTIFIERLOOSE] + '(?:\\.' + src[PRERELEASEIDENTIFIERLOOSE] + ')*))'
+)
 
 # ## Build Metadata Identifier
 # Any combination of digits, letters, or hyphens.
@@ -140,8 +161,7 @@ src[BUILDIDENTIFIER] = '[0-9A-Za-z-]+'
 # identifiers.
 
 BUILD = R()
-src[BUILD] = ('(?:\\+(' + src[BUILDIDENTIFIER] +
-              '(?:\\.' + src[BUILDIDENTIFIER] + ')*))')
+src[BUILD] = '(?:\\+(' + src[BUILDIDENTIFIER] + '(?:\\.' + src[BUILDIDENTIFIER] + ')*))'
 
 #  ## Full Version String
 #  A main version, followed optionally by a pre-release version and
@@ -153,16 +173,14 @@ src[BUILD] = ('(?:\\+(' + src[BUILDIDENTIFIER] +
 #  comparison.
 
 FULL = R()
-FULLPLAIN = ('v?' + src[MAINVERSION] + src[PRERELEASE] + '?' + src[BUILD] + '?')
+FULLPLAIN = 'v?' + src[MAINVERSION] + src[PRERELEASE] + '?' + src[BUILD] + '?'
 
 src[FULL] = '^' + FULLPLAIN + '$'
 
 #  like full, but allows v1.2.3 and =1.2.3, which people do sometimes.
 #  also, 1.0.0alpha1 (prerelease without the hyphen) which is pretty
 #  common in the npm registry.
-LOOSEPLAIN = ('[v=\\s]*' + src[MAINVERSIONLOOSE] +
-              src[PRERELEASELOOSE] + '?' +
-              src[BUILD] + '?')
+LOOSEPLAIN = '[v=\\s]*' + src[MAINVERSIONLOOSE] + src[PRERELEASELOOSE] + '?' + src[BUILD] + '?'
 
 LOOSE = R()
 src[LOOSE] = '^' + LOOSEPLAIN + '$'
@@ -179,18 +197,38 @@ XRANGEIDENTIFIER = R()
 src[XRANGEIDENTIFIER] = src[NUMERICIDENTIFIER] + '|x|X|\\*'
 
 XRANGEPLAIN = R()
-src[XRANGEPLAIN] = ('[v=\\s]*(' + src[XRANGEIDENTIFIER] + ')' +
-                    '(?:\\.(' + src[XRANGEIDENTIFIER] + ')' +
-                    '(?:\\.(' + src[XRANGEIDENTIFIER] + ')' +
-                    '(?:(' + src[PRERELEASE] + ')' +
-                    ')?)?)?')
+src[XRANGEPLAIN] = (
+    '[v=\\s]*('
+    + src[XRANGEIDENTIFIER]
+    + ')'
+    + '(?:\\.('
+    + src[XRANGEIDENTIFIER]
+    + ')'
+    + '(?:\\.('
+    + src[XRANGEIDENTIFIER]
+    + ')'
+    + '(?:('
+    + src[PRERELEASE]
+    + ')'
+    + ')?)?)?'
+)
 
 XRANGEPLAINLOOSE = R()
-src[XRANGEPLAINLOOSE] = ('[v=\\s]*(' + src[XRANGEIDENTIFIERLOOSE] + ')' +
-                         '(?:\\.(' + src[XRANGEIDENTIFIERLOOSE] + ')' +
-                         '(?:\\.(' + src[XRANGEIDENTIFIERLOOSE] + ')' +
-                         '(?:(' + src[PRERELEASELOOSE] + ')' +
-                         ')?)?)?')
+src[XRANGEPLAINLOOSE] = (
+    '[v=\\s]*('
+    + src[XRANGEIDENTIFIERLOOSE]
+    + ')'
+    + '(?:\\.('
+    + src[XRANGEIDENTIFIERLOOSE]
+    + ')'
+    + '(?:\\.('
+    + src[XRANGEIDENTIFIERLOOSE]
+    + ')'
+    + '(?:('
+    + src[PRERELEASELOOSE]
+    + ')'
+    + ')?)?)?'
+)
 
 #  >=2.x, for example, means >=2.0.0-0
 #  <1.x would be the same as "<1.0.0-0", though.
@@ -212,7 +250,7 @@ tildeTrimReplace = r'\1~'
 TILDE = R()
 src[TILDE] = '^' + src[LONETILDE] + src[XRANGEPLAIN] + '$'
 TILDELOOSE = R()
-src[TILDELOOSE] = ('^' + src[LONETILDE] + src[XRANGEPLAINLOOSE] + '$')
+src[TILDELOOSE] = '^' + src[LONETILDE] + src[XRANGEPLAINLOOSE] + '$'
 
 #  Caret ranges.
 #  Meaning is "at least and backwards compatible with"
@@ -239,8 +277,7 @@ src[COMPARATOR] = '^' + src[GTLT] + '\\s*(' + FULLPLAIN + ')$|^$'
 #  An expression to strip any whitespace between the gtlt and the thing
 #  it modifies, so that `> 1.2.3` ==> `>1.2.3`
 COMPARATORTRIM = R()
-src[COMPARATORTRIM] = ('(\\s*)' + src[GTLT] +
-                       '\\s*(' + LOOSEPLAIN + '|' + src[XRANGEPLAIN] + ')')
+src[COMPARATORTRIM] = '(\\s*)' + src[GTLT] + '\\s*(' + LOOSEPLAIN + '|' + src[XRANGEPLAIN] + ')'
 
 #  this one has to use the /g flag
 regexp[COMPARATORTRIM] = re.compile(src[COMPARATORTRIM], re.M)
@@ -252,16 +289,21 @@ comparatorTrimReplace = r'\1\2\3'
 #  checked against either the strict or loose comparator form
 #  later.
 HYPHENRANGE = R()
-src[HYPHENRANGE] = ('^\\s*(' + src[XRANGEPLAIN] + ')' +
-                    '\\s+-\\s+' +
-                    '(' + src[XRANGEPLAIN] + ')' +
-                    '\\s*$')
+src[HYPHENRANGE] = (
+    '^\\s*(' + src[XRANGEPLAIN] + ')' + '\\s+-\\s+' + '(' + src[XRANGEPLAIN] + ')' + '\\s*$'
+)
 
 HYPHENRANGELOOSE = R()
-src[HYPHENRANGELOOSE] = ('^\\s*(' + src[XRANGEPLAINLOOSE] + ')' +
-                         '\\s+-\\s+' +
-                         '(' + src[XRANGEPLAINLOOSE] + ')' +
-                         '\\s*$')
+src[HYPHENRANGELOOSE] = (
+    '^\\s*('
+    + src[XRANGEPLAINLOOSE]
+    + ')'
+    + '\\s+-\\s+'
+    + '('
+    + src[XRANGEPLAINLOOSE]
+    + ')'
+    + '\\s*$'
+)
 
 #  Star ranges basically just allow anything at all.
 STAR = R()
@@ -269,7 +311,9 @@ src[STAR] = '(<|>)?=?\\s*\\*'
 
 # version name recovery for convinient
 RECOVERYVERSIONNAME = R()
-src[RECOVERYVERSIONNAME] = ('v?({n})(?:\\.({n}))?{pre}?'.format(n=src[NUMERICIDENTIFIER], pre=src[PRERELEASELOOSE]))
+src[RECOVERYVERSIONNAME] = 'v?({n})(?:\\.({n}))?{pre}?'.format(
+    n=src[NUMERICIDENTIFIER], pre=src[PRERELEASELOOSE]
+)
 
 #  Compile to actual regexp objects.
 #  All are flag-free, unless they were created above with a flag.
@@ -306,6 +350,7 @@ def clean(version, loose):
     else:
         return None
 
+
 NUMERIC = re.compile("^\d+$")
 
 
@@ -323,6 +368,8 @@ def semver(version, loose):
        return new SemVer(version, loose);
     """
     return SemVer(version, loose)
+
+
 make_semver = semver
 
 
@@ -343,8 +390,9 @@ class SemVer(object):
             if not m.group(3):
                 self.prerelease = []
             else:
-                self.prerelease = [(int(id) if NUMERIC.search(id) else id)
-                                   for id in m.group(3).split(".")]
+                self.prerelease = [
+                    (int(id) if NUMERIC.search(id) else id) for id in m.group(3).split(".")
+                ]
         else:
             #  these are actually numbers
             self.major = int(m.group(1))
@@ -355,8 +403,9 @@ class SemVer(object):
                 self.prerelease = []
             else:
 
-                self.prerelease = [(int(id) if NUMERIC.search(id) else id)
-                                   for id in m.group(4).split(".")]
+                self.prerelease = [
+                    (int(id) if NUMERIC.search(id) else id) for id in m.group(4).split(".")
+                ]
             if m.group(5):
                 self.build = m.group(5).split(".")
             else:
@@ -367,7 +416,7 @@ class SemVer(object):
     def format(self):
         self.version = "{}.{}.{}".format(self.major, self.minor, self.patch)
         if len(self.prerelease) > 0:
-            self.version += ("-{}".format(".".join(str(v) for v in self.prerelease)))
+            self.version += "-{}".format(".".join(str(v) for v in self.prerelease))
         return self.version
 
     def __repr__(self):
@@ -388,9 +437,11 @@ class SemVer(object):
         if not isinstance(other, SemVer):
             other = make_semver(other, self.loose)
 
-        return (compare_identifiers(str(self.major), str(other.major)) or
-                compare_identifiers(str(self.minor), str(other.minor)) or
-                compare_identifiers(str(self.patch), str(other.patch)))
+        return (
+            compare_identifiers(str(self.major), str(other.major))
+            or compare_identifiers(str(self.minor), str(other.minor))
+            or compare_identifiers(str(self.patch), str(other.patch))
+        )
 
     def compare_pre(self, other):
         if not isinstance(other, SemVer):
@@ -587,7 +638,7 @@ def cmp(a, op, b, loose):
 
 def comparator(comp, loose):
     if isinstance(comp, Comparator):
-        if(comp.loose == loose):
+        if comp.loose == loose:
             return comp
         else:
             comp = comp.value
@@ -595,6 +646,8 @@ def comparator(comp, loose):
     # if (!(this instanceof Comparator))
     #   return new Comparator(comp, loose)
     return Comparator(comp, loose)
+
+
 make_comparator = comparator
 
 ANY = object()
@@ -637,7 +690,7 @@ class Comparator(object):
             #  even though `1.2.3-beta < 1.2.3`
             #  The assumption is that the 1.2.3 version has something you
             #  *don't* want, so we push the prerelease down to the minimum.
-            if (self.operator == '<' and len(self.semver.prerelease) >= 0):
+            if self.operator == '<' and len(self.semver.prerelease) >= 0:
                 self.semver.prerelease = ["0"]
                 self.semver.format()
                 logger.debug("Comparator.parse semver %s", self.semver)
@@ -682,7 +735,9 @@ class Range(object):
         return '<SemVer Range "{}">'.format(self.range)
 
     def format(self):
-        self.range = "||".join([" ".join(c.value for c in comps).strip() for comps in self.set]).strip()
+        self.range = "||".join(
+            [" ".join(c.value for c in comps).strip() for comps in self.set]
+        ).strip()
         logger.debug("Range format %s", self.range)
         return self.range
 
@@ -698,7 +753,7 @@ class Range(object):
         else:
             hr = regexp[HYPHENRANGE]
 
-        range_ = hr.sub(hyphen_replace, range_,)
+        range_ = hr.sub(hyphen_replace, range_)
         logger.debug('hyphen replace %s', range_)
 
         #  `> 1.2.3 < 1.2.5` => `>1.2.3 <1.2.5`
@@ -720,7 +775,9 @@ class Range(object):
             comp_re = regexp[COMPARATORLOOSE]
         else:
             comp_re = regexp[COMPARATOR]
-        set_ = re.split("\s+", ' '.join([parse_comparator(comp, loose) for comp in range_.split(" ")]))
+        set_ = re.split(
+            "\s+", ' '.join([parse_comparator(comp, loose) for comp in range_.split(" ")])
+        )
         if self.loose:
             # in loose mode, throw out any that are not valid comparators
             set_ = [comp for comp in set_ if comp_re.search(comp)]
@@ -738,13 +795,16 @@ class Range(object):
 
 #  Mostly just for testing and legacy API reasons
 def to_comparators(range_, loose):
-    return [" ".join([c.value for c in comp]).strip().split(" ")
-            for comp in make_range(range_, loose).set]
+    return [
+        " ".join([c.value for c in comp]).strip().split(" ")
+        for comp in make_range(range_, loose).set
+    ]
 
 
 #  comprised of xranges, tildes, stars, and gtlt's at this point.
 #  already replaced the hyphen ranges
 #  turn into a set of JUST comparators.
+
 
 def parse_comparator(comp, loose):
     logger.debug('comp %s', comp)
@@ -770,9 +830,9 @@ def is_x(id):
 #  ~1.2.3, ~>1.2.3 --> >=1.2.3 <1.3.0
 #  ~1.2.0, ~>1.2.0 --> >=1.2.0 <1.3.0
 
+
 def replace_tildes(comp, loose):
-    return " ".join([replace_tilde(c, loose)
-                     for c in re.split("\s+", comp.strip())])
+    return " ".join([replace_tilde(c, loose) for c in re.split("\s+", comp.strip())])
 
 
 def replace_tilde(comp, loose):
@@ -794,14 +854,15 @@ def replace_tilde(comp, loose):
             ret = '>=' + M + '.' + m + '.0-0 <' + M + '.' + str(int(m) + 1) + '.0-0'
         elif pr:
             logger.debug("replaceTilde pr %s", pr)
-            if (pr[0] != "-"):
+            if pr[0] != "-":
                 pr = '-' + pr
-            ret = '>=' + M + '.' + m + '.' + p + pr +' <' + M + '.' + str(int(m) + 1) + '.0-0'
+            ret = '>=' + M + '.' + m + '.' + p + pr + ' <' + M + '.' + str(int(m) + 1) + '.0-0'
         else:
             #  ~1.2.3 == >=1.2.3-0 <1.3.0-0
-            ret = '>=' + M + '.' + m + '.' + p + '-0' +' <' + M + '.' + str(int(m) + 1) + '.0-0'
+            ret = '>=' + M + '.' + m + '.' + p + '-0' + ' <' + M + '.' + str(int(m) + 1) + '.0-0'
         logger.debug('tilde return, %s', ret)
         return ret
+
     return r.sub(repl, comp)
 
 
@@ -812,8 +873,7 @@ def replace_tilde(comp, loose):
 #  ^1.2.3 --> >=1.2.3 <2.0.0
 #  ^1.2.0 --> >=1.2.0 <2.0.0
 def replace_carets(comp, loose):
-    return " ".join([replace_caret(c, loose)
-                     for c in re.split("\s+", comp.strip())])
+    return " ".join([replace_caret(c, loose) for c in re.split("\s+", comp.strip())])
 
 
 def replace_caret(comp, loose):
@@ -844,7 +904,20 @@ def replace_caret(comp, loose):
                 if m == "0":
                     ret = '=' + M + '.' + m + '.' + (p or "") + pr
                 else:
-                    ret = '>=' + M + '.' + m + '.' + (p or "") + pr +' <' + M + '.' + str(int(m) + 1) + '.0-0'
+                    ret = (
+                        '>='
+                        + M
+                        + '.'
+                        + m
+                        + '.'
+                        + (p or "")
+                        + pr
+                        + ' <'
+                        + M
+                        + '.'
+                        + str(int(m) + 1)
+                        + '.0-0'
+                    )
             else:
                 ret = '>=' + M + '.' + m + '.' + (p or "") + pr + ' <' + str(int(M) + 1) + '.0.0-0'
         else:
@@ -852,9 +925,24 @@ def replace_caret(comp, loose):
                 if m == "0":
                     ret = '=' + M + '.' + m + '.' + (p or "")
                 else:
-                    ret = '>=' + M + '.' + m + '.' + (p or "") + '-0' + ' <' + M + '.' + str((int(m) + 1)) + '.0-0'
+                    ret = (
+                        '>='
+                        + M
+                        + '.'
+                        + m
+                        + '.'
+                        + (p or "")
+                        + '-0'
+                        + ' <'
+                        + M
+                        + '.'
+                        + str((int(m) + 1))
+                        + '.0-0'
+                    )
             else:
-                ret = '>=' + M + '.' + m + '.' + (p or "") + '-0' +' <' + str(int(M) + 1) + '.0.0-0'
+                ret = (
+                    '>=' + M + '.' + m + '.' + (p or "") + '-0' + ' <' + str(int(M) + 1) + '.0.0-0'
+                )
         logger.debug('caret return %s', ret)
         return ret
 
@@ -863,8 +951,7 @@ def replace_caret(comp, loose):
 
 def replace_xranges(comp, loose):
     logger.debug('replaceXRanges %s %s', comp, loose)
-    return " ".join([replace_xrange(c, loose)
-                     for c in re.split("\s+", comp.strip())])
+    return " ".join([replace_xrange(c, loose) for c in re.split("\s+", comp.strip())])
 
 
 def replace_xrange(comp, loose):
@@ -927,6 +1014,7 @@ def replace_xrange(comp, loose):
         logger.debug('xRange return %s', ret)
 
         return ret
+
     return r.sub(repl, comp)
 
 

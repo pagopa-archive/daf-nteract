@@ -1,8 +1,0 @@
-// @flow
-/* eslint-disable */
-
-declare export var Entry: (props: any) => any;
-declare export var Icon: (props: any) => any;
-declare export var LastSaved: (props: any) => any;
-declare export var Listing: (props: any) => any;
-declare export var Name: (props: any) => any;

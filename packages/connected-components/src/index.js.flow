@@ -1,6 +1,0 @@
-// @flow
-
-declare export var NewNotebookNavigation: (props: any) => any;
-declare export var PureNewNotebookNavigation: (props: any) => any;
-declare export var NotebookMenu: (props: any) => any;
-declare export var ModalController: (props: any) => any;

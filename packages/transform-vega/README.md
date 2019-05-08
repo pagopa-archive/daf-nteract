@@ -1,6 +1,6 @@
 # @nteract/transform-vega
 
-This package contains a React component for rendering interactive visualizations using [Vega](https://vega.github.io/vega/). This transform is exported as part of the [@nteract/transforms-full package](https://github.com/nteract/nteract/tree/master/packages/transforms-full).
+This package contains a React component for rendering interactive visualizations using [Vega](https://vega.github.io/vega/).
 
 ## Installation
 

@@ -1,7 +1,7 @@
-import * as React from "react";
 import { WidgetDisplay } from "@nteract/jupyter-widgets";
-import { Subject } from "rxjs";
+import * as React from "react";
 import * as renderer from "react-test-renderer";
+import { Subject } from "rxjs";
 
 describe("index", () => {
   describe("WidgetDisplay", () => {

@@ -7,21 +7,21 @@
  * and allows converting from on-disk v4 and v3 Jupyter Notebooks
  *
  */
-import * as v4 from "./v4";
 import * as v3 from "./v3";
+import * as v4 from "./v4";
 
-import { Map as ImmutableMap, List as ImmutableList, Record } from "immutable";
+import { List as ImmutableList, Map as ImmutableMap, Record } from "immutable";
 
 import { ImmutableCell } from "./cells";
-import { JSONType, CellId } from "./primitives";
+import { CellId, JSONType } from "./primitives";
 
-export type NotebookRecordParams = {
+export interface NotebookRecordParams {
   cellOrder: ImmutableList<CellId>;
   cellMap: ImmutableMap<CellId, ImmutableCell>;
   nbformat_minor: number;
   nbformat: number;
   metadata: ImmutableMap<string, any>;
-};
+}
 
 export const makeNotebookRecord = Record<NotebookRecordParams>({
   cellOrder: ImmutableList(),
@@ -34,44 +34,42 @@ export const makeNotebookRecord = Record<NotebookRecordParams>({
 export type ImmutableNotebook = Record<NotebookRecordParams> &
   Readonly<NotebookRecordParams>;
 
-const freezeReviver = <T extends JSONType>(_k: string, v: T) =>
-  Object.freeze(v) as T;
+function freezeReviver<T extends JSONType>(_k: string, v: T) {
+  return Object.freeze(v);
+}
 
-export type Notebook = v4.Notebook | v3.Notebook;
+export type Notebook = v4.NotebookV4 | v3.NotebookV3;
 
 /**
  * Converts a string representation of a notebook into a JSON representation.
- * 
+ *
  * @param notebookString A string representation of a notebook.
- * 
+ *
  * @returns A JSON representation of the same notebook.
  */
-export const parseNotebook = (notebookString: string): Notebook =>
-  JSON.parse(notebookString, freezeReviver);
+export function parseNotebook(notebookString: string): Notebook {
+  return JSON.parse(notebookString, freezeReviver);
+}
 
-export const fromJS = (
-  notebook: v4.Notebook | v3.Notebook | ImmutableNotebook
-) => {
+export function fromJS(notebook: Notebook | ImmutableNotebook) {
   if (Record.isRecord(notebook)) {
     if (notebook.has("cellOrder") && notebook.has("cellMap")) {
       return notebook;
     }
     throw new TypeError(
-      `commutable was passed an Immutable.Record structure that is not a notebook`
+      "commutable was passed an Immutable.Record structure that is not a notebook"
     );
   }
 
-  if (notebook.nbformat === 4 && notebook.nbformat_minor >= 0) {
-    var v4Notebook = notebook as v4.Notebook;
-
+  if (v4.isNotebookV4(notebook)) {
     if (
-      Array.isArray(v4Notebook.cells) &&
+      Array.isArray(notebook.cells) &&
       typeof notebook.metadata === "object"
     ) {
-      return v4.fromJS(v4Notebook);
+      return v4.fromJS(notebook);
     }
-  } else if (notebook.nbformat === 3 && notebook.nbformat_minor >= 0) {
-    return v3.fromJS(notebook as v3.Notebook);
+  } else if (v3.isNotebookV3(notebook)) {
+    return v3.fromJS(notebook);
   }
 
   if (notebook.nbformat) {
@@ -81,17 +79,18 @@ export const fromJS = (
   }
 
   throw new TypeError("This notebook format is not supported");
-};
+}
+
 /**
  * Converts an immutable representation of a notebook to a JSON representation of the
  * notebook using the v4 of the nbformat specification.
- * 
+ *
  * @param immnb The immutable representation of a notebook.
- * 
+ *
  * @returns The JSON representation of a notebook.
  */
-export const toJS = (immnb: ImmutableNotebook): v4.Notebook => {
-  const minorVersion: null | number = immnb.get("nbformat_minor", null);
+export function toJS(immnb: ImmutableNotebook): v4.NotebookV4 {
+  const minorVersion: number | null = immnb.get("nbformat_minor", null);
 
   if (
     immnb.get("nbformat") === 4 &&
@@ -101,14 +100,15 @@ export const toJS = (immnb: ImmutableNotebook): v4.Notebook => {
     return v4.toJS(immnb);
   }
   throw new TypeError("Only notebook formats 3 and 4 are supported!");
-};
+}
 
 /**
  * Converts a JSON representation of a notebook into a string representation.
- * 
+ *
  * @param notebook The JSON representation of a notebook.
- * 
+ *
  * @returns A string containing the notebook data.
  */
-export const stringifyNotebook = (notebook: v4.Notebook) =>
-  JSON.stringify(notebook, null, 2);
+export function stringifyNotebook(notebook: v4.NotebookV4) {
+  return JSON.stringify(notebook, null, 2);
+}

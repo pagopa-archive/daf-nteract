@@ -3,9 +3,6 @@ const path = require("path");
 const webpack = require("webpack");
 const configurator = require("@nteract/webpack-configurator");
 
-const babelFlowConfig = require("../../babel.flow.config");
-const babelTypescriptConfig = require("../../babel.typescript.config");
-
 const nodeModules = {
   jmp: "commonjs jmp",
   canvas: "commonjs canvas",
@@ -18,7 +15,7 @@ const nodeModules = {
 const mainConfig = {
   mode: "development",
   entry: {
-    main: "./src/main/index.js"
+    main: "./src/main/index.ts"
   },
   target: "electron-main",
   output: {
@@ -32,16 +29,8 @@ const mainConfig = {
   module: {
     rules: [
       {
-        test: /\.js$/,
-        exclude: configurator.exclude,
-        loader: "babel-loader",
-        options: babelFlowConfig()
-      },
-      {
         test: /\.tsx?$/,
-        exclude: configurator.exclude,
-        loader: "babel-loader",
-        options: babelTypescriptConfig()
+        use: [configurator.tsLoaderConfig]
       }
     ]
   },
@@ -56,20 +45,7 @@ const mainConfig = {
 const rendererConfig = {
   mode: "development",
   entry: {
-    app: "./src/notebook/index.js",
-    vendor: [
-      "react",
-      "react-dnd",
-      "react-dnd-html5-backend",
-      "react-dom",
-      "react-redux",
-      "redux",
-      "redux-logger",
-      "redux-observable",
-      "immutable",
-      "rxjs",
-      "date-fns"
-    ]
+    app: "./src/notebook/index.tsx"
   },
   target: "electron-renderer",
   output: {
@@ -81,16 +57,12 @@ const rendererConfig = {
   module: {
     rules: [
       {
-        test: /\.js$/,
-        exclude: configurator.exclude,
-        loader: "babel-loader",
-        options: babelFlowConfig()
+        test: /\.css$/,
+        use: ["style-loader", "css-loader"]
       },
       {
         test: /\.tsx?$/,
-        exclude: configurator.exclude,
-        loader: "babel-loader",
-        options: babelTypescriptConfig()
+        use: [configurator.tsLoaderConfig]
       }
     ]
   },
@@ -99,11 +71,7 @@ const rendererConfig = {
     extensions: [".js", ".jsx", ".ts", ".tsx"],
     alias: configurator.mergeDefaultAliases()
   },
-  plugins: [
-    // No external CSS should get side-loaded by js
-    // I'm looking at you vega-tooltip
-    new webpack.IgnorePlugin(/\.(css|less)$/)
-  ]
+  plugins: []
 };
 
 module.exports = {

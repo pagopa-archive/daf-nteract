@@ -13,7 +13,9 @@ describe("kernels", () => {
       const id = "0000-1111-2222-3333";
       const kernel$ = kernels.get(serverConfig, id) as AjaxObservable;
       const request = kernel$.request;
-      expect(request.url).toBe(`http://localhost:8888/api/kernels/${id}`);
+      expect(request.url).toEqual(
+        expect.stringContaining(`http://localhost:8888/api/kernels/${id}?_=`)
+      );
       expect(request.method).toBe("GET");
     });
   });
@@ -22,7 +24,9 @@ describe("kernels", () => {
     test("creates an AjaxObservable configured for listing kernels", () => {
       const kernel$ = kernels.list(serverConfig) as AjaxObservable;
       const request = kernel$.request;
-      expect(request.url).toBe("http://localhost:8888/api/kernels");
+      expect(request.url).toEqual(
+        expect.stringContaining("http://localhost:8888/api/kernels?_=")
+      );
       expect(request.method).toBe("GET");
       expect(request.crossDomain).toBe(true);
     });

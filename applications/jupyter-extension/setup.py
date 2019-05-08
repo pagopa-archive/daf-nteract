@@ -5,7 +5,7 @@ import setuptools
 import json
 import os
 
-version = '0.0.0-dev'
+version = '0.0.1-dev'
 name = "nteract_on_jupyter"
 
 here = os.path.realpath(os.path.dirname(__file__))
@@ -14,11 +14,10 @@ with open(os.path.join(here, name, "package.json")) as f:
     packageJSON = json.load(f)
     version = packageJSON['version']
 
-config_d_filepath = os.path.join('jupyter-config',
-                                 'jupyter_notebook_config.d',
-                                 'nteract_on_jupyter.json')
-data_files = [('etc/jupyter/jupyter_notebook_config.d', [config_d_filepath]),
-]
+config_d_filepath = os.path.join(
+    'jupyter-config', 'jupyter_notebook_config.d', 'nteract_on_jupyter.json'
+)
+data_files = [('etc/jupyter/jupyter_notebook_config.d', [config_d_filepath])]
 
 setuptools.setup(
     name=name,
@@ -32,10 +31,5 @@ setuptools.setup(
     zip_safe=False,
     install_requires=['notebook'],
     data_files=data_files,
-    entry_points={
-        'console_scripts': [
-            'jupyter-nteract = nteract_on_jupyter.nteractapp:main'
-        ]
-    }
-
+    entry_points={'console_scripts': ['jupyter-nteract = nteract_on_jupyter.nteractapp:main']},
 )

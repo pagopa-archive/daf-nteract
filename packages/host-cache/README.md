@@ -1,6 +1,6 @@
 # @mybinder/host-cache
 
-This package contains a provider component that allows you to connect to a Binder instance and access its context in all child components. To see this package in action, you can view the source for the [nteract play application](https://github.com/nteract/nteract/tree/master/applications/play).
+This package contains a provider component that allows you to connect to a Binder instance and access its context in all child components. To see this package in action, you can view the source for the [nteract play application](https://github.com/nteract/play).
 
 ## Installation
 

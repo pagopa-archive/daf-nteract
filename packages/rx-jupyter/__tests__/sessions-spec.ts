@@ -12,7 +12,9 @@ describe("sessions", () => {
     test("creates an AjaxObservable for listing the sessions", () => {
       const session$ = sessions.list(serverConfig) as AjaxObservable;
       const request = session$.request;
-      expect(request.url).toBe("http://localhost:8888/api/sessions");
+      expect(request.url).toEqual(
+        expect.stringContaining("http://localhost:8888/api/sessions")
+      );
       expect(request.method).toBe("GET");
       expect(request.crossDomain).toBe(true);
       expect(request.responseType).toBe("json");
@@ -23,7 +25,9 @@ describe("sessions", () => {
     test("creates an AjaxObservable for getting particular session info", () => {
       const session$ = sessions.get(serverConfig, "uuid") as AjaxObservable;
       const request = session$.request;
-      expect(request.url).toBe("http://localhost:8888/api/sessions/uuid");
+      expect(request.url).toEqual(
+        expect.stringContaining("http://localhost:8888/api/sessions/uuid")
+      );
       expect(request.method).toBe("GET");
       expect(request.crossDomain).toBe(true);
       expect(request.responseType).toBe("json");

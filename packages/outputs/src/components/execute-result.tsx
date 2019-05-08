@@ -1,51 +1,37 @@
+import { ImmutableExecuteResult, MediaBundle } from "@nteract/commutable";
 import * as React from "react";
-import { MediaBundle } from "@nteract/records";
 
-import { RichMedia } from "./rich-media";
+import { RichMedia, RichMediaProps } from "./rich-media";
 
-type Props = {
+interface Props {
   /**
    * The literal type of output, used for routing with the `<Output />` element
    */
-  outputType: "pyout";
-  /**
-   * Object of media type → data
-   *
-   * E.g.
-   *
-   * ```js
-   * {
-   *   "text/plain": "raw text",
-   * }
-   * ```
-   *
-   * See [Jupyter message spec](http://jupyter-client.readthedocs.io/en/stable/messaging.html)
-   * for more detail.
-   *
-   */
-  data: MediaBundle;
-  /**
-   * custom settings, typically keyed by media type
-   */
-  metadata: {};
-  /**
-   * React elements that accept mimebundle data, will get passed data[mimetype]
-   */
-  children: React.ReactNode;
-};
+  output_type: "execute_result";
+  output?: ImmutableExecuteResult;
 
-export const ExecuteResult = (props: Props) => {
-  const { data, metadata, children } = props;
+  /**
+   * React elements that accept media bundle data, will get passed `data[mediaType]`
+   */
+  children: RichMediaProps["children"];
+}
+
+export const ExecuteResult = (props: Partial<Props>) => {
+  const { output, children } = props;
+  if (!output) {
+    return null;
+  }
 
   return (
-    <RichMedia data={data} metadata={metadata}>
+    <RichMedia data={output.data} metadata={output.metadata}>
       {children}
     </RichMedia>
   );
 };
 
 ExecuteResult.defaultProps = {
-  outputType: "pyout",
-  data: {},
-  metadata: {}
+  output: null,
+  output_type: "execute_result"
 };
+
+export default ExecuteResult;

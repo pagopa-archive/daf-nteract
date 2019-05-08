@@ -1,15 +1,18 @@
 /**
  * @module epics
  */
+import { createMessage, ofMessageType } from "@nteract/messaging";
+import { ofType } from "redux-observable";
+import { ActionsObservable } from "redux-observable";
 import { merge } from "rxjs";
 import { map, retry, switchMap } from "rxjs/operators";
-import { ofType } from "redux-observable";
-import { createMessage, ofMessageType } from "@nteract/messaging";
-import { ActionsObservable } from "redux-observable";
 
-import { commOpenAction, commMessageAction } from "@nteract/actions";
-import { NewKernelAction } from "@nteract/actions";
-import { LAUNCH_KERNEL_SUCCESSFUL } from "@nteract/actions";
+import {
+  commMessageAction,
+  commOpenAction,
+  LAUNCH_KERNEL_SUCCESSFUL,
+  NewKernelAction
+} from "@nteract/actions";
 
 /**
  * creates a comm open message

@@ -1,6 +1,6 @@
-import React from "react";
-import _ from "lodash";
 import { mount } from "enzyme";
+import _ from "lodash";
+import React from "react";
 
 import PlotlyTransform from "../src";
 

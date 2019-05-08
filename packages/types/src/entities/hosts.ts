@@ -1,26 +1,29 @@
+/**
+ * @module types
+ */
 import * as Immutable from "immutable";
 
 import { HostId } from "../ids";
 import { HostRef } from "../refs";
 
-export type ServerConfig = {
+export interface ServerConfig {
   endpoint: string;
   crossDomain: boolean | null | undefined;
   token: string | null | undefined;
-};
+}
 
-export type EmptyHost = {
+export interface EmptyHost {
   type: "empty";
-};
+}
 export type EmptyHostRecord = Immutable.RecordOf<EmptyHost>;
 export const makeEmptyHostRecord = Immutable.Record<EmptyHost>({
   type: "empty"
 });
 
-export type BaseHostProps = {
+export interface BaseHostProps {
   id?: HostId | null;
   defaultKernelName: string;
-};
+}
 
 export type JupyterHostRecordProps = BaseHostProps & {
   type: "jupyter";
@@ -58,10 +61,10 @@ export type HostRecordProps = LocalHostRecordProps | JupyterHostRecordProps;
 
 export type HostRecord = LocalHostRecord | JupyterHostRecord | EmptyHostRecord;
 
-export type HostsRecordProps = {
+export interface HostsRecordProps {
   byRef: Immutable.Map<HostRef, HostRecord>;
   refs: Immutable.List<HostRef>;
-};
+}
 
 export const makeHostsRecord = Immutable.Record<HostsRecordProps>({
   byRef: Immutable.Map(),

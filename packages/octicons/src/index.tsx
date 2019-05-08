@@ -30,6 +30,8 @@ export const SVGWrapper = (props: WrapperProps) => {
   );
 };
 
+SVGWrapper.displayName = "SVGWrapper";
+
 export const MarkdownOcticon = (props: any) => (
   <SVGWrapper width={16} height={16} viewBox="0 0 16 16" outerProps={props}>
     <title>Create Text Cell</title>

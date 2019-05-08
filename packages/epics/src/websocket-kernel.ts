@@ -1,19 +1,19 @@
 /**
  * @module epics
  */
+import { kernelInfoRequest } from "@nteract/messaging";
 import { ofType } from "redux-observable";
 import { ActionsObservable, StateObservable } from "redux-observable";
+import { kernels, ServerConfig, sessions } from "rx-jupyter";
+import { empty, of } from "rxjs";
 import {
   catchError,
+  concatMap,
+  filter,
   map,
   mergeMap,
-  switchMap,
-  concatMap,
-  filter
+  switchMap
 } from "rxjs/operators";
-import { of, empty } from "rxjs";
-import { kernels, sessions, ServerConfig } from "rx-jupyter";
-import { kernelInfoRequest } from "@nteract/messaging";
 
 import * as actions from "@nteract/actions";
 import * as selectors from "@nteract/selectors";
@@ -75,7 +75,7 @@ export const launchWebSocketKernelEpic = (
           const kernel: RemoteKernelProps = Object.assign({}, session.kernel, {
             type: "websocket",
             info: null,
-            sessionId: sessionId,
+            sessionId,
             cwd,
             channels: kernels.connect(
               serverConfig,
