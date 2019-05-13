@@ -9,7 +9,7 @@ import { Action } from "redux";
 import { ofType } from "redux-observable";
 import { ActionsObservable, StateObservable } from "redux-observable";
 import { contents, ServerConfig } from "rx-jupyter";
-import { empty, from, interval, Observable, ObservableInput, of } from "rxjs";
+import { empty, from, interval, Observable, of } from "rxjs";
 import { catchError, map, mergeMap, switchMap, tap } from "rxjs/operators";
 
 import * as actions from "@nteract/actions";
@@ -22,7 +22,7 @@ import urljoin from "url-join";
 export function updateContentEpic(
   action$: ActionsObservable<actions.ChangeContentName>,
   state$: StateObservable<AppState>
-) {
+): Observable<{}> {
   return action$.pipe(
     ofType(actions.CHANGE_CONTENT_NAME),
     switchMap(action => {
@@ -94,7 +94,7 @@ export function fetchContentEpic(
     | actions.FetchContentFulfilled
   >,
   state$: StateObservable<AppState>
-) {
+): Observable<{}> {
   return action$.pipe(
     ofType(actions.FETCH_CONTENT),
     switchMap(action => {
@@ -159,7 +159,7 @@ export function downloadString(
   fileContents: string,
   filepath: string,
   contentType: string
-) {
+): void {
   const filename = filepath.split("/").pop();
   const blob = new Blob([fileContents], { type: contentType });
   // NOTE: There is no callback for this, we have to rely on the browser
@@ -208,8 +208,9 @@ const someArbitraryPrimesAround30k = [
 export function autoSaveCurrentContentEpic(
   action$: ActionsObservable<Action>,
   state$: StateObservable<AppState>
-) {
-  // Pick an autosave duration that won't have the exact same cycle as another open tab
+): Observable<actions.Save> {
+  // Pick an autosave duration that won't have the exact
+  // same cycle as another open tab
   const duration = sample(someArbitraryPrimesAround30k);
 
   return interval(duration).pipe(
@@ -247,8 +248,8 @@ export function autoSaveCurrentContentEpic(
       } else if ((document as any).webkitHidden) {
         isVisible = !(document as any).webkitHidden;
       } else {
-        // Final fallback -- this will say the window is hidden when devtools is open or if the
-        // user is interacting with an iframe
+        // Final fallback -- this will say the window is hidden when
+        // devtools is open or if the user is interacting with an iframe
         isVisible = document.hasFocus();
       }
 
@@ -272,7 +273,12 @@ export function autoSaveCurrentContentEpic(
 export function saveContentEpic(
   action$: ActionsObservable<actions.Save | actions.DownloadContent>,
   state$: StateObservable<AppState>
-) {
+): Observable<
+  | actions.DownloadContentFailed
+  | actions.DownloadContentFulfilled
+  | actions.SaveFailed
+  | actions.SaveFulfilled
+> {
   return action$.pipe(
     ofType(actions.SAVE, actions.DOWNLOAD_CONTENT),
     mergeMap(
@@ -350,7 +356,8 @@ export function saveContentEpic(
 
         switch (action.type) {
           case actions.DOWNLOAD_CONTENT: {
-            // FIXME: Convert this to downloadString, so it works for both files & notebooks
+            // FIXME: Convert this to downloadString, so it works for
+            // both files & notebooks
             if (
               content.type === "notebook" &&
               typeof serializedData === "object"
@@ -382,13 +389,15 @@ export function saveContentEpic(
           case actions.SAVE: {
             const serverConfig: ServerConfig = selectors.serverConfig(host);
 
-            // Check to see if the file was modified since the last time we saved
+            // Check to see if the file was modified since the last time
+            // we saved.
             // TODO: Determine how we handle what to do
             // Don't bother doing this if the file is new(?)
             return contents.get(serverConfig, filepath, { content: 0 }).pipe(
               // Make sure that the modified time is within some delta
               mergeMap(xhr => {
-                // TODO: What does it mean if we have a failed GET on the content
+                // TODO: What does it mean if we have a failed GET
+                // on the content
                 if (xhr.status !== 200) {
                   throw new Error(xhr.response.toString());
                 }
@@ -403,7 +412,8 @@ export function saveContentEpic(
                 const diskDate = new Date(model.last_modified);
                 const inMemoryDate = content.lastSaved
                   ? new Date(content.lastSaved)
-                  : // FIXME: I'm unsure if we don't have a date if we should default to the disk date
+                  : // FIXME: I'm unsure if we don't have a date if we should
+                    // default to the disk date
                     diskDate;
                 const diffDate = diskDate.getTime() - inMemoryDate.getTime();
 

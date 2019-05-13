@@ -86,6 +86,13 @@ export const Cell = styled.div.attrs<CellProps>(props => ({
     background-color: var(--theme-cell-prompt-bg-focus, hsl(0, 0%, 90%));
     color: var(--theme-cell-prompt-fg-focus, hsl(0, 0%, 51%));
   }
+  @media print{
+    /* make sure all cells look the same in print regarless of focus */
+    & ${Prompt}, &.selected ${Prompt}, &:focus ${Prompt}, &:hover:not(.selected) ${Prompt} {
+      background-color: var(--theme-cell-prompt-bg, white);
+      color: var(--theme-cell-prompt-fg, black);
+    }
+  }
 ` as StyledComponent<"div", any, CellProps, never>;
 
 Cell.displayName = "Cell";
