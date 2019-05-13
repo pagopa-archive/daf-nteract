@@ -84,10 +84,13 @@ export const semioticLineChart = (
         selectedMetrics.some(selectedMetric => selectedMetric === metric.label)
     );
 
+  const canvasRender:boolean = lineData[0].coordinates.length > 250
+
   return {
     lineType: { type: lineType, interpolator: curveMonotoneX },
     lines: lineData,
     xScaleType: xScale,
+    canvasLines: canvasRender,
     renderKey: (
       line: { coordinates: Dx.LineCoordinate[]; label: string; line: string },
       index: number
@@ -127,7 +130,7 @@ export const semioticLineChart = (
     hoverAnnotation: true,
     xAccessor: "x",
     yAccessor: "value",
-    showLinePoints: lineType === "line",
+    showLinePoints: !canvasRender && lineType === "line",
     margin: {
       top: 20,
       right: 200,

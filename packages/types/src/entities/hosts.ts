@@ -2,9 +2,15 @@
  * @module types
  */
 import * as Immutable from "immutable";
+import { AjaxRequest } from "rxjs/ajax";
 
 import { HostId } from "../ids";
 import { HostRef } from "../refs";
+
+export interface Bookstore {
+  version: string;
+  enabled: boolean;
+}
 
 export interface ServerConfig {
   endpoint: string;
@@ -14,15 +20,19 @@ export interface ServerConfig {
 
 export interface EmptyHost {
   type: "empty";
+  bookstoreEnabled?: boolean;
 }
 export type EmptyHostRecord = Immutable.RecordOf<EmptyHost>;
 export const makeEmptyHostRecord = Immutable.Record<EmptyHost>({
-  type: "empty"
+  type: "empty",
+  bookstoreEnabled: false
 });
 
 export interface BaseHostProps {
   id?: HostId | null;
   defaultKernelName: string;
+  bookstoreEnabled?: boolean;
+  showHeaderEditor?: boolean;
 }
 
 export type JupyterHostRecordProps = BaseHostProps & {
@@ -30,7 +40,11 @@ export type JupyterHostRecordProps = BaseHostProps & {
   token?: string | null;
   origin: string;
   basePath: string;
+  bookstoreEnabled: boolean;
+  showHeaderEditor: boolean;
   crossDomain?: boolean | null;
+  ajaxOptions?: Partial<AjaxRequest>;
+  wsProtocol?: string | string[];
 };
 
 export const makeJupyterHostRecord = Immutable.Record<JupyterHostRecordProps>({
@@ -40,7 +54,11 @@ export const makeJupyterHostRecord = Immutable.Record<JupyterHostRecordProps>({
   token: null,
   origin: typeof location === "undefined" ? "" : location.origin,
   basePath: "/",
-  crossDomain: false
+  crossDomain: false,
+  ajaxOptions: undefined,
+  wsProtocol: undefined,
+  bookstoreEnabled: false,
+  showHeaderEditor: false
 });
 
 export type JupyterHostRecord = Immutable.RecordOf<JupyterHostRecordProps>;
@@ -52,7 +70,8 @@ export type LocalHostRecordProps = BaseHostProps & {
 export const makeLocalHostRecord = Immutable.Record<LocalHostRecordProps>({
   type: "local",
   id: null,
-  defaultKernelName: "python"
+  defaultKernelName: "python",
+  bookstoreEnabled: false
 });
 
 export type LocalHostRecord = Immutable.RecordOf<LocalHostRecordProps>;
