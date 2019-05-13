@@ -353,7 +353,7 @@ class DataExplorer extends React.PureComponent<Partial<Props>, State> {
       return;
     }
 
-    const { data, height, onMetadataChange } = this.props;
+    const { data, height } = this.props;
 
     const { Frame, chartGenerator } = semioticSettings[view];
 
@@ -430,11 +430,8 @@ class DataExplorer extends React.PureComponent<Partial<Props>, State> {
 
     // If you pass an onMetadataChange function, then fire it and pass the updated dx settings so someone upstream can update the metadata or otherwise use it
 
-    if (onMetadataChange) {
-      onMetadataChange(
+    this.updateMetadata(
         {
-          ...this.props.metadata,
-          dx: {
             view,
             lineType,
             areaType,
@@ -450,10 +447,7 @@ class DataExplorer extends React.PureComponent<Partial<Props>, State> {
             colors,
             chart
           }
-        },
-        mediaType
-      );
-    }
+        )
 
     this.setState(
       (prevState): any => {
@@ -471,7 +465,51 @@ class DataExplorer extends React.PureComponent<Partial<Props>, State> {
     this.updateChart({ view });
   };
 
+  updateMetadata = (overrideProps:object) => {
+    const { onMetadataChange, metadata } = this.props
+    const { view,
+      lineType,
+      areaType,
+      selectedDimensions,
+      selectedMetrics,
+      pieceType,
+      summaryType,
+      networkType,
+      hierarchyType,
+      trendLine,
+      marginalGraphics,
+      barGrouping,
+      colors,
+      chart } = this.state
+    if (onMetadataChange) {
+      onMetadataChange(
+        {
+          ...metadata,
+          dx: {
+            view,
+            lineType,
+            areaType,
+            selectedDimensions,
+            selectedMetrics,
+            pieceType,
+            summaryType,
+            networkType,
+            hierarchyType,
+            trendLine,
+            marginalGraphics,
+            barGrouping,
+            colors,
+            chart,
+            ...overrideProps
+          }
+        },
+        mediaType
+      );
+    }
+  }
+
   setGrid = () => {
+    this.updateMetadata({ view: "grid" })
     this.setState({ view: "grid" });
   };
 
