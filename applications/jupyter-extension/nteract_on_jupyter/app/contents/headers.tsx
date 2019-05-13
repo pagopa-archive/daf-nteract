@@ -1,6 +1,5 @@
 // import { H4 } from "@blueprintjs/core";
 import * as actions from "@nteract/actions";
-
 import { ContentRef } from "@nteract/core";
 import { ErrorIcon, LoadingIcon, SavingIcon } from "@nteract/iron-icons";
 import * as React from "react";
@@ -54,9 +53,10 @@ export interface State {
 }
 
 class FileHeader extends React.PureComponent<FileHeaderProps, State> {
-  static defaultProps = {
+  static defaultProps: Partial<FileHeaderProps> = {
     children: null
   };
+
   constructor(props: FileHeaderProps) {
     super(props);
 

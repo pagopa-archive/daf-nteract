@@ -3,6 +3,8 @@
  * jupyter extension writes out to the html page.
  */
 
+// Vendor modules
+import { Bookstore } from "@nteract/core";
 import * as React from "react";
 import ReactDOM from "react-dom";
 
@@ -13,6 +15,7 @@ export interface JupyterConfigData {
   baseUrl: string;
   appVersion: string;
   assetUrl: string;
+  bookstore: Bookstore;
 }
 
 const ErrorPage = (props: { error?: Error }) => (

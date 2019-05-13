@@ -34,7 +34,7 @@ export const makeNotebookRecord = Record<NotebookRecordParams>({
 export type ImmutableNotebook = Record<NotebookRecordParams> &
   Readonly<NotebookRecordParams>;
 
-function freezeReviver<T extends JSONType>(_k: string, v: T) {
+function freezeReviver<T extends JSONType>(_k: string, v: T): Readonly<T> {
   return Object.freeze(v);
 }
 
@@ -51,14 +51,15 @@ export function parseNotebook(notebookString: string): Notebook {
   return JSON.parse(notebookString, freezeReviver);
 }
 
-export function fromJS(notebook: Notebook | ImmutableNotebook) {
+export function fromJS(notebook: Notebook | ImmutableNotebook): any {
   if (Record.isRecord(notebook)) {
     if (notebook.has("cellOrder") && notebook.has("cellMap")) {
       return notebook;
     }
-    throw new TypeError(
-      "commutable was passed an Immutable.Record structure that is not a notebook"
-    );
+    throw new TypeError(`
+      commutable was passed an Immutable.Record 
+      structure that is not a notebook
+    `);
   }
 
   if (v4.isNotebookV4(notebook)) {
@@ -82,8 +83,9 @@ export function fromJS(notebook: Notebook | ImmutableNotebook) {
 }
 
 /**
- * Converts an immutable representation of a notebook to a JSON representation of the
- * notebook using the v4 of the nbformat specification.
+ * Converts an immutable representation of a notebook
+ * to a JSON representation of the notebook using the
+ * v4 of the nbformat specification.
  *
  * @param immnb The immutable representation of a notebook.
  *
@@ -109,6 +111,6 @@ export function toJS(immnb: ImmutableNotebook): v4.NotebookV4 {
  *
  * @returns A string containing the notebook data.
  */
-export function stringifyNotebook(notebook: v4.NotebookV4) {
+export function stringifyNotebook(notebook: v4.NotebookV4): string {
   return JSON.stringify(notebook, null, 2);
 }

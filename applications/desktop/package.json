@@ -1,6 +1,6 @@
 {
   "name": "nteract",
-  "version": "1.0.2",
+  "version": "0.14.2",
   "description": "Interactive literate coding notebook!",
   "main": "./lib/webpacked-main.js",
   "repository": "nteract/nteract",
@@ -83,11 +83,11 @@
         "AppImage",
         "tar.gz"
       ],
+      "executableName": "nteract",
       "desktop": {
         "Comment": "Interactive literate coding notebook",
-        "Exec": "/opt/nteract/nteract %U",
         "Icon": "nteract",
-        "MimeType": "application/x-ipynb+json",
+        "MimeType": "application/x-ipynb+json;",
         "Name": "nteract",
         "Path": "/opt/nteract/",
         "StartupNotify": "true",
@@ -120,6 +120,6 @@
     "nteract-assets": "^4.0.0"
   },
   "devDependencies": {
-    "electron": "3.1.7"
+    "electron": "3.1.9"
   }
 }

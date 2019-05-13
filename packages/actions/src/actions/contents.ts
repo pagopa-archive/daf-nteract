@@ -1,11 +1,19 @@
 /**
  * @module actions
  */
+// Vendor modules
 import { ContentRef, KernelRef, KernelspecInfo } from "@nteract/types";
+import { contents } from "rx-jupyter";
 
+// Local modules
 import * as actionTypes from "../actionTypes";
 
-import { contents } from "rx-jupyter";
+export const toggleHeaderEditor = (payload: {
+  contentRef: ContentRef;
+}): actionTypes.ToggleHeaderEditor => ({
+  type: actionTypes.TOGGLE_HEADER_EDITOR,
+  payload
+});
 
 export const changeContentName = (payload: {
   filepath: string;

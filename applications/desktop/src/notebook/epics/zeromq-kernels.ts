@@ -195,9 +195,11 @@ export const launchKernelByNameEpic = (
             return actions.launchKernelFailed({
               contentRef: action.payload.contentRef,
               error: new Error(
-                `Kernel named ${
+                `A kernel named ${
                   action.payload.kernelSpecName
-                } does not appear to be available.`
+                } does not appear to be available. Try installing the ${
+                  action.payload.kernelSpecName
+                } kernelspec or selecting a kernel from the runtime menu.`
               ),
               kernelRef: action.payload.kernelRef
             });

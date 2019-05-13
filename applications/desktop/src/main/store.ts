@@ -1,6 +1,5 @@
 import { middlewares as coreMiddlewares } from "@nteract/core";
 import { applyMiddleware, compose, createStore, Middleware } from "redux";
-import { electronEnhancer } from "redux-electron-store";
 
 import reducers from "./reducers";
 
@@ -12,11 +11,5 @@ if (process.env.DEBUG === "true") {
 }
 
 export default function configureStore() {
-  return createStore(
-    reducers,
-    compose(
-      applyMiddleware(...middlewares),
-      electronEnhancer()
-    )
-  );
+  return createStore(reducers, compose(applyMiddleware(...middlewares)));
 }
