@@ -135,7 +135,7 @@ data <- GET("https://api.daf.teamdigitale.it/dataset-manager/v1/dataset/${encode
 content <- content(data)
 ${metacatalog.dcatapit.name} <- read.csv(text=content, header=TRUE, sep=",")
 ${metacatalog.dcatapit.name}`
-      }else if(kernelName == 'julia'){
+      }else if(kernelName == 'julia-1.1'){
         return `using Pkg
 Pkg.add("HTTP");
 Pkg.add("DataFrames");
