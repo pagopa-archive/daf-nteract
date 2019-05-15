@@ -6,7 +6,6 @@ import {
   catchError,
   concatMap,
   tap,
-  skipWhile
 } from "rxjs/operators";
 import { ajax } from "rxjs/ajax";
 import { ofType } from "redux-observable";
