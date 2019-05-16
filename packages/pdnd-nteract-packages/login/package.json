@@ -1,6 +1,6 @@
 {
   "name": "@pdnd-nteract-packages/login",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "main": "pdndLogin.ts",
   "author": "and0111",
   "license": "BSD-3-Clause",
