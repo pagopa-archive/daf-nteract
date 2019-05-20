@@ -5,7 +5,11 @@ import {
   take,
   catchError,
   concatMap,
+<<<<<<< HEAD
   tap,
+=======
+  tap
+>>>>>>> feature/configurable-api-uris
 } from "rxjs/operators";
 import { ajax } from "rxjs/ajax";
 import { ofType } from "redux-observable";
