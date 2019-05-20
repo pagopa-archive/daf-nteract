@@ -125,7 +125,8 @@ val resp = Http("https://api.daf.teamdigitale.it/dataset-manager/v1/dataset/${en
 val ${metacatalog.dcatapit.name}  = ujson.read(resp.body).asInstanceOf[ujson.Js.Arr]
       `
       } else if(kernelName == 'ir'){
-        return `library(httr)
+        return `options(repr.matrix.max.rows = 10)
+library(httr)
 #install.packages("ggplot2")
 library(ggplot2)
 library(IRdisplay)
