@@ -12,6 +12,9 @@ import { tokensSelector } from "../../login/duck/loginDuck";
 
 //TODO check if is better another way
 import { selectors } from "@nteract/core";
+import { apiUriConfig } from "../../ducks";
+
+const { BASE_API_URI } = apiUriConfig;
 
 // actionTypes
 const appName = "nteract-pdnd";
@@ -91,9 +94,9 @@ const datasetMetaSelector = createSelector(
 
 const selectedDatasetSelectors = { datasetSelector, datasetMetaSelector };
 
-// operations
+// operations (TODO: needs refactor)
 const makeDatasetSnippet = ({ datasetURI, basicToken, bearerToken }): string =>
-  `url = "https://api.daf.teamdigitale.it/dataset-manager/v1/dataset/${encodeURIComponent(
+  `url = "${BASE_API_URI}dataset-manager/v1/dataset/${encodeURIComponent(
     datasetURI
   )}?format=json"
 payload = ""
@@ -103,40 +106,49 @@ response = requests.request("GET", url, data=payload, headers=headers)
 data = pd.read_json(StringIO(response.text))
 data`;
 
-const makeDatasetSnippetByKernel = 
-   ({ datasetURI, basicToken, bearerToken, kernelName, metacatalog }): string => {
-      if(kernelName == 'python3') {
-        const dataVar = metacatalog.dcatapit.name // .substring(0, 20);
-       return `url = "https://api.daf.teamdigitale.it/dataset-manager/v1/dataset/${encodeURIComponent(
-          datasetURI
-        )}?format=json" 
+const makeDatasetSnippetByKernel = ({
+  datasetURI,
+  basicToken,
+  bearerToken,
+  kernelName,
+  metacatalog
+}): string => {
+  if (kernelName == "python3") {
+    const dataVar = metacatalog.dcatapit.name; // .substring(0, 20);
+    return `url = "${BASE_API_URI}dataset-manager/v1/dataset/${encodeURIComponent(
+      datasetURI
+    )}?format=json" 
 payload = ""
 headers = {'authorization': 'Bearer YOU_MUST_BE_LOGGEDIN'}
 response = requests.request("GET", url, data=payload, headers=headers)
 ${dataVar} = pd.read_json(StringIO(response.text))
 ${dataVar}`;
-      } else if(kernelName == 'scala'){
-       return `import ammonite.ops._, scalaj.http._
-val resp = Http("https://api.daf.teamdigitale.it/dataset-manager/v1/dataset/${encodeURIComponent(
-        datasetURI)}?format=json")
+  } else if (kernelName == "scala") {
+    return `import ammonite.ops._, scalaj.http._
+val resp = Http("${BASE_API_URI}dataset-manager/v1/dataset/${encodeURIComponent(
+      datasetURI
+    )}?format=json")
 .headers(Seq("Authorization" -> ("Bearer YOU_MUST_BE_LOGGEDIN"),
 "content-Type" -> "application/json"))
 .asString
-val ${metacatalog.dcatapit.name}  = ujson.read(resp.body).asInstanceOf[ujson.Js.Arr]
-      `
-      } else if(kernelName == 'ir'){
-        return `library(httr)
+val ${
+      metacatalog.dcatapit.name
+    }  = ujson.read(resp.body).asInstanceOf[ujson.Js.Arr]
+      `;
+  } else if (kernelName == "ir") {
+    return `library(httr)
 #install.packages("ggplot2")
 library(ggplot2)
 library(IRdisplay)
-data <- GET("https://api.daf.teamdigitale.it/dataset-manager/v1/dataset/${encodeURIComponent(
-  datasetURI)}?format=csv", 
+data <- GET("${BASE_API_URI}dataset-manager/v1/dataset/${encodeURIComponent(
+      datasetURI
+    )}?format=csv", 
   add_headers(Authorization = "Bearer YOU_MUST_BE_LOGGEDIN"))
 content <- content(data)
 ${metacatalog.dcatapit.name} <- read.csv(text=content, header=TRUE, sep=",")
-${metacatalog.dcatapit.name}`
-      }else if(kernelName == 'julia'){
-        return `using Pkg
+${metacatalog.dcatapit.name}`;
+  } else if (kernelName == "julia") {
+    return `using Pkg
 Pkg.add("HTTP");
 Pkg.add("DataFrames");
 Pkg.add("CSV");
@@ -145,36 +157,39 @@ using Plots;
 using HTTP;
 using CSV;
 res = HTTP.request("GET",
-  "https://api.daf.teamdigitale.it/dataset-manager/v1/dataset/${encodeURIComponent(
-    datasetURI)}?format=csv",
+  "${BASE_API_URI}dataset-manager/v1/dataset/${encodeURIComponent(
+      datasetURI
+    )}?format=csv",
   [("Authorization", "Bearer YOU_MUST_BE_LOGGEDIN")]);
 ${metacatalog.dcatapit.name} = CSV.read(IOBuffer(res.body));
 ${metacatalog.dcatapit.name}
-`        
-      } else if (kernelName == 'pysparkkernel') {
-        const physicalUrl = metacatalog.operational.physical_uri
-        const name = metacatalog.dcatapit.name
-        if(metacatalog.operational.ext_opendata === null || 
-          metacatalog.operational.ext_opendata === undefined){
-          return `path_dataset = "${physicalUrl}"
+`;
+  } else if (kernelName == "pysparkkernel") {
+    const physicalUrl = metacatalog.operational.physical_uri;
+    const name = metacatalog.dcatapit.name;
+    if (
+      metacatalog.operational.ext_opendata === null ||
+      metacatalog.operational.ext_opendata === undefined
+    ) {
+      return `path_dataset = "${physicalUrl}"
 ${metacatalog.dcatapit.name} = (spark.read.format("parquet") 
 .option("inferSchema", "true") 
 .load(path_dataset)
 )
-${metacatalog.dcatapit.name}`
-        } else {
-        return `path_dataset = "${physicalUrl}/${name}.csv"
+${metacatalog.dcatapit.name}`;
+    } else {
+      return `path_dataset = "${physicalUrl}/${name}.csv"
 ${metacatalog.dcatapit.name} = (spark.read.format("csv") 
 .option("inferSchema", "true") 
 .option("header", "true")
 .load(path_dataset)
 )
-${metacatalog.dcatapit.name}`
-        }
-      }else {
-        return "kernel not supported yet"
-      }
+${metacatalog.dcatapit.name}`;
     }
+  } else {
+    return "kernel not supported yet";
+  }
+};
 /// epics
 const datasetEpic = (action$, state$) =>
   action$.pipe(
@@ -189,7 +204,7 @@ const datasetEpic = (action$, state$) =>
         const state = state$.value;
         const { contentRef, id } = focusedCell.payload;
         const { basicToken, bearerToken } = { ...tokensSelector(state) };
-        
+
         const model = selectors.model(state, { contentRef });
         // Is not correct when switch kernel
         //const kernelName = selectors.notebook.displayName(model)
@@ -215,28 +230,29 @@ const datasetEpic = (action$, state$) =>
     )
   );
 
-const requestDatasetEpic = action$ => {
-  const endpoint =
-    "https://api.daf.teamdigitale.it/catalog-manager/v1/public/catalog-ds/getbyname/";
-
-  return action$.pipe(
+const requestDatasetEpic = action$ =>
+  action$.pipe(
     ofType(DATASET_REQUEST),
     switchMap(({ payload }) =>
       ajax
-        .get(endpoint + payload, {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          Authorization: "Basic " // + basicSecret
-        })
+        .get(
+          BASE_API_URI +
+            "catalog-manager/v1/public/catalog-ds/getbyname/" +
+            payload,
+          {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            Authorization: "Basic " // + basicSecret
+          }
+        )
         .pipe(
-        //  map(({ response }) => response.operational.logical_uri),
+          //  map(({ response }) => response.operational.logical_uri),
           map(({ response }) => response),
           map(mappedResponse => fulfillDataset(mappedResponse)),
           catchError(error => of(rejectDataset(error)))
         )
     )
   );
-};
 
 const selectedDatasetOperations = {
   datasetEpic,
