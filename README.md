@@ -24,6 +24,18 @@ There are three ways to get you a copy of the project up and running on your loc
 ### Docker
 
 Docker MUST be installed on your local machine
+<<<<<<< HEAD
+=======
+
+From [dockerhub](https://hub.docker.com/r/teamdigitale/daf-nteract)
+
+```
+docker pull teamdigitale/daf-nteract
+docker run -p 8888:8888 daf-nteract
+```
+
+or from your local build
+>>>>>>> 7e7f90fec05fadc09b29e774cc740a2cd7df0207
 
 ```
 git clone git@github.com:teamdigitale/nteract.git
