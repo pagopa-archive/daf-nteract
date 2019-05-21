@@ -93,7 +93,7 @@ const saveDatasetMetaSelector = createSelector(
 
 const isEditorOrAdmin = createSelector(
   [loggedUserDataSelector],
-  ({ roles = []}) => ({
+  ({ roles }) => ({
     isEditorOrAdmin:
       roles.includes("daf_edt_daf_data") || roles.includes("daf_adm_daf_data")
   })

@@ -1,30 +1,25 @@
 /**
  * @module actions
  */
-
-// Vendor modules
 import {
   CellId,
   JSONObject,
   MediaBundle,
   OnDiskOutput
 } from "@nteract/commutable";
+
+import * as actionTypes from "../actionTypes";
+
 import {
   ContentRef,
-  HeaderDataProps,
-  HostId,
   HostRef,
   KernelRef,
   LanguageInfoMetadata,
   PayloadMessage
 } from "@nteract/types";
 
-// Local modules
-import * as actionTypes from "../actionTypes";
-
 export * from "./cells";
 export * from "./contents";
-export * from "./hosts";
 export * from "./kernels";
 export * from "./kernelspecs";
 
@@ -40,20 +35,15 @@ export const closeModal = () => ({
 export const addHost = (payload: {
   hostRef: HostRef;
   host: {
-    id?: HostId | null;
+    id?: string;
     type: "jupyter" | "local";
     defaultKernelName: string;
-    token?: string | null;
+    token?: string;
     serverUrl?: string;
-    crossDomain?: boolean | null;
+    crossDomain?: boolean;
   };
 }) => ({
   type: actionTypes.ADD_HOST,
-  payload
-});
-
-export const removeHost = (payload: { hostRef: HostRef }) => ({
-  type: actionTypes.REMOVE_HOST,
   payload
 });
 
@@ -64,15 +54,6 @@ export function overwriteMetadataField(payload: {
 }): actionTypes.OverwriteMetadataField {
   return {
     type: actionTypes.OVERWRITE_METADATA_FIELD,
-    payload
-  };
-}
-
-export function overwriteMetadataFields(
-  payload: Partial<HeaderDataProps> & Partial<{ contentRef: ContentRef }>
-): actionTypes.OverwriteMetadataFields {
-  return {
-    type: actionTypes.OVERWRITE_METADATA_FIELDS,
     payload
   };
 }
@@ -143,20 +124,14 @@ export function toggleOutputExpansion(payload: {
 }
 
 export const loadConfig = () => ({ type: actionTypes.LOAD_CONFIG });
-
 export const saveConfig = () => ({ type: actionTypes.SAVE_CONFIG });
-
 export const doneSavingConfig = () => ({
   type: actionTypes.DONE_SAVING_CONFIG
 });
 
-interface ConfigPayload {
-  config: { [key: string]: string; theme: string };
-}
-
-export const configLoaded = (
-  payload: ConfigPayload
-): actionTypes.MergeConfigAction => ({
+export const configLoaded = (payload: {
+  config: object;
+}): actionTypes.MergeConfigAction => ({
   payload,
   type: actionTypes.MERGE_CONFIG
 });

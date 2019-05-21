@@ -1,12 +1,9 @@
+// Due to the on-disk format needing to be written out in an explicit order, we disable ordering for this file
+// tslint:disable:object-literal-sort-keys
 /**
  * @module commutable
  */
-
-// Due to the on-disk format needing to be written out in an explicit order,
-// we disable ordering for this file
-// tslint:disable:object-literal-sort-keys.
-
-/**
+/*
  * Functions in this module are provided for converting from Jupyter Notebook
  * Format v4 to nteract's in-memory format, affectionately referred to as
  * commutable.
@@ -19,16 +16,27 @@
  *
  */
 
-// Vendor modules
 import {
   fromJS as immutableFromJS,
   List as ImmutableList,
   Map as ImmutableMap,
-  Record,
   Set as ImmutableSet
 } from "immutable";
 
-// Local modules
+import { ImmutableNotebook, makeNotebookRecord } from "./notebook";
+
+import {
+  CellId,
+  createFrozenMediaBundle,
+  createOnDiskMediaBundle,
+  demultiline,
+  ExecutionCount,
+  JSONObject,
+  MultiLineString,
+  OnDiskMediaBundle,
+  remultiline
+} from "./primitives";
+
 import {
   ImmutableCell,
   ImmutableCodeCell,
@@ -38,25 +46,13 @@ import {
   makeMarkdownCell,
   makeRawCell
 } from "./cells";
-import {
-  ImmutableNotebook,
-  makeNotebookRecord,
-  NotebookRecordParams
-} from "./notebook";
+
 import {
   createImmutableOutput,
   ImmutableOutput,
   OnDiskOutput
 } from "./outputs";
-import {
-  CellId,
-  createOnDiskMediaBundle,
-  demultiline,
-  ExecutionCount,
-  JSONObject,
-  MultiLineString,
-  remultiline
-} from "./primitives";
+
 import { appendCell, CellStructure } from "./structures";
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -99,7 +95,7 @@ export interface NotebookV4 {
  *
  * @returns ImmutableMetadata An immutable representation of the metadata.
  */
-function createImmutableMetadata(metadata: JSONObject): ImmutableMap<any, any> {
+function createImmutableMetadata(metadata: JSONObject) {
   return ImmutableMap(metadata).map((v, k: string) => {
     if (k !== "tags") {
       return v;
@@ -163,9 +159,7 @@ function createImmutableCell(cell: Cell): ImmutableCell {
   }
 }
 
-export function fromJS(
-  notebook: NotebookV4
-): Record<NotebookRecordParams> & Readonly<NotebookRecordParams> {
+export function fromJS(notebook: NotebookV4) {
   if (!isNotebookV4(notebook)) {
     notebook = notebook as any;
     throw new TypeError(
@@ -195,7 +189,7 @@ export function fromJS(
   });
 }
 
-function metadataToJS(immMetadata: ImmutableMap<string, any>): JSONObject {
+function metadataToJS(immMetadata: ImmutableMap<string, any>) {
   return immMetadata.toJS() as JSONObject;
 }
 

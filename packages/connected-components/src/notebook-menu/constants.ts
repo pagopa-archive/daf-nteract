@@ -22,11 +22,9 @@ export const MENU_ITEM_ACTIONS = {
   PASTE_CELL: "paste-cell",
   SET_THEME_DARK: "set-theme-dark",
   SET_THEME_LIGHT: "set-theme-light",
-  TOGGLE_EDITOR: "toggle-editor",
   OPEN_ABOUT: "open-about",
   KILL_KERNEL: "kill-kernel",
-  INTERRUPT_KERNEL: "interrupt-kernel",
-  PUBLISH_TO_BOOKSTORE: "publish-to-bookstore"
+  INTERRUPT_KERNEL: "interrupt-kernel"
 };
 
 // These are top-level-menu or sub-menu keys in case we need interim look-ups

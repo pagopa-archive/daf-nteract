@@ -6,6 +6,11 @@ import { loadFullMenu } from "./menu";
 
 let launchIpynb: (path: string) => void;
 
+export function getPath(url: string) {
+  const nUrl = url.substring(url.indexOf("static"));
+  return path.join(__dirname, "..", "..", nUrl.replace("static/", ""));
+}
+
 // Given a URL from any browser window, determine whether to launch
 // a notebook or open an external URL
 export function deferURL(event: Event, url: string) {
@@ -13,7 +18,7 @@ export function deferURL(event: Event, url: string) {
   if (!url.startsWith("file:")) {
     shell.openExternal(url);
   } else if (url.endsWith(".ipynb")) {
-    launchIpynb(url);
+    launchIpynb(getPath(url));
   }
 }
 

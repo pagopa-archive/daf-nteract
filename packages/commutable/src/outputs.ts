@@ -109,7 +109,6 @@ export interface OnDiskExecuteResult {
   execution_count: ExecutionCount;
   data: OnDiskMediaBundle;
   metadata: JSONObject;
-  transient?: JSONObject;
 }
 
 export interface OnDiskDisplayData {

@@ -1,10 +1,6 @@
-// just a string copy/paste for now
-/*  'react-table@6.8.6' vendorized css */
-/* 'react-table/react-table.css' */
-// this will be merged with other styles and combined into one styled-component
+import { createGlobalStyle } from "styled-components";
 
-export default `
-  
+export default createGlobalStyle`
   .ReactTable {
     position: relative;
     display: -webkit-box;
@@ -267,6 +263,15 @@ export default `
   .ReactTable .rt-tfoot .rt-td:last-child {
     border-right: 0;
   }
+  .ReactTable .rt-thead.-header .rt-th {
+    background: var(--cm-background);
+  }
+  .ReactTable.-striped .rt-tr.-odd > div {
+    background: var(--theme-app-bg);
+  }
+  .ReactTable.-striped .rt-tr.-even > div {
+    background: var(--cm-background);
+  }
   .ReactTable.-highlight .rt-tbody .rt-tr:not(.-padRow):hover {
     background: rgba(0, 0, 0, 0.05);
   }
@@ -308,6 +313,8 @@ export default `
     border-radius: 3px;
     padding: 6px;
     font-size: 1em;
+    color: var(--theme-app-fg);
+    background: var(--cm-background);
     transition: all 0.1s ease;
     cursor: pointer;
     outline: none;

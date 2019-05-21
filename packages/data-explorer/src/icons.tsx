@@ -4,8 +4,8 @@ import styled from "styled-components";
 
 const IconPath = styled.path`
   & {
-    fill: var(--theme-app-bg, #ccc);
-    stroke: var(--theme-app-fg, #2b2b2b);
+    fill: var(--theme-app-bg);
+    stroke: var(--theme-app-fg);
   }
 `;
 

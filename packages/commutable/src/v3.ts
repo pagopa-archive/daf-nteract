@@ -4,8 +4,7 @@
 import {
   fromJS as immutableFromJS,
   List as ImmutableList,
-  Map as ImmutableMap,
-  RecordOf
+  Map as ImmutableMap
 } from "immutable";
 
 import {
@@ -20,16 +19,13 @@ import {
 import { makeNotebookRecord } from "./notebook";
 
 import {
-  CodeCellParams,
   ImmutableCell,
   ImmutableCodeCell,
   ImmutableMarkdownCell,
   ImmutableRawCell,
   makeCodeCell,
   makeMarkdownCell,
-  makeRawCell,
-  MarkdownCellParams,
-  RawCellParams
+  makeRawCell
 } from "./cells";
 
 import {
@@ -37,7 +33,8 @@ import {
   makeDisplayData,
   makeErrorOutput,
   makeExecuteResult,
-  makeStreamOutput
+  makeStreamOutput,
+  OnDiskErrorOutput
 } from "./outputs";
 
 import { appendCell, CellStructure } from "./structures";
@@ -205,7 +202,7 @@ function createImmutableHeadingCell(cell: HeadingCell): ImmutableMarkdownCell {
   });
 }
 
-function createImmutableCell(cell: Cell): any {
+function createImmutableCell(cell: Cell) {
   switch (cell.cell_type) {
     case "markdown":
       return createImmutableMarkdownCell(cell);
@@ -220,7 +217,7 @@ function createImmutableCell(cell: Cell): any {
   }
 }
 
-export function fromJS(notebook: NotebookV3): any {
+export function fromJS(notebook: NotebookV3) {
   if (!isNotebookV3(notebook)) {
     notebook = notebook as any;
     throw new TypeError(

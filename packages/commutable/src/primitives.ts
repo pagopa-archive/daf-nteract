@@ -119,7 +119,7 @@ export function remultiline(s: string | string[]): string[] {
   return s.split(/(.*?(?:\r\n|\n))/g).filter(x => x !== "");
 }
 
-function isJSONKey(key: string): boolean {
+function isJSONKey(key: string) {
   return /^application\/(.*\+)json$/.test(key);
 }
 

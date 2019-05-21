@@ -31,9 +31,7 @@ export const list = (serverConfig: ServerConfig) =>
  */
 export const get = (serverConfig: ServerConfig, id: string) =>
   ajax(
-    createAJAXSettings(serverConfig, `/api/kernels/${id}`, {
-      cache: false
-    })
+    createAJAXSettings(serverConfig, `/api/kernels/${id}`, { cache: false })
   );
 
 /**
@@ -148,10 +146,9 @@ export const connect = (
   kernelID: string,
   sessionID?: string
 ): Subject<any> => {
-  const wsSubject = webSocket<JupyterMessage>({
-    url: formWebSocketURL(serverConfig, kernelID, sessionID),
-    protocol: serverConfig.wsProtocol
-  });
+  const wsSubject = webSocket<JupyterMessage>(
+    formWebSocketURL(serverConfig, kernelID, sessionID)
+  );
 
   wsSubject.pipe(
     retryWhen(error$ => {

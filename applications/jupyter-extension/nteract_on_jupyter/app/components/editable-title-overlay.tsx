@@ -33,17 +33,17 @@ export class EditableTitleOverlay extends React.PureComponent<
   // Needs to track the input value because in order to handle save
   // when the save button is clicked, we need to know what the last
   // entered value is.
-  state: IEditableTitleOverlayState = {
+  state = {
     value: this.props.defaultValue || ""
   };
 
-  handleChange = (value: string): void => this.setState({ value });
+  handleChange = (value: string) => this.setState({ value });
 
-  handleClose = (): void => this.props.onCancel(true);
+  handleClose = () => this.props.onCancel(true);
 
-  handleSave = (): void => this.props.onSave(this.state.value);
+  handleSave = () => this.props.onSave(this.state.value);
 
-  render(): JSX.Element {
+  render() {
     return (
       <Overlay
         canEscapeKeyClose

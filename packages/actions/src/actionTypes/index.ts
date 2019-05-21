@@ -1,36 +1,24 @@
 /**
  * @module actions
  */
-
-// Vendor modules
 import {
   CellId,
+  ImmutableJSONType,
   JSONObject,
   MediaBundle,
   OnDiskOutput
 } from "@nteract/commutable";
-import {
-  ContentRef,
-  HeaderDataProps,
-  HostRef,
-  KernelRef,
-  PayloadMessage
-} from "@nteract/types";
+
+import { ContentRef, HostRef, KernelRef, PayloadMessage } from "@nteract/types";
 import { HostRecord } from "@nteract/types";
 import { LanguageInfoMetadata } from "@nteract/types";
+
 import { System as NotificationSystem } from "react-notification-system";
 
 export * from "./cells";
 export * from "./contents";
-export * from "./hosts";
 export * from "./kernels";
 export * from "./kernelspecs";
-
-export const OVERWRITE_METADATA_FIELDS = "CORE/OVERWRITE_METADATA_FIELDS";
-export interface OverwriteMetadataFields {
-  type: "CORE/OVERWRITE_METADATA_FIELDS";
-  payload: Partial<HeaderDataProps> & Partial<{ contentRef: ContentRef }>;
-}
 
 export interface ErrorAction<T extends string> {
   type: T;
@@ -55,18 +43,6 @@ export const ADD_HOST = "CORE/ADD_HOST";
 export interface AddHost {
   type: "CORE/ADD_HOST";
   payload: { hostRef: HostRef; host: HostRecord };
-}
-
-export const REMOVE_HOST = "CORE/REMOVE_HOST";
-export interface RemoveHost {
-  type: "CORE/REMOVE_HOST";
-  payload: { hostRef: HostRef };
-}
-
-export const SET_APP_HOST = "SET_APP_HOST";
-export interface SetAppHostAction {
-  type: "SET_APP_HOST";
-  payload: HostRecord;
 }
 
 export const CHANGE_FILENAME = "CHANGE_FILENAME";

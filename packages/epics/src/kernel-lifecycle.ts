@@ -90,33 +90,18 @@ export function acquireKernelInfo(
         nbconvertExporter: l.nbconvert_exporter
       };
 
-      let result;
-      if (!c.protocol_version.startsWith("5")) {
-        result = [
-          actions.launchKernelFailed({
-            kernelRef,
-            contentRef,
-            error: new Error(
-              "The kernel that you are attempting to launch does not support the latest version (v5) of the messaging protocol."
-            )
-          })
-        ];
-      } else {
-        result = [
-          // The original action we were using
-          actions.setLanguageInfo({
-            langInfo: msg.content.language_info,
-            kernelRef,
-            contentRef
-          }),
-          actions.setKernelInfo({
-            kernelRef,
-            info
-          })
-        ];
-      }
-
-      return of(...result);
+      return of(
+        // The original action we were using
+        actions.setLanguageInfo({
+          langInfo: msg.content.language_info,
+          kernelRef,
+          contentRef
+        }),
+        actions.setKernelInfo({
+          kernelRef,
+          info
+        })
+      );
     })
   );
 

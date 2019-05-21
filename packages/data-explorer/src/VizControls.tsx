@@ -27,7 +27,6 @@ const ControlWrapper = styled.div`
 
 const Wrapper = styled.div`
   display: flex;
-  flex-wrap: wrap;
   justify-content: left;
   margin-bottom: 30px;
   ${commonCSS}

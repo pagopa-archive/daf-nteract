@@ -13,7 +13,6 @@ import {
   executeCellEpic,
   updateDisplayEpic
 } from "./execute";
-import { publishToBookstore, publishToBookstoreAfterSave } from "./hosts";
 import {
   acquireKernelInfoEpic,
   launchKernelWhenNotebookSetEpic,
@@ -48,9 +47,7 @@ const allEpics = [
   fetchContentEpic,
   updateContentEpic,
   saveContentEpic,
-  autoSaveCurrentContentEpic,
-  publishToBookstore,
-  publishToBookstoreAfterSave
+  autoSaveCurrentContentEpic
 ];
 
 export {
@@ -71,7 +68,5 @@ export {
   fetchContentEpic,
   updateContentEpic,
   saveContentEpic,
-  autoSaveCurrentContentEpic,
-  publishToBookstore,
-  publishToBookstoreAfterSave
+  autoSaveCurrentContentEpic
 };

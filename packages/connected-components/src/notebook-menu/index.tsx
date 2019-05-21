@@ -1,24 +1,22 @@
-// Vendor modules
 import { CellType } from "@nteract/commutable";
-import { actions } from "@nteract/core";
+import { actions, selectors } from "@nteract/core";
 import {
   AppState,
   ContentRef,
-  HostRecord,
   KernelRef,
   KernelspecsByRefRecord,
-  KernelspecsByRefRecordProps,
-  KernelspecsRef
+  KernelspecsRef,
+  KernelspecsByRefRecordProps
 } from "@nteract/types";
-import { RecordOf } from "immutable";
 import Menu, { Divider, MenuItem, SubMenu } from "rc-menu";
 import * as React from "react";
 import { connect } from "react-redux";
 import styled from "styled-components";
 
-// Local modules
 import { MODAL_TYPES } from "../modal-controller";
+
 import { MENU_ITEM_ACTIONS, MENUS } from "./constants";
+import { RecordOf } from "immutable";
 
 // To allow actions that can take dynamic arguments (like selecting a kernel
 // based on the host's kernelspecs), we have some simple utility functions to
@@ -27,29 +25,17 @@ const createActionKey = (action: string, ...args: any[]) =>
   [action, ...args].join(":");
 const parseActionKey = (key: string) => key.split(":");
 
-// Styled Components
 const StickyMenu = styled(Menu)`
   position: sticky;
   top: 0;
   z-index: 10000;
 `;
 
-const Link = styled.a`
-  text-decoration: none;
-  color: currentColor;
-`;
-
 interface Props {
-  /**
-   * Whether or not `Bookstore` is enabled
-   * https://github.com/nteract/bookstore#bookstore-books
-   */
-  bookstoreEnabled?: boolean;
   persistAfterClick?: boolean;
   defaultOpenKeys?: string[];
   openKeys?: string[];
   currentKernelRef?: KernelRef | null;
-  toggleNotebookHeaderEditor?: (payload: { contentRef: string }) => void;
   saveNotebook?: (payload: { contentRef: string }) => void;
   downloadNotebook?: (payload: { contentRef: string }) => void;
   executeCell?: (payload: { id: string; contentRef: string }) => void;
@@ -103,18 +89,13 @@ interface Props {
   currentContentRef: ContentRef;
   currentKernelspecsRef?: KernelspecsRef | null;
   currentKernelspecs?: KernelspecsByRefRecord | null;
-  /**
-   * Function required to publish notebooks to `Bookstore`.
-   * https://github.com/nteract/bookstore#bookstore-books
-   */
-  onPublish?: (payload: { contentRef: ContentRef }) => void;
 }
 
 interface State {
   openKeys?: string[];
 }
 
-class PureNotebookMenu extends React.PureComponent<Props, State> {
+class PureNotebookMenu extends React.Component<Props, State> {
   state: State = {};
   handleClick = ({ key }: { key: string }) => {
     const {
@@ -130,7 +111,6 @@ class PureNotebookMenu extends React.PureComponent<Props, State> {
       executeAllCellsBelow,
       clearAllOutputs,
       unhideAll,
-      onPublish,
       openAboutModal,
       pasteCell,
       setTheme,
@@ -140,16 +120,10 @@ class PureNotebookMenu extends React.PureComponent<Props, State> {
       restartKernelAndRunAllOutputs,
       killKernel,
       interruptKernel,
-      currentContentRef,
-      toggleNotebookHeaderEditor
+      currentContentRef
     } = this.props;
     const [action, ...args] = parseActionKey(key);
     switch (action) {
-      case MENU_ITEM_ACTIONS.TOGGLE_EDITOR:
-        if (toggleNotebookHeaderEditor) {
-          toggleNotebookHeaderEditor({ contentRef: currentContentRef });
-        }
-        break;
       case MENU_ITEM_ACTIONS.SAVE_NOTEBOOK:
         if (saveNotebook) {
           saveNotebook({ contentRef: currentContentRef });
@@ -292,11 +266,6 @@ class PureNotebookMenu extends React.PureComponent<Props, State> {
           });
         }
         break;
-      case MENU_ITEM_ACTIONS.PUBLISH_TO_BOOKSTORE:
-        if (onPublish) {
-          onPublish({ contentRef: currentContentRef });
-        }
-        break;
       default:
         console.log(`unhandled action: ${action}`);
     }
@@ -305,22 +274,18 @@ class PureNotebookMenu extends React.PureComponent<Props, State> {
       this.setState({ openKeys: [] });
     }
   };
-
   handleOpenChange = (openKeys: string[]) => {
     if (!this.props.persistAfterClick) {
       this.setState({ openKeys });
     }
   };
-
-  componentWillMount(): void {
+  componentWillMount() {
     // This ensures that we can still initially set defaultOpenKeys when
     // persistAfterClick is true.
     this.setState({ openKeys: this.props.defaultOpenKeys });
   }
-
-  render(): JSX.Element {
+  render() {
     const {
-      bookstoreEnabled,
       currentKernelspecs,
       defaultOpenKeys,
       persistAfterClick
@@ -333,19 +298,24 @@ class PureNotebookMenu extends React.PureComponent<Props, State> {
       defaultOpenKeys,
       selectable: false
     };
-
     if (!persistAfterClick) {
       menuProps.openKeys = openKeys;
     }
-
     return (
       <React.Fragment>
         <StickyMenu {...menuProps}>
           <SubMenu key={MENUS.FILE} title="File">
             <MenuItem>
-              <Link href="/nteract/edit" target="_blank">
+              <a
+                href="/nteract/edit"
+                style={{
+                  textDecoration: "none",
+                  color: "currentColor"
+                }}
+                target="_blank"
+              >
                 Open...
-              </Link>
+              </a>
             </MenuItem>
             <MenuItem key={createActionKey(MENU_ITEM_ACTIONS.SAVE_NOTEBOOK)}>
               Save
@@ -355,13 +325,6 @@ class PureNotebookMenu extends React.PureComponent<Props, State> {
             >
               Download (.ipynb)
             </MenuItem>
-            {bookstoreEnabled ? (
-              <MenuItem
-                key={createActionKey(MENU_ITEM_ACTIONS.PUBLISH_TO_BOOKSTORE)}
-              >
-                Publish
-              </MenuItem>
-            ) : null}
           </SubMenu>
           <SubMenu key={MENUS.EDIT} title="Edit">
             <MenuItem key={createActionKey(MENU_ITEM_ACTIONS.CUT_CELL)}>
@@ -388,9 +351,6 @@ class PureNotebookMenu extends React.PureComponent<Props, State> {
             </SubMenu>
           </SubMenu>
           <SubMenu key={MENUS.VIEW} title="View">
-            <MenuItem key={createActionKey(MENU_ITEM_ACTIONS.TOGGLE_EDITOR)}>
-              Notebook Header
-            </MenuItem>
             <SubMenu key={MENUS.VIEW_THEMES} title="themes">
               <MenuItem
                 key={createActionKey(MENU_ITEM_ACTIONS.SET_THEME_LIGHT)}
@@ -513,8 +473,6 @@ function makeMapStateToProps(
 
   const mapStateToProps = (state: AppState) => {
     const content = state.core.entities.contents.byRef.get(contentRef);
-    const host: HostRecord = state.app.host;
-    const isBookstoreEnabled: boolean = host.bookstoreEnabled || false;
 
     // The current kernelspecs setup is _overkill_ as we're only ever going to
     // have one collection of kernelspecs
@@ -540,7 +498,6 @@ function makeMapStateToProps(
     const currentKernelRef = content.model.kernelRef;
 
     return {
-      bookstoreEnabled: isBookstoreEnabled,
       currentContentRef,
       currentKernelRef,
       currentKernelspecs,
@@ -556,10 +513,6 @@ function makeMapDispatchToProps(
   initialProps: { contentRef: ContentRef }
 ) {
   const mapDispatchToProps = (dispatch: any) => ({
-    onPublish: (payload: { contentRef: string }) =>
-      dispatch(actions.publishToBookstore(payload)),
-    toggleNotebookHeaderEditor: (payload: { contentRef: string }) =>
-      dispatch(actions.toggleHeaderEditor(payload)),
     saveNotebook: (payload: { contentRef: string }) =>
       dispatch(actions.save(payload)),
     downloadNotebook: (payload: { contentRef: string }) =>

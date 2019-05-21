@@ -47,13 +47,13 @@ function promptText(props: PromptProps): string {
   if (typeof props.counter === "number") {
     return `[${props.counter}]`;
   }
-  if (props.blank) {
-    return "";
-  }
   return "[ ]";
 }
 
 const BarePrompt = (props: PromptProps) => {
+  if (props.blank) {
+    return null;
+  }
   return <div className={props.className}>{promptText(props)}</div>;
 };
 
@@ -63,6 +63,8 @@ export const Prompt = styled(BarePrompt)`
   line-height: 22px;
   /* For creating a buffer area for <Prompt blank /> */
   min-height: 22px;
+
+  color: black;
 
   width: var(--prompt-width, 50px);
   padding: 9px 0;

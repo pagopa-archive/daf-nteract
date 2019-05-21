@@ -62,7 +62,7 @@ export class File extends React.PureComponent<FileProps> {
     return choice;
   };
 
-  render(): JSX.Element {
+  render() {
     const choice = this.getChoice();
 
     // Right now we only handle one kind of editor

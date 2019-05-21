@@ -12,8 +12,8 @@ import {
 import { actions, selectors } from "@nteract/core";
 import { AppState, ContentRef } from "@nteract/types";
 
-import { get } from "https";
 import memoizeOne from "memoize-one";
+import { get } from "https";
 
 interface OwnProps {
   output_type: string;
@@ -28,7 +28,6 @@ interface MappedProps {
   output?: ImmutableDisplayData | ImmutableExecuteResult;
   data?: any;
   metadata?: Immutable.Map<string, any>;
-  theme?: string;
 }
 
 interface DispatchProps {
@@ -38,16 +37,14 @@ interface DispatchProps {
 }
 
 const PureTransformMedia = (props: MappedProps & DispatchProps) => {
-  const { Media, mediaActions, mediaType, data, metadata, theme } = props;
+  const { Media, mediaActions, mediaType, data, metadata } = props;
 
   // If we had no valid result, return an empty output
   if (!mediaType || !data) {
     return null;
   }
 
-  return (
-    <Media {...mediaActions} data={data} metadata={metadata} theme={theme} />
-  );
+  return <Media {...mediaActions} data={data} metadata={metadata} />;
 };
 
 const richestMediaType = (
@@ -102,7 +99,6 @@ const makeMapStateToProps = (
 
     const handlers = selectors.transformsById(state);
     const order = selectors.displayOrder(state);
-    const theme = selectors.userTheme(state);
 
     const mediaType = richestMediaType(output, order, handlers);
 
@@ -114,15 +110,13 @@ const makeMapStateToProps = (
         Media,
         mediaType,
         data,
-        metadata,
-        theme
+        metadata
       };
     }
     return {
       Media: () => null,
       mediaType,
-      output,
-      theme
+      output
     };
   };
   return mapStateToProps;

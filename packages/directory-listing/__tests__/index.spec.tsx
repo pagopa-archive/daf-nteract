@@ -6,12 +6,16 @@ import { Entry, Icon, LastSaved, Listing, Name } from "../src";
 
 describe("Listing", () => {
   it("accepts props and renders entries in directory in a table", () => {
-    const component = shallow(
+    const component = (
       <Listing>
         <Entry>
           <Icon fileType={"directory"} />
           <Name>{"linky"}</Name>
-          <LastSaved lastModified={new Date("2018-06-22 00:15:55 GMT")} />
+          <LastSaved
+            last_modified={
+              "Fri Jun 22 2018 00:15:55 GMT-0400 (Eastern Daylight Time)"
+            }
+          />
         </Entry>
       </Listing>
     );
@@ -25,7 +29,11 @@ describe("Entry", () => {
       <Entry>
         <Icon fileType={"directory"} />
         <Name>{"linky jr"}</Name>
-        <LastSaved lastModified={new Date("2018-06-22 00:15:55 GMT")} />
+        <LastSaved
+          last_modified={
+            "Fri Jun 22 2018 00:15:55 GMT-0400 (Eastern Daylight Time)"
+          }
+        />
       </Entry>
     );
     expect(toJson(component)).toMatchSnapshot();

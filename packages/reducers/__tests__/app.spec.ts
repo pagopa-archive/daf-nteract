@@ -1,7 +1,5 @@
 import * as actions from "@nteract/actions";
-import { SetAppHostAction } from "@nteract/actions";
 import * as stateModule from "@nteract/types";
-import { makeJupyterHostRecord, makeLocalHostRecord } from "@nteract/types";
 import * as reducers from "../src";
 
 describe("save", () => {
@@ -82,37 +80,5 @@ describe("setGithubToken", () => {
 
     const state = reducers.app(originalState, (action as unknown) as any);
     expect(state.githubToken).toBe("TOKEN");
-  });
-});
-
-describe("setAppHost", () => {
-  test("can set local record", () => {
-    const originalState = stateModule.makeAppRecord({
-      host: null
-    });
-
-    const action: SetAppHostAction = {
-      type: actions.SET_APP_HOST,
-      payload: makeLocalHostRecord({ id: "anid" })
-    };
-
-    const state = reducers.app(originalState, action);
-    expect(state.host.get("type")).toBe("local");
-    expect(state.host.get("id")).toBe("anid");
-  });
-
-  test("can set Jupyter record", () => {
-    const originalState = stateModule.makeAppRecord({
-      host: null
-    });
-
-    const action: SetAppHostAction = {
-      type: actions.SET_APP_HOST,
-      payload: makeJupyterHostRecord({ id: "anotherid" })
-    };
-
-    const state = reducers.app(originalState, action);
-    expect(state.host.get("type")).toBe("jupyter");
-    expect(state.host.get("id")).toBe("anotherid");
   });
 });

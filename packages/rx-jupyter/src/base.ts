@@ -13,8 +13,6 @@ export interface ServerConfig {
   token?: string;
   xsrfToken?: string;
   crossDomain?: boolean;
-  ajaxOptions?: Partial<AjaxRequest>;
-  wsProtocol?: string | string[];
 }
 
 /**
@@ -43,10 +41,8 @@ export const createAJAXSettings = (
   // Use the server config provided token if available before trying cookies
   const xsrfToken = serverConfig.xsrfToken || Cookies.get("_xsrf");
   const headers = {
-    ...(xsrfToken && { "X-XSRFToken": xsrfToken }),
-    ...(serverConfig.token && {
-      Authorization: `token ${serverConfig.token}`
-    })
+    "X-XSRFToken": xsrfToken,
+    Authorization: `token ${serverConfig.token ? serverConfig.token : ""}`
   };
 
   // Merge in our typical settings for responseType, allow setting additional
@@ -56,14 +52,9 @@ export const createAJAXSettings = (
     responseType: "json",
     createXHR: () => new XMLHttpRequest(),
     ...serverConfig,
-    ...serverConfig.ajaxOptions,
     ...opts,
     // Make sure we merge in the auth headers with user given headers
-    headers: {
-      ...headers,
-      ...opts.headers,
-      ...(serverConfig.ajaxOptions && serverConfig.ajaxOptions.headers)
-    }
+    headers: { ...headers, ...opts.headers }
   };
   delete settings.endpoint;
   delete settings.cache;

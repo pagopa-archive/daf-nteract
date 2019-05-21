@@ -1,4 +1,3 @@
-// Vendor modules
 import {
   actions,
   AppState,
@@ -17,23 +16,24 @@ import {
   makeTransformsRecord
 } from "@nteract/core";
 import { Media } from "@nteract/outputs";
-import TransformVDOM from "@nteract/transform-vdom";
 import { ContentRecord, HostRecord } from "@nteract/types";
+
+import TransformVDOM from "@nteract/transform-vdom";
+
 import * as Immutable from "immutable";
 import * as React from "react";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
 
-// Local modules
-import App from "./app";
 import { JupyterConfigData } from "./config";
+
+import App from "./app";
+
 import("./fonts");
+
 import configureStore from "./store";
 
-export async function main(
-  config: JupyterConfigData,
-  rootEl: Element
-): Promise<void> {
+export async function main(config: JupyterConfigData, rootEl): Promise<void> {
   // When the data element isn't there, provide an error message
   // Primarily for development usage
 
@@ -43,9 +43,7 @@ export async function main(
     defaultKernelName: "python",
     token: config.token,
     origin: location.origin,
-    basePath: config.baseUrl,
-    bookstoreEnabled: config.bookstore.enabled,
-    showHeaderEditor: false
+    basePath: config.baseUrl
   });
 
   const hostRef = createHostRef();
@@ -120,7 +118,7 @@ export async function main(
             "text/html": Media.HTML,
             "text/markdown": Media.Markdown,
             "text/latex": Media.LaTeX,
-            "image/svg+xml": Media.SVG,
+            "image/svg": Media.SVG,
             "image/gif": Media.Image,
             "image/png": Media.Image,
             "image/jpeg": Media.Image,

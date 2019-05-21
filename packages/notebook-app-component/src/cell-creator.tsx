@@ -80,10 +80,6 @@ const CreatorHoverMask = styled.div`
   position: relative;
   overflow: visible;
   height: 0px;
-
-  @media print{
-    display: none;
-  }
 `;
 const CreatorHoverRegion = styled.div`
   position: relative;

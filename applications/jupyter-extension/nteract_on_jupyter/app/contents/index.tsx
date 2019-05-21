@@ -1,9 +1,5 @@
-// Vendor modules
 import * as actions from "@nteract/actions";
-import { CellType, ImmutableNotebook } from "@nteract/commutable";
-import { HeaderEditor } from "@nteract/connected-components";
-import { NotebookMenu } from "@nteract/connected-components";
-import { HeaderDataProps } from "@nteract/connected-components/lib/header-editor";
+import { CellType } from "@nteract/commutable";
 import { AppState, ContentRef, HostRecord, selectors } from "@nteract/core";
 import {
   DirectoryContentRecordProps,
@@ -19,12 +15,13 @@ import { connect } from "react-redux";
 import { Dispatch } from "redux";
 import urljoin from "url-join";
 
-// Local modules
 import { ConnectedDirectory } from "./directory";
 import { default as File } from "./file";
 import { ConnectedFileHeader as FileHeader, DirectoryHeader } from "./headers";
 
-interface IContentsBaseProps {
+import { NotebookMenu } from "@nteract/connected-components";
+
+interface IContentsProps {
   appBase: string;
   baseDir: string;
   contentType: "dummy" | "notebook" | "directory" | "file";
@@ -41,20 +38,14 @@ interface IContentsBaseProps {
 interface IContentsState {
   isDialogOpen: boolean;
 }
-
-interface IStateToProps {
-  headerData?: HeaderDataProps;
-  showHeaderEditor: boolean;
-}
-
 interface IDispatchFromProps {
   handlers: any;
-  onHeaderEditorChange: (props: HeaderDataProps) => void;
 }
 
-type ContentsProps = IContentsBaseProps & IStateToProps & IDispatchFromProps;
-
-class Contents extends React.PureComponent<ContentsProps, IContentsState> {
+class Contents extends React.PureComponent<
+  IContentsProps & IDispatchFromProps,
+  IContentsState
+> {
   private keyMap: KeyMap = {
     CHANGE_CELL_TYPE: [
       "ctrl+shift+y",
@@ -85,11 +76,8 @@ class Contents extends React.PureComponent<ContentsProps, IContentsState> {
       displayName,
       error,
       handlers,
-      headerData,
       loading,
-      onHeaderEditorChange,
-      saving,
-      showHeaderEditor
+      saving
     } = this.props;
 
     switch (contentType) {
@@ -109,17 +97,7 @@ class Contents extends React.PureComponent<ContentsProps, IContentsState> {
                 saving={saving}
               >
                 {contentType === "notebook" ? (
-                  <React.Fragment>
-                    <NotebookMenu contentRef={contentRef} />
-                    {showHeaderEditor ? (
-                      <HeaderEditor
-                        editable
-                        contentRef={contentRef}
-                        headerData={headerData}
-                        onChange={onHeaderEditorChange}
-                      />
-                    ) : null}
-                  </React.Fragment>
+                  <NotebookMenu contentRef={this.props.contentRef} />
                 ) : null}
               </FileHeader>
               <File contentRef={contentRef} appBase={appBase} />
@@ -156,7 +134,7 @@ const makeMapStateToProps: any = (
 
   const appBase: string = urljoin(host.basePath, "/nteract/edit");
 
-  const mapStateToProps = (state: AppState): Partial<ContentsProps> => {
+  const mapStateToProps = (state: AppState): IContentsProps => {
     const contentRef: ContentRef = initialProps.contentRef;
 
     if (!contentRef) {
@@ -174,35 +152,6 @@ const makeMapStateToProps: any = (
       throw new Error("need content to view content, check your contentRefs");
     }
 
-    let showHeaderEditor: boolean = false;
-    let headerData: HeaderDataProps = {
-      authors: [],
-      description: "",
-      tags: [],
-      title: ""
-    };
-
-    // If a notebook, we need to read in the headerData if available
-    if (content.type === "notebook") {
-      const notebook: ImmutableNotebook = content.model.get("notebook");
-      const metadata: object = notebook.metadata.toJS();
-      const {
-        authors = [],
-        description = "",
-        tags = [],
-        title = ""
-      } = metadata;
-
-      // Updates
-      showHeaderEditor = content!.showHeaderEditor;
-      headerData = Object.assign({}, headerData, {
-        authors,
-        description,
-        tags,
-        title
-      });
-    }
-
     return {
       appBase,
       baseDir: dirname(content.filepath),
@@ -211,12 +160,10 @@ const makeMapStateToProps: any = (
       displayName: content.filepath.split("/").pop() || "",
       error: content.error,
       filepath: content.filepath,
-      headerData,
       lastSavedStatement: "recently",
       loading: content.loading,
       mimetype: content.mimetype,
-      saving: content.saving,
-      showHeaderEditor
+      saving: content.saving
     };
   };
 
@@ -225,19 +172,11 @@ const makeMapStateToProps: any = (
 
 const mapDispatchToProps = (
   dispatch: Dispatch,
-  ownProps: ContentsProps
+  ownProps: IContentsProps
 ): object => {
   const { appBase, contentRef } = ownProps;
 
   return {
-    onHeaderEditorChange: (props: HeaderDataProps) => {
-      return dispatch(
-        actions.overwriteMetadataFields({
-          ...props,
-          contentRef: ownProps.contentRef
-        })
-      );
-    },
     // `HotKeys` handlers object
     // see: https://github.com/greena13/react-hotkeys#defining-handlers
     handlers: {

@@ -1,4 +1,4 @@
-import React, { FunctionComponent, SyntheticEvent, Fragment } from "react";
+import React, { FunctionComponent, SyntheticEvent } from "react";
 import {
   Dialog,
   InputGroup,
@@ -22,7 +22,6 @@ const LoginDialog: FunctionComponent<ILoginDialogProps> = ({
   isOpen,
   onClose,
   error,
-  isLoading,
   requestLogin
 }) => {
   const handleSubmit = (e: SyntheticEvent) => {
@@ -41,68 +40,56 @@ const LoginDialog: FunctionComponent<ILoginDialogProps> = ({
       onClose={onClose}
     >
       <form onSubmit={handleSubmit}>
-        {isLoading ? (
-          "Loading..."
-        ) : (
-          <Fragment>
-            <div className={DIALOG_BODY}>
-              <FormGroup
-                labelFor="pdnd-login-email"
-                label="Email"
-                labelInfo="(required)*"
-                helperText="Please enter your email"
-              >
-                <InputGroup
-                  large
-                  intent={error ? DANGER : NONE}
-                  leftIcon={USER}
-                  type="email"
-                  placeholder="marco.rossi@teamdigitale.it"
-                  required
-                  id="pdnd-login-email"
-                  name="pdnd-login-email"
-                />
-              </FormGroup>
-              <FormGroup
-                labelFor="pdnd-login-password"
-                label="Password"
-                labelInfo="(required)*"
-                helperText="Please enter your password"
-              >
-                <PasswordInput error={error} />
-              </FormGroup>
-            </div>
-            <div className={`${DIALOG_FOOTER} ${DIALOG_FOOTER_ACTIONS}`}>
-              <AnchorButton
-                style={{ marginRight: "auto", marginLeft: 0 }}
-                large
-                minimal
-                intent={error ? DANGER : NONE}
-                href={`${commonURL}requestreset`}
-                target="_blank"
-              >
-                Forgot password?
-              </AnchorButton>
-              <Button
-                large
-                minimal
-                intent={PRIMARY}
-                icon={LOG_IN}
-                type="submit"
-              >
-                Log in
-              </Button>
-              <AnchorButton
-                large
-                intent={PRIMARY}
-                href={`${commonURL}register`}
-                target="_blank"
-              >
-                Sign up
-              </AnchorButton>
-            </div>
-          </Fragment>
-        )}
+        <div className={DIALOG_BODY}>
+          <FormGroup
+            labelFor="pdnd-login-email"
+            label="Email"
+            labelInfo="(required)*"
+            helperText="Please enter your email"
+          >
+            <InputGroup
+              large
+              intent={error ? DANGER : NONE}
+              leftIcon={USER}
+              type="email"
+              placeholder="marco.rossi@teamdigitale.it"
+              required
+              id="pdnd-login-email"
+              name="pdnd-login-email"
+            />
+          </FormGroup>
+          <FormGroup
+            labelFor="pdnd-login-password"
+            label="Password"
+            labelInfo="(required)*"
+            helperText="Please enter your password"
+          >
+            <PasswordInput error={error} />
+          </FormGroup>
+        </div>
+        <div className={`${DIALOG_FOOTER} ${DIALOG_FOOTER_ACTIONS}`}>
+          <AnchorButton
+            style={{ marginRight: "auto", marginLeft: 0 }}
+            large
+            minimal
+            intent={error ? DANGER : NONE}
+            href={`${commonURL}requestreset`}
+            target="_blank"
+          >
+            Forgot password?
+          </AnchorButton>
+          <Button large minimal intent={PRIMARY} icon={LOG_IN} type="submit">
+            Log in
+          </Button>
+          <AnchorButton
+            large
+            intent={PRIMARY}
+            href={`${commonURL}register`}
+            target="_blank"
+          >
+            Sign up
+          </AnchorButton>
+        </div>
       </form>
     </Dialog>
   );

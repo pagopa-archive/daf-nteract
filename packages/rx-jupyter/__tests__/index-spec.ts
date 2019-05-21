@@ -17,22 +17,6 @@ describe("rx-jupyter", () => {
       const request = apiVersion$.request;
       expect(request.url).toBe("https://somewhere.com/api");
       expect(request.method).toBe("GET");
-      expect(request.headers).toEqual({});
-    });
-    test("creates an AjaxObservable with the correct custom options", () => {
-      const apiVersion$ = jupyter.apiVersion({
-        endpoint: "https://somewhere.com",
-        crossDomain: true,
-        ajaxOptions: {
-          headers: {
-            From: "test@tester.com"
-          }
-        }
-      }) as AjaxObservable;
-      const request = apiVersion$.request;
-      expect(request.url).toBe("https://somewhere.com/api");
-      expect(request.method).toBe("GET");
-      expect(request.headers).toEqual({ From: "test@tester.com" });
     });
   });
   describe("shutdown", () => {

@@ -35,9 +35,6 @@ export const Bar = styled.div`
   line-height: 0.5em;
   background: var(--status-bar);
   z-index: 99;
-  @media print {
-     display: none;
-  }
 `;
 
 export class StatusBar extends React.Component<Props> {

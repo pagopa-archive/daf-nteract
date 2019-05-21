@@ -7,7 +7,6 @@ import {
   emptyNotebook,
   makeDisplayData,
   makeErrorOutput,
-  makeExecuteResult,
   makeStreamOutput
 } from "@nteract/commutable";
 import * as Immutable from "immutable";
@@ -867,14 +866,6 @@ describe("updateDisplay", () => {
           transient: { display_id: "1234" }
         }
       }),
-      actions.appendOutput({
-        id,
-        output: {
-          output_type: "execute_result",
-          data: { "text/plain": "shennagins afoot" },
-          transient: { display_id: "1234" }
-        }
-      }),
       actions.updateDisplay({
         content: {
           output_type: "update_display_data",
@@ -893,11 +884,6 @@ describe("updateDisplay", () => {
       Immutable.List([
         makeDisplayData({
           output_type: "display_data",
-          data: { "text/html": "<marquee>WOO</marquee>" },
-          metadata: Immutable.Map({})
-        }),
-        makeExecuteResult({
-          output_type: "execute_result",
           data: { "text/html": "<marquee>WOO</marquee>" },
           metadata: Immutable.Map({})
         })

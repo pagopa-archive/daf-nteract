@@ -28,8 +28,3 @@ You can use the `queued` prop to indicate that a cell is queued for execution. Y
 ```js
 <Prompt counter={12} queued />
 ```
-
-Pass the `blank` prop to create a prompt with no brackets or other indicators. This is used for Markdown cells through the `<PromptBuffer />` component.
-```js
-<Prompt blank />
-```

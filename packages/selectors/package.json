@@ -1,6 +1,6 @@
 {
   "name": "@nteract/selectors",
-  "version": "2.1.0",
+  "version": "2.0.2",
   "description": "A colletion of state selectors",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -12,10 +12,10 @@
     "access": "public"
   },
   "dependencies": {
-    "@nteract/commutable": "^7.1.0",
-    "@nteract/types": "^4.1.0",
+    "@nteract/commutable": "^7.0.2",
+    "@nteract/types": "^4.0.2",
     "immutable": "^4.0.0-rc.12",
     "reselect": "^4.0.0",
-    "rx-jupyter": "^5.1.0"
+    "rx-jupyter": "^5.0.2"
   }
 }

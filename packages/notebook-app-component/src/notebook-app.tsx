@@ -1,10 +1,10 @@
 /* eslint-disable no-return-assign */
 import {
   CellId,
-  CellType,
   ExecutionCount,
   ImmutableCodeCell,
-  JSONObject
+  JSONObject,
+  CellType
 } from "@nteract/commutable";
 import { actions, selectors } from "@nteract/core";
 import {
@@ -38,7 +38,6 @@ import DraggableCell from "./draggable-cell";
 import Editor from "./editor";
 import { HijackScroll } from "./hijack-scroll";
 import MarkdownPreviewer from "./markdown-preview";
-import NotebookHelmet from "./notebook-helmet";
 import StatusBar from "./status-bar";
 import Toolbar, { CellToolbarMask } from "./toolbar";
 import TransformMedia from "./transform-media";
@@ -273,7 +272,6 @@ class AnyCell extends React.PureComponent<AnyCellProps> {
       focusEditor,
       id,
       tags,
-      theme,
       selectCell,
       unfocusEditor,
       contentRef,
@@ -588,10 +586,9 @@ export class NotebookApp extends React.PureComponent<NotebookProps> {
     }
   }
 
-  render(): JSX.Element {
+  render() {
     return (
       <React.Fragment>
-        <NotebookHelmet contentRef={this.props.contentRef} />
         <Cells>
           <CellCreator
             id={this.props.cellOrder.get(0)}

@@ -8,7 +8,6 @@ import { createAJAXSettings, ServerConfig as _ServerConfig } from "./base";
 export type ServerConfig = _ServerConfig;
 
 import { Observable } from "rxjs";
-import * as bookstore from "./bookstore";
 import * as contents from "./contents";
 import * as kernels from "./kernels";
 import * as kernelspecs from "./kernelspecs";
@@ -38,4 +37,4 @@ export const shutdown = (
 ): Observable<AjaxResponse> =>
   ajax(createAJAXSettings(serverConfig, "/api/shutdown", { method: "POST" }));
 
-export { kernels, kernelspecs, sessions, bookstore, contents, terminals };
+export { kernels, kernelspecs, sessions, contents, terminals };

@@ -353,7 +353,7 @@ export const semioticScatterplot = (
 
   let marginalGraphicsAxes: object[] = [];
 
-  if (marginalGraphics !== "none" && type === "scatterplot") {
+  if (marginalGraphics !== "none") {
     marginalGraphicsAxes = [
       {
         orient: "right",

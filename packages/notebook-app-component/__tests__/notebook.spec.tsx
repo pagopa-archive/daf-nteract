@@ -32,22 +32,6 @@ describe("NotebookApp", () => {
     expect(component).not.toBeNull();
   });
 
-  describe("NotebookApp", () => {
-    test("contains a base attribute", () => {
-      const component = shallow(
-        <NotebookApp
-          cellOrder={fixtureCommutable.get("cellOrder")}
-          cellMap={fixtureCommutable.get("cellMap")}
-          transient={new Immutable.Map({ cellMap: new Immutable.Map() })}
-          cellPagers={new Immutable.Map()}
-          cellStatuses={new Immutable.Map()}
-          contentRef={"contentRef"}
-        />
-      );
-      expect(component.find("base")).toBeDefined();
-    });
-  });
-
   describe("keyDown", () => {
     test("detects a cell execution keypress", () => {
       const focusedCell = fixtureCommutable.getIn(["cellOrder", 1]);

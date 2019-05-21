@@ -1,6 +1,6 @@
 {
   "name": "@nteract/actions",
-  "version": "2.4.0",
+  "version": "2.1.1",
   "description": "A collection of actions",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -13,10 +13,10 @@
     "access": "public"
   },
   "dependencies": {
-    "@nteract/commutable": "^7.1.0",
-    "@nteract/messaging": "^6.0.4",
-    "@nteract/types": "^4.1.0",
+    "@nteract/commutable": "^7.0.2",
+    "@nteract/messaging": "^6.0.2",
+    "@nteract/types": "^4.0.2",
     "immutable": "^4.0.0-rc.12",
-    "rx-jupyter": "^5.1.0"
+    "rx-jupyter": "^5.0.2"
   }
 }

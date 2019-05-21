@@ -91,7 +91,7 @@ export const semioticSummaryChart = (
           ),
     margin: { top: 25, right: 10, bottom: 50, left: 100 },
     axis: {
-      orient: "bottom",
+      orient: "left",
       label: rAccessor,
       tickFormat: numeralFormatting
     },

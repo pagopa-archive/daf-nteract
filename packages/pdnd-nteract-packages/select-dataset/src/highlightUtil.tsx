@@ -1,5 +1,3 @@
-import React, { ReactNode } from "react"
-
 const escapeRegExpChars = (value: string) =>
   value.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
 
@@ -13,7 +11,7 @@ const highlightText = (value: string, query: string) => {
     return [value];
   }
   const regexp = new RegExp(words.join("|"), "gi");
-  const tokens: ReactNode[] = [];
+  const tokens: React.ReactNode[] = [];
   while (true) {
     const match = regexp.exec(value);
     if (!match) {

@@ -8,14 +8,20 @@ interface IconProps {
 }
 
 const IconWrapper = styled.span.attrs(props => ({
-  style: { color: props.color }
+  style: {
+    color: props.color
+  }
 }))`
   vertical-align: middle;
   text-align: center;
   opacity: 0.95;
+  color: "#0366d6";
 `;
 
 IconWrapper.displayName = "IconWrapper";
+IconWrapper.defaultProps = {
+  color: "#0366d6"
+};
 
 export class Icon extends React.PureComponent<IconProps> {
   static defaultProps: Partial<IconProps> = {
@@ -24,6 +30,7 @@ export class Icon extends React.PureComponent<IconProps> {
   };
 
   render() {
+    const styles = { color: this.props.color };
     let icon = <FileText />;
     switch (this.props.fileType) {
       case "notebook":
@@ -39,7 +46,7 @@ export class Icon extends React.PureComponent<IconProps> {
         icon = <FileText />;
     }
 
-    return <IconWrapper color={this.props.color}>{icon}</IconWrapper>;
+    return <IconWrapper>{icon}</IconWrapper>;
   }
 }
 

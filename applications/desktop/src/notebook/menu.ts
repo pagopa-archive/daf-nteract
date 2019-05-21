@@ -534,10 +534,6 @@ export function dispatchLoad(
   // We are loading a new document so we will create a kernelRef
   const kernelRef = createKernelRef();
 
-  // Remove the protocol string from requests originating from
-  // another notebook
-  filepath = filepath.replace("file://", "");
-
   store.dispatch(
     actions.fetchContent({
       filepath,

@@ -55,7 +55,7 @@ export const closeNotebookEpic = (
         dirtyPromptObservable = Observable.create((observer: Observer<any>) => {
           const promptDialog = {
             type: "question",
-            buttons: ["Quit", "Cancel"],
+            buttons: ["Yes", "No"],
             title: "Confirm",
             message: "Unsaved data will be lost. Are you sure you want to quit?"
           };

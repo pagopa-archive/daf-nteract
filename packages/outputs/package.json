@@ -1,6 +1,6 @@
 {
   "name": "@nteract/outputs",
-  "version": "2.1.2",
+  "version": "2.1.0",
   "description": "components for rendering outputs",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -18,7 +18,7 @@
     "we only use it for type checking within the monorepo"
   ],
   "devDependencies": {
-    "@nteract/commutable": "^7.1.0"
+    "@nteract/commutable": "^7.0.2"
   },
   "peerDependencies": {
     "react": "^16.3.2"

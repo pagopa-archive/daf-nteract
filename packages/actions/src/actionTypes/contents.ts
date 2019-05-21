@@ -3,14 +3,6 @@
  */
 import { ContentRef, KernelRef, KernelspecInfo } from "@nteract/types";
 
-export const TOGGLE_HEADER_EDITOR = "CORE/TOGGLE_HEADER_EDITOR";
-export interface ToggleHeaderEditor {
-  type: "CORE/TOGGLE_HEADER_EDITOR";
-  payload: {
-    contentRef: ContentRef;
-  };
-}
-
 export const CHANGE_CONTENT_NAME = "CORE/CHANGE_CONTENT_NAME";
 export interface ChangeContentName {
   type: "CORE/CHANGE_CONTENT_NAME";
