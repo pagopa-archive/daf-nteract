@@ -5,11 +5,15 @@ import {
   take,
   catchError,
   concatMap,
-  tap,
+  tap
 } from "rxjs/operators";
 import { ajax } from "rxjs/ajax";
 import { ofType } from "redux-observable";
 import { createSelector } from "reselect";
+// import { apiUriConfig } from "../../ducks";
+
+// const { BASE_API_URI } = apiUriConfig;
+// TODO: make BASE_API_URI works in login
 
 const appName = "nteract-pdnd";
 const reducerName = "loggedUser";
