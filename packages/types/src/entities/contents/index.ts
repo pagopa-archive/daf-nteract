@@ -15,6 +15,17 @@ export * from "./directory";
 export * from "./dummy";
 export * from "./file";
 
+export interface AuthorObject {
+  name: string;
+}
+
+export interface HeaderDataProps {
+  authors: AuthorObject[];
+  description: string;
+  tags: string[];
+  title: string;
+}
+
 export type ContentModel =
   | NotebookModel
   | DirectoryModelRecord

@@ -8,6 +8,7 @@ import {
   ContentsRecord,
   createContentRef,
   DummyContentRecordProps,
+  JupyterHostRecord,
   makeContentsRecord,
   makeDirectoryContentRecord,
   makeDirectoryModel,
@@ -15,9 +16,10 @@ import {
   makeDummyContentRecord,
   makeFileContentRecord,
   makeFileModelRecord,
-  makeNotebookContentRecord
+  makeNotebookContentRecord,
+  NotebookContentRecordProps
 } from "@nteract/types";
-import { List, Map, RecordOf } from "immutable";
+import { List, Map, Record, RecordOf } from "immutable";
 import { Action } from "redux";
 
 // Local modules
@@ -29,6 +31,63 @@ const byRef = (
   action: Action
 ): Map<ContentRef, ContentRecord> => {
   switch (action.type) {
+    case actionTypes.OVERWRITE_METADATA_FIELDS:
+      const overwriteMetadataFieldsAction = action as actionTypes.OverwriteMetadataFields;
+      const {
+        authors,
+        description,
+        tags,
+        title
+      } = overwriteMetadataFieldsAction.payload;
+
+      return state
+        .setIn(
+          [
+            overwriteMetadataFieldsAction.payload.contentRef,
+            "model",
+            "notebook",
+            "metadata",
+            "authors"
+          ],
+          authors
+        )
+        .setIn(
+          [
+            overwriteMetadataFieldsAction.payload.contentRef,
+            "model",
+            "notebook",
+            "metadata",
+            "description"
+          ],
+          description
+        )
+        .setIn(
+          [
+            overwriteMetadataFieldsAction.payload.contentRef,
+            "model",
+            "notebook",
+            "metadata",
+            "tags"
+          ],
+          tags
+        )
+        .setIn(
+          [
+            overwriteMetadataFieldsAction.payload.contentRef,
+            "model",
+            "notebook",
+            "metadata",
+            "title"
+          ],
+          title
+        );
+    case actionTypes.TOGGLE_HEADER_EDITOR:
+      const toggleHeaderAction = action as actionTypes.ToggleHeaderEditor;
+      const ref = toggleHeaderAction.payload.contentRef;
+      const content: any = state.get(ref);
+      const prevValue = content.get("showHeaderEditor");
+      // toggle header
+      return state.setIn([ref, "showHeaderEditor"], !prevValue);
     case actionTypes.CHANGE_CONTENT_NAME:
       const changeContentNameAction = action as actionTypes.ChangeContentName;
       const { contentRef, filepath } = changeContentNameAction.payload;
@@ -40,15 +99,14 @@ const byRef = (
       // communication state first and not requesting this information until
       // the communication state shows that it should exist.
       const fetchContentAction = action as actionTypes.FetchContent;
-      return state
-        .set(
-          fetchContentAction.payload.contentRef,
-          makeDummyContentRecord({
-            filepath: fetchContentAction.payload.filepath || ""
-            // TODO: we can set kernelRef when the content record uses it.
-          })
-        )
-        .setIn([fetchContentAction.payload.filepath, "loading"], true);
+      return state.set(
+        fetchContentAction.payload.contentRef,
+        makeDummyContentRecord({
+          filepath: fetchContentAction.payload.filepath || "",
+          loading: true
+          // TODO: we can set kernelRef when the content record uses it.
+        })
+      );
     case actionTypes.LAUNCH_KERNEL_SUCCESSFUL:
       // TODO: is this reasonable? We launched the kernel on behalf of this
       // content... so it makes sense to swap it, right?
@@ -196,9 +254,10 @@ const byRef = (
         .updateIn(
           [saveFulfilledAction.payload.contentRef, "model"],
           (model: ContentModel) => {
-            // Notebook ends up needing this because we store a last
-            // saved version of the notebook Alternatively, we could
-            // be storing a hash of the content to compare 🤔
+            // Notebook ends up needing this because we store
+            // a last saved version of the notebook
+            // Alternatively, we could be storing a hash of the
+            // content to compare 🤔
             if (model && model.type === "notebook") {
               return notebook(model, saveFulfilledAction);
             }
