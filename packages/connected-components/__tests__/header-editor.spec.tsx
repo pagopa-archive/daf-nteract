@@ -3,6 +3,7 @@ import * as React from "react";
 import renderer from "react-test-renderer";
 
 import { HeaderEditor } from "../src/header-editor";
+import { AuthorTag } from "../src/header-editor/styled";
 
 jest.mock("styled-components", () => {
   /* tslint:disable no-empty */

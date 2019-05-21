@@ -3,6 +3,14 @@
  */
 import { ContentRef, KernelRef, KernelspecInfo } from "@nteract/types";
 
+export const TOGGLE_HEADER_EDITOR = "CORE/TOGGLE_HEADER_EDITOR";
+export interface ToggleHeaderEditor {
+  type: "CORE/TOGGLE_HEADER_EDITOR";
+  payload: {
+    contentRef: ContentRef;
+  };
+}
+
 export const CHANGE_CONTENT_NAME = "CORE/CHANGE_CONTENT_NAME";
 export interface ChangeContentName {
   type: "CORE/CHANGE_CONTENT_NAME";
@@ -125,6 +133,25 @@ export interface SaveFulfilled {
   payload: {
     contentRef: ContentRef;
     // Literal response from contents API, for use with
+    model: any;
+  };
+}
+
+export const SAVE_AS_FAILED = "SAVE_AS_FAILED";
+export interface SaveAsFailed {
+  type: "SAVE_AS_FAILED";
+  payload: {
+    contentRef: ContentRef;
+    error: Error;
+  };
+  error: true;
+}
+
+export const SAVE_AS_FULFILLED = "SAVE_AS_FULFILLED";
+export interface SaveAsFulfilled {
+  type: "SAVE_AS_FULFILLED";
+  payload: {
+    contentRef: ContentRef;
     model: any;
   };
 }

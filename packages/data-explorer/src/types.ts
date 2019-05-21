@@ -41,6 +41,7 @@ export interface Metric extends Field {
 
 export interface Dimension extends Field {
   type: "string" | "boolean" | "datetime";
+  cardinality: number;
 }
 
 export interface Datapoint {

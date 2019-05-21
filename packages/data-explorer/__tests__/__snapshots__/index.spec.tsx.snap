@@ -57,16 +57,19 @@ exports[`DataExplorer composed with Toolbar to the left 1`] = `
       dimensions={
         Array [
           Object {
-            "name": "Country",
+            "cardinality": 3,
+            "name": "Region",
             "type": "string",
           },
           Object {
-            "name": "Region",
+            "cardinality": 9,
+            "name": "Country",
             "type": "string",
           },
         ]
       }
       key=".0"
+      largeDataset={false}
       setGrid={[Function]}
       setView={[Function]}
     />
@@ -470,11 +473,13 @@ exports[`DataExplorer composed with Toolbar to the left 1`] = `
           dimensions={
             Array [
               Object {
-                "name": "Country",
+                "cardinality": 3,
+                "name": "Region",
                 "type": "string",
               },
               Object {
-                "name": "Region",
+                "cardinality": 9,
+                "name": "Country",
                 "type": "string",
               },
             ]

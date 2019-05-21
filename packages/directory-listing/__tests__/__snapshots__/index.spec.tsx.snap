@@ -26,11 +26,27 @@ exports[`Entry accepts props and renders entries in directory 1`] = `
     key=".2"
   >
     <LastSaved
-      lastModified={null}
-      last_modified="Fri Jun 22 2018 00:15:55 GMT-0400 (Eastern Daylight Time)"
+      lastModified={2018-06-22T00:15:55.000Z}
     />
   </td>
 </DirectoryEntry>
 `;
 
-exports[`Listing accepts props and renders entries in directory in a table 1`] = `undefined`;
+exports[`Listing accepts props and renders entries in directory in a table 1`] = `
+<ListingRoot>
+  <tbody>
+    <Entry>
+      <Icon
+        color="#0366d6"
+        fileType="directory"
+      />
+      <Name>
+        linky
+      </Name>
+      <LastSaved
+        lastModified={2018-06-22T00:15:55.000Z}
+      />
+    </Entry>
+  </tbody>
+</ListingRoot>
+`;

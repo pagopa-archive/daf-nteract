@@ -6,7 +6,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/python:3.7.2-node
+      - image: circleci/python:3.7.3-node
 
     working_directory: ~/nteract
 
