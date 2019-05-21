@@ -4,7 +4,7 @@
 import { Notebook } from "@nteract/commutable";
 import querystring from "querystring";
 import { Observable } from "rxjs";
-import { ajax, AjaxRequest } from "rxjs/ajax";
+import { ajax, AjaxRequest, AjaxResponse } from "rxjs/ajax";
 import urljoin from "url-join";
 import { createAJAXSettings, JupyterAjaxResponse, ServerConfig } from "./base";
 
@@ -146,7 +146,7 @@ export function create<FT extends FileType>(
   serverConfig: ServerConfig,
   path: string,
   model: Partial<IContent<FT>> & { type: FT }
-) {
+): Observable<AjaxResponse> {
   return ajax(
     createAJAXSettings(serverConfig, formURI(path), {
       body: model,

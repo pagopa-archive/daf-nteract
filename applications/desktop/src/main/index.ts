@@ -195,7 +195,8 @@ app.on("before-quit", e => {
 
   const windows = BrowserWindow.getAllWindows();
   if (
-    windows.length > 0 &&
+    // `win.close()` teardown is async, so `isVisible` is more reliable, see #3656
+    windows.filter(win => win.isVisible()).length > 0 &&
     store.getState().get("quittingState") === QUITTING_STATE_NOT_STARTED
   ) {
     e.preventDefault();

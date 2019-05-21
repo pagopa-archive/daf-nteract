@@ -31,11 +31,11 @@ const rootReducer = combineReducers({
 });
 
 export default function configureStore(
-  initialState: DesktopNotebookAppState
+  initialState: Partial<DesktopNotebookAppState>
 ): DesktopStore {
   const store = createStore(
     rootReducer,
-    initialState,
+    (initialState as unknown) as any,
     applyMiddleware(...middlewares)
   );
   epicMiddleware.run(rootEpic);

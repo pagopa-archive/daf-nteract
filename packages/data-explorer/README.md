@@ -2,12 +2,19 @@
 
 # nteract Data Explorer
 
+![Data Explorer Examples](https://user-images.githubusercontent.com/1863892/55675008-07632e80-5871-11e9-9dac-0a71450faf7b.gif)
+
 [Read @emeek's post on designing the data explorer](https://blog.nteract.io/designing-the-nteract-data-explorer-f4476d53f897).
 
 ## Using the Data Explorer
 
 ```
-yarn install @nteract/data-explorer
+yarn add @nteract/data-explorer
+```
+
+Install `react` and `styled-components` if you are not already using them.
+```
+yarn add react styled-components
 ```
 
 The `data` prop must be a [tabular data resource `application/vnd.dataresource+json`](https://frictionlessdata.io/specs/tabular-data-resource/)
@@ -34,16 +41,6 @@ import { DataExplorer, Toolbar, Viz } from "@nteract/data-explorer";
 <DataExplorer data={data}>
   <Viz />
 </DataExplorer>;
-```
-
-## CSS
-
-Note: you also need to include the CSS for a few dependencies as well
-
-```
-
-// CSS for the grid view on the data explorer
-import "react-table/react-table.css";
 ```
 
 ## Hacking on the nteract Data Explorer
