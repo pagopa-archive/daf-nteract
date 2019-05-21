@@ -1,6 +1,6 @@
 {
   "name": "@nteract/data-explorer",
-  "version": "6.2.0",
+  "version": "7.0.1",
   "description": "Transform for data resource JSON",
   "main": "lib/",
   "types": "lib/index.d.ts",
@@ -33,7 +33,7 @@
     "react-hot-loader": "^4.1.2",
     "react-table": "6.8.6",
     "react-table-hoc-fixed-columns": "2.1.0",
-    "semiotic": "^1.19.7"
+    "semiotic": "^1.19.8"
   },
   "devDependencies": {
     "@types/d3-collection": "^1.0.7",

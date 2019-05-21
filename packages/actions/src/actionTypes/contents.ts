@@ -137,6 +137,25 @@ export interface SaveFulfilled {
   };
 }
 
+export const SAVE_AS_FAILED = "SAVE_AS_FAILED";
+export interface SaveAsFailed {
+  type: "SAVE_AS_FAILED";
+  payload: {
+    contentRef: ContentRef;
+    error: Error;
+  };
+  error: true;
+}
+
+export const SAVE_AS_FULFILLED = "SAVE_AS_FULFILLED";
+export interface SaveAsFulfilled {
+  type: "SAVE_AS_FULFILLED";
+  payload: {
+    contentRef: ContentRef;
+    model: any;
+  };
+}
+
 export const NEW_NOTEBOOK = "NEW_NOTEBOOK";
 export interface NewNotebook {
   type: "NEW_NOTEBOOK";

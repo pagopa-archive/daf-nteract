@@ -14,6 +14,9 @@ import { createSelector } from "reselect";
 
 import { SET_IN_CELL } from "@nteract/actions/src";
 import { DATASET_FULFILL } from "./selectedDatasetDuck";
+import { apiUriConfig } from "../../ducks";
+
+const { BASE_API_URI } = apiUriConfig;
 
 const appName = "nteract-pdnd";
 const reducerName = "datasetList";
@@ -117,17 +120,13 @@ const datasetListSelectors = {
 };
 
 // epics
-const datasetListEpic = action$ => {
-  const endpoint =
-    "https://api.daf.teamdigitale.it/dati-gov/v1/public/elasticsearch/search";
-
-  return action$.pipe(
+const datasetListEpic = action$ => action$.pipe(
     debounceTime(900),
     ofType(DATASETLIST_REQUEST),
     switchMap(({ payload }) =>
       ajax
         .post(
-          endpoint,
+          BASE_API_URI + "dati-gov/v1/public/elasticsearch/search",
           JSON.stringify({
             text: payload,
             index: ["catalog_test"],
@@ -156,7 +155,6 @@ const datasetListEpic = action$ => {
         )
     )
   );
-};
 
 const resetDatasetListEpic = action$ =>
   action$.pipe(

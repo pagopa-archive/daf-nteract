@@ -62,6 +62,7 @@ export interface Props {
 }
 
 interface State {
+  largeDataset: boolean;
   view: View;
   colors: string[];
   metrics: Dx.Field[];
@@ -249,12 +250,14 @@ class DataExplorer extends React.PureComponent<Partial<Props>, State> {
       fields = [...fields, { name: Dx.defaultPrimaryKey, type: "integer" }];
     }
 
-    const dimensions = fields.filter(
-      field =>
-        field.type === "string" ||
-        field.type === "boolean" ||
-        field.type === "datetime"
-    ) as Dx.Dimension[];
+    const dimensions = fields
+      .filter(
+        field =>
+          field.type === "string" ||
+          field.type === "boolean" ||
+          field.type === "datetime"
+      )
+      .map(field => ({ ...field, cardinality: 0 })) as Dx.Dimension[];
 
     // Should datetime data types be transformed into js dates before getting to this resource?
     const data = props.data.data.map((datapoint, datapointIndex) => {
@@ -272,6 +275,28 @@ class DataExplorer extends React.PureComponent<Partial<Props>, State> {
       return mappedDatapoint;
     });
 
+    let largeDataset = true;
+    let selectedDimensions: string[] = [];
+
+    if (data.length < 5000) {
+      largeDataset = false;
+      const cardinalityHash: { [key: string]: { [key: string]: true } } = {};
+      dimensions.forEach(dim => {
+        cardinalityHash[dim.name] = {};
+        data.forEach(datapoint => {
+          const dimValue = datapoint[dim.name];
+          cardinalityHash[dim.name][dimValue] = true;
+        });
+
+        dim.cardinality = Object.entries(cardinalityHash[dim.name]).length;
+      });
+
+      selectedDimensions = dimensions
+        .sort((a, b) => a.cardinality - b.cardinality)
+        .filter((data, index) => index === 0)
+        .map(dim => dim.name);
+    }
+
     const metrics = fields
       .filter(
         field =>
@@ -285,13 +310,14 @@ class DataExplorer extends React.PureComponent<Partial<Props>, State> {
 
     const displayChart: DisplayChart = {};
     this.state = {
+      largeDataset,
       view: initialView,
       lineType: "line",
       areaType: "hexbin",
       trendLine: "none",
       marginalGraphics: "none",
       barGrouping: "Clustered",
-      selectedDimensions: [],
+      selectedDimensions,
       selectedMetrics: [],
       pieceType: "bar",
       summaryType: "violin",
@@ -430,24 +456,22 @@ class DataExplorer extends React.PureComponent<Partial<Props>, State> {
 
     // If you pass an onMetadataChange function, then fire it and pass the updated dx settings so someone upstream can update the metadata or otherwise use it
 
-    this.updateMetadata(
-        {
-            view,
-            lineType,
-            areaType,
-            selectedDimensions,
-            selectedMetrics,
-            pieceType,
-            summaryType,
-            networkType,
-            hierarchyType,
-            trendLine,
-            marginalGraphics,
-            barGrouping,
-            colors,
-            chart
-          }
-        )
+    this.updateMetadata({
+      view,
+      lineType,
+      areaType,
+      selectedDimensions,
+      selectedMetrics,
+      pieceType,
+      summaryType,
+      networkType,
+      hierarchyType,
+      trendLine,
+      marginalGraphics,
+      barGrouping,
+      colors,
+      chart
+    });
 
     this.setState(
       (prevState): any => {
@@ -465,9 +489,10 @@ class DataExplorer extends React.PureComponent<Partial<Props>, State> {
     this.updateChart({ view });
   };
 
-  updateMetadata = (overrideProps:object) => {
-    const { onMetadataChange, metadata } = this.props
-    const { view,
+  updateMetadata = (overrideProps: object) => {
+    const { onMetadataChange, metadata } = this.props;
+    const {
+      view,
       lineType,
       areaType,
       selectedDimensions,
@@ -480,7 +505,8 @@ class DataExplorer extends React.PureComponent<Partial<Props>, State> {
       marginalGraphics,
       barGrouping,
       colors,
-      chart } = this.state
+      chart
+    } = this.state;
     if (onMetadataChange) {
       onMetadataChange(
         {
@@ -506,10 +532,10 @@ class DataExplorer extends React.PureComponent<Partial<Props>, State> {
         mediaType
       );
     }
-  }
+  };
 
   setGrid = () => {
-    this.updateMetadata({ view: "grid" })
+    this.updateMetadata({ view: "grid" });
     this.setState({ view: "grid" });
   };
 
@@ -557,7 +583,8 @@ class DataExplorer extends React.PureComponent<Partial<Props>, State> {
       hierarchyType,
       trendLine,
       marginalGraphics,
-      barGrouping
+      barGrouping,
+      largeDataset
     } = this.state;
 
     let display: React.ReactNode = null;
@@ -607,7 +634,8 @@ class DataExplorer extends React.PureComponent<Partial<Props>, State> {
           dimensions,
           currentView: view,
           setGrid: this.setGrid,
-          setView: this.setView
+          setView: this.setView,
+          largeDataset
         };
         return React.cloneElement(child, toolbarProps);
       }

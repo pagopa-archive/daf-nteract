@@ -111,6 +111,6 @@ export function toJS(immnb: ImmutableNotebook): v4.NotebookV4 {
  *
  * @returns A string containing the notebook data.
  */
-export function stringifyNotebook(notebook: v4.NotebookV4): string {
+export function stringifyNotebook(notebook: Notebook): string {
   return JSON.stringify(notebook, null, 2);
 }

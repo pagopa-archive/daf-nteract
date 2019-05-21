@@ -14,10 +14,19 @@ import { catchError, map, mergeMap, switchMap, tap } from "rxjs/operators";
 
 import * as actions from "@nteract/actions";
 import * as selectors from "@nteract/selectors";
-import { AppState, ContentRef } from "@nteract/types";
+import {
+  AppState,
+  ContentRef,
+  DirectoryContentRecordProps,
+  DummyContentRecordProps,
+  FileContentRecordProps,
+  NotebookContentRecordProps
+} from "@nteract/types";
 import { AjaxResponse } from "rxjs/ajax";
 
 import urljoin from "url-join";
+
+import { RecordOf } from "immutable";
 
 export function updateContentEpic(
   action$: ActionsObservable<actions.ChangeContentName>,
@@ -270,6 +279,46 @@ export function autoSaveCurrentContentEpic(
   );
 }
 
+function serializeContent(
+  state: AppState,
+  content:
+    | RecordOf<NotebookContentRecordProps>
+    | RecordOf<DummyContentRecordProps>
+    | RecordOf<FileContentRecordProps>
+    | RecordOf<DirectoryContentRecordProps>
+) {
+  // This could be object for notebook, or string for files
+  let serializedData: Notebook | string;
+  let saveModel: Partial<contents.IContent<"file" | "notebook">> = {};
+  if (content.type === "notebook") {
+    const appVersion = selectors.appVersion(state);
+
+    // contents API takes notebook as raw JSON whereas downloading takes
+    // a string
+    serializedData = toJS(
+      content.model.notebook.setIn(
+        ["metadata", "nteract", "version"],
+        appVersion
+      )
+    );
+    saveModel = {
+      content: serializedData,
+      type: content.type
+    };
+  } else if (content.type === "file") {
+    serializedData = content.model.text;
+    saveModel = {
+      content: serializedData,
+      type: content.type,
+      format: "text"
+    };
+  } else {
+    return { saveModel: null, serializedData: null };
+  }
+
+  return { saveModel, serializedData };
+}
+
 export function saveContentEpic(
   action$: ActionsObservable<actions.Save | actions.DownloadContent>,
   state$: StateObservable<AppState>
@@ -296,8 +345,12 @@ export function saveContentEpic(
 
         const host = selectors.currentHost(state);
         if (host.type !== "jupyter") {
-          // Dismiss any usage that isn't targeting a jupyter server
-          return empty();
+          return of(
+            actions.saveFailed({
+              error: new Error("Cannot save content if no host is set."),
+              contentRef: action.payload.contentRef
+            })
+          );
         }
         const contentRef = action.payload.contentRef;
         const content = selectors.content(state, { contentRef });
@@ -318,40 +371,25 @@ export function saveContentEpic(
         }
 
         if (content.type === "directory") {
-          // Don't save directories
-          return empty();
+          return of(
+            actions.saveFailed({
+              error: new Error("Cannot save directories."),
+              contentRef: action.payload.contentRef
+            })
+          );
         }
 
         const filepath = content.filepath;
 
-        // This could be object for notebook, or string for files
-        let serializedData: Notebook | string;
-        let saveModel: Partial<contents.IContent<"file" | "notebook">> = {};
-        if (content.type === "notebook") {
-          const appVersion = selectors.appVersion(state);
+        const { serializedData, saveModel } = serializeContent(state, content);
 
-          // contents API takes notebook as raw JSON whereas downloading takes
-          // a string
-          serializedData = toJS(
-            content.model.notebook.setIn(
-              ["metadata", "nteract", "version"],
-              appVersion
-            )
+        if (!saveModel || !serializedData) {
+          return of(
+            actions.saveFailed({
+              error: new Error("No serialized model created for this content."),
+              contentRef: action.payload.contentRef
+            })
           );
-          saveModel = {
-            content: serializedData,
-            type: content.type
-          };
-        } else if (content.type === "file") {
-          serializedData = content.model.text;
-          saveModel = {
-            content: serializedData,
-            type: content.type,
-            format: "text"
-          };
-        } else {
-          // We shouldn't save directories
-          return empty();
         }
 
         switch (action.type) {
@@ -391,13 +429,9 @@ export function saveContentEpic(
 
             // Check to see if the file was modified since the last time
             // we saved.
-            // TODO: Determine how we handle what to do
-            // Don't bother doing this if the file is new(?)
             return contents.get(serverConfig, filepath, { content: 0 }).pipe(
               // Make sure that the modified time is within some delta
               mergeMap(xhr => {
-                // TODO: What does it mean if we have a failed GET
-                // on the content
                 if (xhr.status !== 200) {
                   throw new Error(xhr.response.toString());
                 }
@@ -450,6 +484,85 @@ export function saveContentEpic(
             // is here merely as safety
             return empty();
         }
+      }
+    )
+  );
+}
+
+export function saveAsContentEpic(
+  action$: ActionsObservable<actions.SaveAs>,
+  state$: StateObservable<AppState>
+): Observable<actions.SaveAsFailed | actions.SaveAsFulfilled> {
+  return action$.pipe(
+    ofType(actions.SAVE_AS),
+    mergeMap(
+      (
+        action: actions.SaveAs
+      ):
+        | Observable<actions.SaveAsFailed | actions.SaveAsFulfilled>
+        | Observable<never> => {
+        const state = state$.value;
+
+        const host = selectors.currentHost(state);
+        if (host.type !== "jupyter") {
+          return of(
+            actions.saveAsFailed({
+              error: new Error("Cannot save content if no host is set."),
+              contentRef: action.payload.contentRef
+            })
+          );
+        }
+        const contentRef = action.payload.contentRef;
+        const content = selectors.content(state, { contentRef });
+
+        if (!content) {
+          const errorPayload = {
+            error: new Error("Content was not set."),
+            contentRef: action.payload.contentRef
+          };
+          return of(actions.saveAsFailed(errorPayload));
+        }
+
+        if (content.type === "directory") {
+          return of(
+            actions.saveAsFailed({
+              error: new Error("Cannot save directories."),
+              contentRef: action.payload.contentRef
+            })
+          );
+        }
+
+        const filepath = content.filepath;
+
+        const { saveModel } = serializeContent(state, content);
+
+        if (!saveModel) {
+          return of(
+            actions.saveAsFailed({
+              error: new Error("No serialized model created for this content."),
+              contentRef: action.payload.contentRef
+            })
+          );
+        }
+
+        const serverConfig: ServerConfig = selectors.serverConfig(host);
+
+        return contents.save(serverConfig, filepath, saveModel).pipe(
+          map((xhr: AjaxResponse) => {
+            return actions.saveAsFulfilled({
+              contentRef: action.payload.contentRef,
+              model: xhr.response
+            });
+          }),
+          catchError((error: Error) =>
+            of(
+              actions.saveAsFailed({
+                error,
+                contentRef: action.payload.contentRef
+              })
+            )
+          )
+        );
       }
     )
   );

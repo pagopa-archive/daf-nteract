@@ -147,6 +147,25 @@ export function saveFulfilled(payload: {
   };
 }
 
+export function saveAsFailed(
+  payload: actionTypes.SaveAsFailed["payload"]
+): actionTypes.SaveAsFailed {
+  return {
+    type: actionTypes.SAVE_AS_FAILED,
+    payload,
+    error: true
+  };
+}
+
+export function saveAsFulfilled(
+  payload: actionTypes.SaveAsFulfilled["payload"]
+): actionTypes.SaveAsFulfilled {
+  return {
+    type: actionTypes.SAVE_AS_FULFILLED,
+    payload
+  };
+}
+
 // TODO: New Notebook action should use a kernel spec type
 export function newNotebook(payload: {
   kernelSpec: KernelspecInfo;
