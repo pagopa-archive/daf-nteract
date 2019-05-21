@@ -4,6 +4,7 @@ import {
   Save,
   SaveFailed,
   SaveFulfilled,
+  SetAppHostAction,
   SetGithubTokenAction,
   SetNotificationSystemAction
 } from "@nteract/actions";
@@ -39,6 +40,13 @@ function setNotificationsSystem(
   return state.set("notificationSystem", action.payload.notificationSystem);
 }
 
+function setAppHost(
+  state: AppRecord,
+  action: SetAppHostAction
+): RecordOf<AppRecordProps> {
+  return state.set("host", action.payload);
+}
+
 export default function handleApp(
   state: AppRecord = makeAppRecord(),
   action:
@@ -47,6 +55,7 @@ export default function handleApp(
     | Save
     | SaveFulfilled
     | SaveFailed
+    | SetAppHostAction
 ): RecordOf<AppRecordProps> {
   switch (action.type) {
     case actions.SAVE:
@@ -59,6 +68,8 @@ export default function handleApp(
       return setNotificationsSystem(state, action);
     case actions.SET_GITHUB_TOKEN:
       return setGithubToken(state, action);
+    case actions.SET_APP_HOST:
+      return setAppHost(state, action);
     default:
       return state;
   }

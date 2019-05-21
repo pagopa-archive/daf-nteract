@@ -26,6 +26,7 @@ interface Props {
   currentView: string;
   // How we tell the root DataExplorer to pass toolbar props to this component:
   componentType: "toolbar";
+  largeDataset?: boolean;
 }
 
 const ToolbarWrapper = styled.div`
@@ -48,7 +49,8 @@ export function Toolbar({
   setGrid,
   setView,
   currentView,
-  componentType
+  componentType,
+  largeDataset
 }: Props) {
   return (
     <ToolbarWrapper className="dx-button-bar">
@@ -60,7 +62,7 @@ export function Toolbar({
       >
         <DatabaseOcticon />
       </IconButton>
-      {dimensions.length > 0 && (
+      {!largeDataset && dimensions.length > 0 && (
         <IconButton
           title={chartHelpText.bar}
           onClick={() => setView("bar")}
@@ -94,7 +96,7 @@ export function Toolbar({
       >
         <HexbinIcon />
       </IconButton>
-      {dimensions.length > 1 && (
+      {!largeDataset && dimensions.length > 1 && (
         <IconButton
           title={chartHelpText.network}
           onClick={() => setView("network")}
@@ -104,7 +106,7 @@ export function Toolbar({
           <NetworkIcon />
         </IconButton>
       )}
-      {dimensions.length > 0 && (
+      {!largeDataset && dimensions.length > 0 && (
         <IconButton
           title={chartHelpText.hierarchy}
           onClick={() => setView("hierarchy")}

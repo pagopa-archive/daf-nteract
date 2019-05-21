@@ -1,11 +1,19 @@
 /**
  * @module actions
  */
+// Vendor modules
 import { ContentRef, KernelRef, KernelspecInfo } from "@nteract/types";
+import { contents } from "rx-jupyter";
 
+// Local modules
 import * as actionTypes from "../actionTypes";
 
-import { contents } from "rx-jupyter";
+export const toggleHeaderEditor = (payload: {
+  contentRef: ContentRef;
+}): actionTypes.ToggleHeaderEditor => ({
+  type: actionTypes.TOGGLE_HEADER_EDITOR,
+  payload
+});
 
 export const changeContentName = (payload: {
   filepath: string;
@@ -135,6 +143,25 @@ export function saveFulfilled(payload: {
 }): actionTypes.SaveFulfilled {
   return {
     type: actionTypes.SAVE_FULFILLED,
+    payload
+  };
+}
+
+export function saveAsFailed(
+  payload: actionTypes.SaveAsFailed["payload"]
+): actionTypes.SaveAsFailed {
+  return {
+    type: actionTypes.SAVE_AS_FAILED,
+    payload,
+    error: true
+  };
+}
+
+export function saveAsFulfilled(
+  payload: actionTypes.SaveAsFulfilled["payload"]
+): actionTypes.SaveAsFulfilled {
+  return {
+    type: actionTypes.SAVE_AS_FULFILLED,
     payload
   };
 }

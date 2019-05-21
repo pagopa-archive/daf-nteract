@@ -52,6 +52,10 @@ export const CellToolbar = styled.div`
     opacity: 1;
   }
 
+  @media print {
+    display: none ;
+  }
+
   button {
     display: inline-block;
 

@@ -21,7 +21,11 @@ export const loadConfigEpic = (action$: ActionsObservable<Actions>) =>
     ofType(actions.LOAD_CONFIG),
     switchMap(() =>
       readFileObservable(CONFIG_FILE_PATH).pipe(
-        map(data => actions.configLoaded(JSON.parse(data.toString())))
+        map(data =>
+          actions.configLoaded({
+            config: JSON.parse(data.toString())
+          })
+        )
       )
     )
   );
