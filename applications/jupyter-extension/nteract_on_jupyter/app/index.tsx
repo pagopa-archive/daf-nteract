@@ -2,26 +2,23 @@
  * Main entry point for the web notebook UI
  */
 
-import { JupyterConfigData, readConfig } from "./config";
-
+// Vendor modules
 import "@blueprintjs/core/lib/css/blueprint.css";
 import "@blueprintjs/select/lib/css/blueprint-select.css";
 
-import "codemirror/lib/codemirror.css";
 import "codemirror/addon/hint/show-hint.css";
-
+import "codemirror/lib/codemirror.css";
+import "@nteract/styles/app.css";
+import "@nteract/styles/editor-overrides.css";
+import "@nteract/styles/global-variables.css";
 import "react-table/react-table.css";
+import urljoin from "url-join";
 
+// Local modules
+import { JupyterConfigData, readConfig } from "./config";
 // Until we're switched to blueprint for the menu, we have our own custom css
 // for the rc-menu style menu
 import "./notebook-menu.css";
-
-import "@nteract/styles/app.css";
-import "@nteract/styles/global-variables.css";
-
-import "@nteract/styles/editor-overrides.css";
-
-import urljoin from "url-join";
 
 const rootEl = document.querySelector("#root");
 const dataEl = document.querySelector("#jupyter-config-data");

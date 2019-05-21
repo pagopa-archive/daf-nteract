@@ -185,7 +185,8 @@ export default class CodeMirrorEditor extends React.PureComponent<
       hintOptions,
       // This sets the class on the codemirror <div> that gets created to
       // cm-s-composition
-      theme: "composition"
+      theme: "composition",
+      lineWrapping: true
     });
   }
 

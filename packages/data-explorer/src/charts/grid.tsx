@@ -2,6 +2,7 @@ import * as React from "react";
 import ReactTable from "react-table";
 import withFixedColumns from "react-table-hoc-fixed-columns";
 
+import CustomReactTableStyles from "../css/";
 import * as Dx from "../types";
 
 import styled from "styled-components";
@@ -27,10 +28,6 @@ interface NumberFilterProps {
   filterName: string;
   updateFunction: (input: Dx.JSONObject) => void;
 }
-
-const GridWrapper = styled.div`
-  width: 100%;
-`;
 
 const NumberFilter = (props: NumberFilterProps) => {
   const { filterState, filterName, updateFunction, onChange } = props;
@@ -149,6 +146,7 @@ interface State {
 interface Props {
   data: { data: Dx.Datapoint[]; schema: Dx.Schema };
   height: number;
+  theme?: string;
 }
 
 class DataResourceTransformGrid extends React.PureComponent<Props, State> {
@@ -168,7 +166,8 @@ class DataResourceTransformGrid extends React.PureComponent<Props, State> {
   render() {
     const {
       data: { data, schema },
-      height
+      height,
+      theme
     } = this.props;
 
     const { filters, showFilters } = this.state;
@@ -206,14 +205,16 @@ class DataResourceTransformGrid extends React.PureComponent<Props, State> {
       } else {
         return {
           Header: field.name,
-          accessor: field.name,
+          id: field.name,
+          accessor: (rowValue:{ [key: string]: any }) => {
+            return field.type === "boolean" ? rowValue[field.name].toString() : rowValue[field.name]},
           fixed: primaryKey.indexOf(field.name) !== -1 && "left"
         };
       }
     });
 
     return (
-      <GridWrapper>
+      <CustomReactTableStyles theme={theme}>
         <button
           //          icon="filter"
           onClick={() => this.setState({ showFilters: !showFilters })}
@@ -229,7 +230,7 @@ class DataResourceTransformGrid extends React.PureComponent<Props, State> {
           className="-striped -highlight"
           filterable={showFilters}
         />
-      </GridWrapper>
+      </CustomReactTableStyles>
     );
   }
 }
