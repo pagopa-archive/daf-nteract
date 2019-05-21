@@ -1,3 +1,5 @@
+import apiUriConfig from "./apiUriConfig"
+
 import selectedDataset, {
   selectedDatasetTypes,
   selectedDatasetActions,
@@ -124,5 +126,6 @@ export {
   pdndReducers,
   pdndActionCreators,
   pdndSelectors,
-  pdndEpics
+  pdndEpics,
+  apiUriConfig
 };
