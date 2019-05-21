@@ -32,9 +32,9 @@ class LoginLogoutButton extends PureComponent<
   }
 
   public render(): JSX.Element {
-    const { username, isUserLogged } = this.props;
     const { handleVisibility, handleLogout } = this;
-
+    const { username, isUserLogged } = this.props;
+    const { isOpen } = this.state;
     return (
       <Fragment>
         <Button
@@ -45,7 +45,7 @@ class LoginLogoutButton extends PureComponent<
           <b>{isUserLogged ? username : "Log in"}</b>
         </Button>
         <LoginDialogContainer
-          isOpen={this.state.isOpen && !isUserLogged}
+          isOpen={isOpen && !isUserLogged}
           onClose={handleVisibility}
         />
       </Fragment>
