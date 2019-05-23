@@ -70,7 +70,9 @@ jupyter nteract
 
 If you want to contribute to the project, we suggest to follow the contrubuting guidelines of [nteract](https://nteract.io). We have public milestones and [project](https://github.com/teamdigitale/nteract/projects) on github for looking at our current work. Nteract is build using typescript react redux rx-js and is a very active project. If you are willing to work on such technolgies can be a really good start and we are very open to create a community around our integration.
 
-Requires [Node.js](https://docs.npmjs.com/getting-started/installing-node), [yarn](https://yarnpkg.com/lang/en/docs/install/), [lerna](https://lernajs.io/) python 3 and pip on python 3. The following steps are for MacOs only but can be adjusted for different operating systems.
+Requires [Node.js](https://docs.npmjs.com/getting-started/installing-node), [yarn](https://yarnpkg.com/lang/en/docs/install/), [lerna](https://lernajs.io/) python 3 and pip on python 3. 
+
+#### MacOS
 
 ```
 git clone git@github.com:teamdigitale/nteract.git
@@ -84,5 +86,31 @@ jupyter serverextension enable nteract_on_jupyter
 cd YOUR_LOCAL_FODER_TO_SAVE_OR_LOAD_NOTEBOOKS
 jupyter nteract --dev
 ```
+
+#### Ubuntu or Debian
+```
+git clone git@github.com:teamdigitale/nteract.git
+cd nteract
+pip3 install jupyter requests pandas fbprophet
+
+YARN INSTALLATION
+curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+sudo apt-get update && sudo apt-get install yarn
+
+NODEJS INSTALLATION
+curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
+sudo apt-get install -y nodejs
+
+yarn install
+cd applications/jupyter-extension
+pip3 install -e .
+jupyter serverextension enable nteract_on_jupyter
+cd YOUR_LOCAL_FODER_TO_SAVE_OR_LOAD_NOTEBOOKS
+jupyter nteract --dev
+```
+
+#### Windows
+If you are on Windows 10, you can activate Ubuntu on the [Windows Subsystem for Linux](https://docs.microsoft.com/en-us/learn/modules/get-started-with-windows-subsystem-for-linux/) and follow the same steps as above.
 
 Almost the main things developed are inside the [pdnd-nteract-packages](https://github.com/teamdigitale/nteract/tree/daf-develop/packages/pdnd-nteract-packages)
