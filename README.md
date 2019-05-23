@@ -47,7 +47,9 @@ and open your browser at [http://localhost:8888]. If you are asked the token pas
 
 ### Install for data analyst
 
-If you want to use this repo as your favorite tool for anlysing Italian public dataset you can follow these steps:
+If you are a data scientist we have realeased  [pdnd-open-notebooks](https://github.com/teamdigitale/pdnd-open-notebooks) repository based on this work on nteract. It provides a ready to use datascience Docker with libraries for python, R and julia. 
+
+Otherwise, you can use this repo as your favorite tool for anlysing Italian public dataset you can follow these steps:
 
 Requires [Node.js](https://docs.npmjs.com/getting-started/installing-node), [yarn](https://yarnpkg.com/lang/en/docs/install/), [lerna](https://lernajs.io/) python 3 and pip on python 3. The following steps are for MacOs only but can be adjusted for different operating systems.
 
