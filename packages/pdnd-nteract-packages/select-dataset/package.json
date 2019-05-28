@@ -1,6 +1,6 @@
 {
   "name": "@pdnd-nteract-packages/select-dataset",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "main": "SelectDatasetContainer.tsx",
   "author": "and0111",
   "license": "BSD-3-Clause",

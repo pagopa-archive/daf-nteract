@@ -6,7 +6,6 @@ import { IconNames } from "@blueprintjs/icons";
 import DatasetListContainer from "./src/DatasetListContainer";
 import { isUserLogged } from "../login/duck/loginDuck";
 import { ISelectDatasetProps } from "./types";
-import "./styles.css";
 
 const SelectDataset: FunctionComponent<ISelectDatasetProps> = ({
   isUserLogged
