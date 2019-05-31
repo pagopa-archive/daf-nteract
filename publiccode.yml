@@ -1,0 +1,122 @@
+# This repository adheres to the publiccode.yml standard by including this 
+# metadata file that makes public software easily discoverable.
+# More info at https://github.com/italia/publiccode.yml
+
+publiccodeYmlVersion: '0.2'
+releaseDate: '2019-05-31'
+name: PDND nteract
+url: 'https://github.com/teamdigitale/daf-nteract'
+isBasedOn: 'https://github.com/nteract/nteract'
+landingURL: 'https://github.com/teamdigitale/daf-nteract/blob/daf-develop/README.md'
+softwareVersion: v0.12.3.1
+developmentStatus: beta
+softwareType: standalone/web
+platforms:
+  - web
+roadmap: 'https://github.com/teamdigitale/daf-nteract/projects/1'
+categories:
+  - data-analytics
+  - data-visualization
+  - productivity-suite
+dependsOn:
+  open:
+    - name: nteract
+      versionMin: v0.12.3
+maintenance:
+  type: community
+  contacts:
+    - name: Alessandro Ercolani
+      affiliation: Team per la Trasformazione Digitale
+      email: alessandro@teamdigitale.governo.it
+legal:
+  license: BSD-3-Clause
+  mainCopyrightOwner: nteract contributors
+  repoOwner: Team per la Trasformazione Digitale
+  authorsFile: 'https://github.com/teamdigitale/daf-nteract/blob/daf-develop/AUTHORS'
+intendedAudience:
+  scope:
+    - research
+    - science-and-technology
+  countries:
+    - it
+localisation:
+  localisationReady: false
+  availableLanguages:
+    - en
+it:
+  countryExtensionVersion: '0.2'
+description:
+  it:
+    genericName: Jupyter notebook
+    shortDescription: >-
+      Data science avanzata grazie a Jupiter notebook interfacciati direttamente
+      agli open data italiani: cerca i dati che ti servono, analizza, condividi!
+    longDescription: >
+      La [Piattaforma Digitale Nazionale dei
+      Dati](https://dataportal.daf.teamdigitale.it/) (ex DAF) contiene migliaia
+      di dataset rilasciati dalle pubbliche amministrazioni italiane con licenze
+      open data. La piattaforma espone delle
+      [API](https://docs.italia.it/italia/daf/daf-dataportal-it-docs/it/bozza/dataportal-privato/api.html)
+      (Application Programming Interface) con cui è possibile cercare e
+      scaricare i dati di interesse direttamente da un software di terze parti.
+      Il progetto [PDND-nteract](https://github.com/teamdigitale/daf-nteract)
+      integra le API della PDND all'interno della suite di analisi dati
+      [Jupyter](https://jupyter.org/) grazie al progetto open source
+      [nteract](https://nteract.io/) di cui è un'estensione. L'utente può
+      cercare, analizzare, visualizzare ed eventualmente salvare i dati di
+      interesse all'interno del proprio notebook (Julia, Python, R), oltre che
+      condividerli con la comunità[ direttamente su
+      Github](https://github.com/teamdigitale/pdnd-open-notebooks).
+    documentation: >-
+      https://github.com/teamdigitale/daf-nteract/blob/daf-develop/pdnd-tutorials/pdnd-nteract-tutorial.md
+    apiDocumentation: >-
+      https://docs.italia.it/italia/daf/daf-dataportal-it-docs/it/bozza/dataportal-privato/api.html
+    features:
+      - data science
+      - data analysis
+    screenshots:
+      - >-
+        https://raw.githubusercontent.com/teamdigitale/nteract/daf-develop/pdnd-tutorials/img/login.png
+      - >-
+        https://raw.githubusercontent.com/teamdigitale/nteract/daf-develop/pdnd-tutorials/img/search.png
+      - >-
+        https://raw.githubusercontent.com/teamdigitale/nteract/daf-develop/pdnd-tutorials/img/results.png
+    videos:
+      - 'https://www.youtube.com/watch?v=nlZnYcz66YE'
+  en:
+    localisedName: P
+    genericName: Jupyter notebook
+    shortDescription: >-
+      Advanced data science on Italian open data using Jupyter notebooks: find,
+      analyze and share all data you are interested in!
+    longDescription: >
+      This is a branched (daf-\*) fork of [nteract](https://nteract.io/), a
+      [React](https://reactjs.org/) user interface on top of
+      [Jupyter](https://jupyter.org/) server. We have developed an integration
+      of the API from [PDND - DAF](https://dataportal.daf.teamdigitale.it/)
+      (Piattaforma Digitale Nazionale Dati, formerly Data & Analytics Framework)
+      for simplyfing the access to Italian public data inside notebook for data
+      analysis. We are developing a set of UI components integrated into a set
+      of the official API to **read**, **save** and **update **data into PDND.
+      User can search for datasets from PDND load into a dataframe and starting
+      working on it. The tool is very powerful and flexible and can be an easy
+      way to start working on public dataset from italian administrations,
+      making simple analysis and reports.
+    documentation: >-
+      https://github.com/teamdigitale/daf-nteract/blob/daf-develop/pdnd-tutorials/pdnd-nteract-tutorial.md
+    apiDocumentation: >-
+      https://docs.italia.it/italia/daf/daf-dataportal-it-docs/it/bozza/dataportal-privato/api.html
+    features:
+      - data science
+      - data analysis
+    screenshots:
+      - >-
+        https://raw.githubusercontent.com/teamdigitale/nteract/daf-develop/pdnd-tutorials/img/login.png
+      - >-
+        https://raw.githubusercontent.com/teamdigitale/nteract/daf-develop/pdnd-tutorials/img/search.png
+      - >-
+        https://raw.githubusercontent.com/teamdigitale/nteract/daf-develop/pdnd-tutorials/img/results.png
+    videos:
+      - 'https://www.youtube.com/watch?v=nlZnYcz66YE'
+outputTypes:
+  - jupyter notebooks
