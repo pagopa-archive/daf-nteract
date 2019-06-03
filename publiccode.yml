@@ -118,5 +118,3 @@ description:
         https://raw.githubusercontent.com/teamdigitale/nteract/daf-develop/pdnd-tutorials/img/results.png
     videos:
       - 'https://www.youtube.com/watch?v=nlZnYcz66YE'
-outputTypes:
-  - jupyter notebooks
