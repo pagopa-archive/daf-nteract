@@ -1,6 +1,6 @@
 {
   "name": "@nteract/fs-kernels",
-  "version": "2.0.8",
+  "version": "2.0.9",
   "description": "A manager for the filesystem aspects of Juyter kernels",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",

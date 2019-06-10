@@ -29,18 +29,29 @@ export const MENU_ITEM_ACTIONS = {
   PUBLISH_TO_BOOKSTORE: "publish-to-bookstore"
 };
 
-// These are top-level-menu or sub-menu keys in case we need interim look-ups
-// when users hover over sub-menu titles.
-export const MENUS = {
-  FILE: "file",
-  EDIT: "edit",
-  EDIT_SET_CELL_TYPE: "cell-set-cell-type",
-  INSERT: "insert",
-  CELL: "cell",
-  CELL_CREATE_CELL: "cell-create-cell",
-  VIEW: "view",
-  VIEW_THEMES: "view-themes",
-  RUNTIME: "runtime",
-  RUNTIME_CHANGE_KERNEL: "runtime-change-kernel",
-  HELP: "help"
+export const MENU_ITEM_LABELS = {
+  SAVE_NOTEBOOK: "Save",
+  DOWNLOAD_NOTEBOOK: "Download (.ipynb)",
+  PUBLISH_TO_BOOKSTORE: "Publish",
+  CUT_CELL: "Cut Cell",
+  COPY_CELL: "Copy Cell",
+  PASTE_CELL: "Paste Cell Below",
+  SET_CELL_TYPE_CODE: "To Code",
+  SET_CELL_TYPE_MARKDOWN: "To Markdown",
+  TOGGLE_EDITOR: "Notebook Header",
+  SET_THEME_LIGHT: "Light",
+  SET_THEME_DARK: "Dark",
+  EXECUTE_ALL_CELLS: "Run All Cells",
+  EXECUTE_ALL_CELLS_BELOW: "Run All Cells Below",
+  CREATE_CODE_CELL: "Code Cell",
+  CREATE_MARKDOWN_CELL: "Markdown Cell",
+  CLEAR_ALL_OUTPUTS: "Clear All Outputs",
+  // CHANGE_KERNEL: "change-kernel",
+  UNHIDE_ALL: "Unhide All Input and Output",
+  INTERRUPT_KERNEL: "Interrupt",
+  KILL_KERNEL: "Halt",
+  RESTART_KERNEL: "Restart",
+  RESTART_AND_CLEAR_OUTPUTS: "Restart and Clear All Cells",
+  RESTART_AND_RUN_ALL_OUTPUTS: "Restart and Run All Cells",
+  OPEN_ABOUT: "About"
 };

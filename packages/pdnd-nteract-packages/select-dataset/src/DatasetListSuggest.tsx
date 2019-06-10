@@ -1,17 +1,19 @@
 import React, { SyntheticEvent, Fragment } from "react";
 import {
+  Menu,
   MenuItem,
   InputGroup,
   Spinner,
-  Classes,
   FormGroup,
   Tag,
   Button,
   Intent,
   H3,
-  Icon
+  Icon,
+  Position,
+  Classes
 } from "@blueprintjs/core";
-import { Suggest, ItemRenderer, ItemPredicate } from "@blueprintjs/select";
+import { Suggest, ItemRenderer, ItemPredicate, renderFilteredItems } from "@blueprintjs/select";
 import { IconNames } from "@blueprintjs/icons";
 
 import { highlightText } from "./highlightUtil";
@@ -109,10 +111,18 @@ const DatasetListSuggest = ({
           large: true,
           placeholder: "turismo",
           leftIcon: IconNames.FILTER_LIST,
-          disabled: !hasLoaded || error || datasetList.length < 1
+          disabled: !hasLoaded || error || datasetList.length < 1,
+          intent:
+            !hasLoaded || error || datasetList.length < 1
+              ? Intent.NONE
+              : Intent.SUCCESS
+        }}
+        popoverProps={{
+          position: Position.BOTTOM_LEFT
         }}
         items={datasetList}
         itemRenderer={renderDatasetItem}
+        // itemListRenderer={itemListProps => <Menu>{renderFilteredItems(itemListProps)}</Menu>}
         itemPredicate={filterDatasetItem}
         inputValueRenderer={datasetInputRender}
         onItemSelect={({ name }: IDatasetItem) => requestDataset(name)}

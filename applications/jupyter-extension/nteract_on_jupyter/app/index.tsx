@@ -16,9 +16,6 @@ import urljoin from "url-join";
 
 // Local modules
 import { JupyterConfigData, readConfig } from "./config";
-// Until we're switched to blueprint for the menu, we have our own custom css
-// for the rc-menu style menu
-import "./notebook-menu.css";
 
 const rootEl = document.querySelector("#root");
 const dataEl = document.querySelector("#jupyter-config-data");

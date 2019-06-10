@@ -7,7 +7,7 @@ For example, we can create a `stream` output and use the `Output` and `StreamTex
 const { StreamText } = require("./stream-text");
 
 const output = Object.freeze({
-  outputType: "stream",
+  output_type: "stream",
   text: "Hello World\nHow are you?",
   name: "stdout"
 });
@@ -16,13 +16,14 @@ const output = Object.freeze({
   <StreamText />
 </Output>;
 ```
+
 Errors returned from the connected Jupyter kernel can be rendered.
 
 ```jsx
 const { KernelOutputError } = require("./kernel-output-error");
 
 const output = Object.freeze({
-  outputType: "error",
+  output_type: "error",
   ename: "NameError",
   evalue: "Yikes!",
   traceback: ["Yikes, never heard of that one!"]
@@ -54,26 +55,26 @@ HTML.defaultProps = {
 
 const outputs = [
   {
-    outputType: "stream",
+    output_type: "stream",
     text: "Hello World\nHow are you?",
     name: "stdout"
   },
   {
-    outputType: "display_data",
+    output_type: "display_data",
     data: {
       "text/plain": "O____O"
     },
     metadata: {}
   },
-    {
-    outputType: "display_data",
+  {
+    output_type: "display_data",
     data: {
       "text/html": "<p>This is some HTML.</p>"
     },
     metadata: {}
   },
   {
-    outputType: "stream",
+    output_type: "stream",
     text: "Pretty good I would say",
     name: "stdout"
   }
@@ -91,15 +92,20 @@ const outputs = [
   ))}
 </div>;
 ```
+
 This structure also allows you to create your own components to override how a given output type is rendered. Below is an example that overrides the component to support `display_data` output types with a component that always renders the same thing.
 
 ```jsx
 const { StreamText } = require("./stream-text");
 
 // Our own DisplayData component
-const MyDisplayData = props => <p><b>MyDisplayData.</b></p>;
+const MyDisplayData = props => (
+  <p>
+    <b>MyDisplayData.</b>
+  </p>
+);
 MyDisplayData.defaultProps = {
-  outputType: "display_data"
+  output_type: "display_data"
 };
 
 // Some "rich" handlers for Media. These aren't going to be
@@ -117,19 +123,19 @@ HTML.defaultProps = {
 
 const outputs = [
   {
-    outputType: "display_data",
+    output_type: "display_data",
     data: {
       "text/plain": "O____O"
     },
     metadata: {}
   },
-    {
-    outputType: "display_data",
+  {
+    output_type: "display_data",
     data: {
       "text/html": "<p>This is some HTML.</p>"
     },
     metadata: {}
-  },
+  }
 ];
 
 <div>

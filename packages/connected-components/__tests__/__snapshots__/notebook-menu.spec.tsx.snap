@@ -1,145 +1,266 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`PureNotebookMenu  snapshots renders the default 1`] = `
+exports[`PureNotebookMenu snapshots renders the default 1`] = `
 <ul
-  aria-activedescendant=""
-  className="rc-menu sc-htpNat iSedcs rc-menu-root rc-menu-horizontal"
-  onKeyDown={[Function]}
-  role="menu"
-  style={Object {}}
-  tabIndex="0"
+  className="bp3-menu"
+  style={
+    Object {
+      "background": "var(--theme-app-bg)",
+      "borderBottom": "1px solid var(--theme-app-border)",
+      "color": "var(--theme-app-fg)",
+      "display": "inline-flex",
+      "position": "sticky",
+      "top": 0,
+      "width": "100%",
+      "zIndex": 10000,
+    }
+  }
 >
   <li
-    className="rc-menu-submenu rc-menu-submenu-horizontal"
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    className="bp3-submenu"
   >
-    <div
-      aria-expanded={false}
-      aria-haspopup="true"
-      aria-owns="file$Menu"
-      className="rc-menu-submenu-title"
-      onClick={[Function]}
-      onMouseEnter={[Function]}
-      onMouseLeave={[Function]}
-      style={Object {}}
-      title="File"
+    <span
+      className="bp3-popover-wrapper"
     >
-      File
-      <i
-        className="rc-menu-submenu-arrow"
-      />
-    </div>
+      <span
+        className="bp3-popover-target"
+        onClick={[Function]}
+      >
+        <a
+          className="bp3-menu-item"
+        >
+          <div
+            className="bp3-text-overflow-ellipsis bp3-fill"
+          >
+            File
+          </div>
+          <span
+            className="bp3-icon bp3-icon-caret-right"
+            icon="caret-right"
+          >
+            <svg
+              data-icon="caret-right"
+              height={16}
+              viewBox="0 0 16 16"
+              width={16}
+            >
+              <desc>
+                caret-right
+              </desc>
+              <path
+                d="M11 8c0-.15-.07-.28-.17-.37l-4-3.5A.495.495 0 0 0 6 4.5v7a.495.495 0 0 0 .83.37l4-3.5c.1-.09.17-.22.17-.37z"
+                fillRule="evenodd"
+              />
+            </svg>
+          </span>
+        </a>
+      </span>
+    </span>
   </li>
   <li
-    className="rc-menu-submenu rc-menu-submenu-horizontal"
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    className="bp3-submenu"
   >
-    <div
-      aria-expanded={false}
-      aria-haspopup="true"
-      aria-owns="edit$Menu"
-      className="rc-menu-submenu-title"
-      onClick={[Function]}
-      onMouseEnter={[Function]}
-      onMouseLeave={[Function]}
-      style={Object {}}
-      title="Edit"
+    <span
+      className="bp3-popover-wrapper"
     >
-      Edit
-      <i
-        className="rc-menu-submenu-arrow"
-      />
-    </div>
+      <span
+        className="bp3-popover-target"
+        onClick={[Function]}
+      >
+        <a
+          className="bp3-menu-item"
+        >
+          <div
+            className="bp3-text-overflow-ellipsis bp3-fill"
+          >
+            Edit
+          </div>
+          <span
+            className="bp3-icon bp3-icon-caret-right"
+            icon="caret-right"
+          >
+            <svg
+              data-icon="caret-right"
+              height={16}
+              viewBox="0 0 16 16"
+              width={16}
+            >
+              <desc>
+                caret-right
+              </desc>
+              <path
+                d="M11 8c0-.15-.07-.28-.17-.37l-4-3.5A.495.495 0 0 0 6 4.5v7a.495.495 0 0 0 .83.37l4-3.5c.1-.09.17-.22.17-.37z"
+                fillRule="evenodd"
+              />
+            </svg>
+          </span>
+        </a>
+      </span>
+    </span>
   </li>
   <li
-    className="rc-menu-submenu rc-menu-submenu-horizontal"
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    className="bp3-submenu"
   >
-    <div
-      aria-expanded={false}
-      aria-haspopup="true"
-      aria-owns="view$Menu"
-      className="rc-menu-submenu-title"
-      onClick={[Function]}
-      onMouseEnter={[Function]}
-      onMouseLeave={[Function]}
-      style={Object {}}
-      title="View"
+    <span
+      className="bp3-popover-wrapper"
     >
-      View
-      <i
-        className="rc-menu-submenu-arrow"
-      />
-    </div>
+      <span
+        className="bp3-popover-target"
+        onClick={[Function]}
+      >
+        <a
+          className="bp3-menu-item"
+        >
+          <div
+            className="bp3-text-overflow-ellipsis bp3-fill"
+          >
+            View
+          </div>
+          <span
+            className="bp3-icon bp3-icon-caret-right"
+            icon="caret-right"
+          >
+            <svg
+              data-icon="caret-right"
+              height={16}
+              viewBox="0 0 16 16"
+              width={16}
+            >
+              <desc>
+                caret-right
+              </desc>
+              <path
+                d="M11 8c0-.15-.07-.28-.17-.37l-4-3.5A.495.495 0 0 0 6 4.5v7a.495.495 0 0 0 .83.37l4-3.5c.1-.09.17-.22.17-.37z"
+                fillRule="evenodd"
+              />
+            </svg>
+          </span>
+        </a>
+      </span>
+    </span>
   </li>
   <li
-    className="rc-menu-submenu rc-menu-submenu-horizontal"
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    className="bp3-submenu"
   >
-    <div
-      aria-expanded={false}
-      aria-haspopup="true"
-      aria-owns="cell$Menu"
-      className="rc-menu-submenu-title"
-      onClick={[Function]}
-      onMouseEnter={[Function]}
-      onMouseLeave={[Function]}
-      style={Object {}}
-      title="Cell"
+    <span
+      className="bp3-popover-wrapper"
     >
-      Cell
-      <i
-        className="rc-menu-submenu-arrow"
-      />
-    </div>
+      <span
+        className="bp3-popover-target"
+        onClick={[Function]}
+      >
+        <a
+          className="bp3-menu-item"
+        >
+          <div
+            className="bp3-text-overflow-ellipsis bp3-fill"
+          >
+            Cell
+          </div>
+          <span
+            className="bp3-icon bp3-icon-caret-right"
+            icon="caret-right"
+          >
+            <svg
+              data-icon="caret-right"
+              height={16}
+              viewBox="0 0 16 16"
+              width={16}
+            >
+              <desc>
+                caret-right
+              </desc>
+              <path
+                d="M11 8c0-.15-.07-.28-.17-.37l-4-3.5A.495.495 0 0 0 6 4.5v7a.495.495 0 0 0 .83.37l4-3.5c.1-.09.17-.22.17-.37z"
+                fillRule="evenodd"
+              />
+            </svg>
+          </span>
+        </a>
+      </span>
+    </span>
   </li>
   <li
-    className="rc-menu-submenu rc-menu-submenu-horizontal"
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    className="bp3-submenu"
   >
-    <div
-      aria-expanded={false}
-      aria-haspopup="true"
-      aria-owns="runtime$Menu"
-      className="rc-menu-submenu-title"
-      onClick={[Function]}
-      onMouseEnter={[Function]}
-      onMouseLeave={[Function]}
-      style={Object {}}
-      title="Runtime"
+    <span
+      className="bp3-popover-wrapper"
     >
-      Runtime
-      <i
-        className="rc-menu-submenu-arrow"
-      />
-    </div>
+      <span
+        className="bp3-popover-target"
+        onClick={[Function]}
+      >
+        <a
+          className="bp3-menu-item"
+        >
+          <div
+            className="bp3-text-overflow-ellipsis bp3-fill"
+          >
+            Runtime
+          </div>
+          <span
+            className="bp3-icon bp3-icon-caret-right"
+            icon="caret-right"
+          >
+            <svg
+              data-icon="caret-right"
+              height={16}
+              viewBox="0 0 16 16"
+              width={16}
+            >
+              <desc>
+                caret-right
+              </desc>
+              <path
+                d="M11 8c0-.15-.07-.28-.17-.37l-4-3.5A.495.495 0 0 0 6 4.5v7a.495.495 0 0 0 .83.37l4-3.5c.1-.09.17-.22.17-.37z"
+                fillRule="evenodd"
+              />
+            </svg>
+          </span>
+        </a>
+      </span>
+    </span>
   </li>
   <li
-    className="rc-menu-submenu rc-menu-submenu-horizontal"
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+    className="bp3-submenu"
   >
-    <div
-      aria-expanded={false}
-      aria-haspopup="true"
-      aria-owns="help$Menu"
-      className="rc-menu-submenu-title"
-      onClick={[Function]}
-      onMouseEnter={[Function]}
-      onMouseLeave={[Function]}
-      style={Object {}}
-      title="Help"
+    <span
+      className="bp3-popover-wrapper"
     >
-      Help
-      <i
-        className="rc-menu-submenu-arrow"
-      />
-    </div>
+      <span
+        className="bp3-popover-target"
+        onClick={[Function]}
+      >
+        <a
+          className="bp3-menu-item"
+        >
+          <div
+            className="bp3-text-overflow-ellipsis bp3-fill"
+          >
+            Help
+          </div>
+          <span
+            className="bp3-icon bp3-icon-caret-right"
+            icon="caret-right"
+          >
+            <svg
+              data-icon="caret-right"
+              height={16}
+              viewBox="0 0 16 16"
+              width={16}
+            >
+              <desc>
+                caret-right
+              </desc>
+              <path
+                d="M11 8c0-.15-.07-.28-.17-.37l-4-3.5A.495.495 0 0 0 6 4.5v7a.495.495 0 0 0 .83.37l4-3.5c.1-.09.17-.22.17-.37z"
+                fillRule="evenodd"
+              />
+            </svg>
+          </span>
+        </a>
+      </span>
+    </span>
   </li>
 </ul>
 `;

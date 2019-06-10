@@ -2,7 +2,6 @@ The Jupyter kernel will return outputs that contain data from standard out or st
 
 The `StreamText` component takes a `text` prop which contains the contents of the stream. The `name` prop, which can be one of `stdout` or `stderr` dictates whether the text stream originated from standard out or standard error respectively.
 
-
 ```jsx
-<StreamText name="stderr" text="hello world" />
+<StreamText output={{ name: "stderr", text: "hello world" }} />
 ```

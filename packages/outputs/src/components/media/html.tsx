@@ -17,7 +17,7 @@ interface Props {
 
 // Note: createRange and Range must be polyfilled on older browsers with
 //       https://github.com/timdown/rangy
-export function createFragment(html: string): Node {
+function createFragment(html: string): Node {
   /**
    * createFragment takes in an HTML string and outputs a DOM element that is
    * treated as if it originated on the page "like normal".

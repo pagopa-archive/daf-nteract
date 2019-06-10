@@ -93,7 +93,7 @@ const saveDatasetMetaSelector = createSelector(
 
 const isEditorOrAdmin = createSelector(
   [loggedUserDataSelector],
-  ({ roles = []}) => ({
+  ({ roles = [] }) => ({
     isEditorOrAdmin:
       roles.includes("daf_edt_daf_data") || roles.includes("daf_adm_daf_data")
   })
@@ -112,7 +112,7 @@ const saveDatasetSelectors = {
 };
 
 // operations
-const makeDatasetSaveSnippet = ({ dataset, basicToken, bearerToken }): string => {
+const makeDatasetSaveSnippet = ({ dataset, bearerToken }): string => {
   const {
     user,
     variable,
@@ -166,7 +166,7 @@ const datasetSaveEpic = (action$, state$) =>
       (focusedCell, savedDataset) => {
         const state = state$.value;
         const { contentRef, id } = focusedCell.payload;
-        const { basicToken, bearerToken } = { ...tokensSelector(state) };
+        const { bearerToken } = { ...tokensSelector(state) };
         const { username } = { ...usernameSelector(state) };
         const value =
           cellByIdSelector(modelSelector(state, { contentRef }), {
@@ -178,7 +178,6 @@ const datasetSaveEpic = (action$, state$) =>
               user: username,
               ...savedDataset.payload
             },
-            basicToken,
             bearerToken
           });
 
