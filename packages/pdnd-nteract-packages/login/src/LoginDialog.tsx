@@ -83,23 +83,23 @@ const LoginDialog: FunctionComponent<ILoginDialogProps> = ({
               >
                 Forgot password?
               </AnchorButton>
-              <Button
-                large
-                minimal
-                intent={PRIMARY}
-                icon={LOG_IN}
-                type="submit"
-              >
-                Log in
-              </Button>
               <AnchorButton
                 large
+                minimal
                 intent={PRIMARY}
                 href={`${commonURL}register`}
                 target="_blank"
               >
                 Sign up
               </AnchorButton>
+              <Button
+                large
+                intent={PRIMARY}
+                icon={LOG_IN}
+                type="submit"
+              >
+                Log in
+              </Button>
             </div>
           </Fragment>
         )}
