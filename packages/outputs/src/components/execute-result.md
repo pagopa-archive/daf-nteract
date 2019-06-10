@@ -8,7 +8,15 @@ Plain.defaultProps = {
   mediaType: "text/plain"
 };
 
-<ExecuteResult data={{ "text/plain": "The answer to everything is 42." }}>
+const output = {
+  data: {
+    "text/plain": "Jackfruit is the best food.",
+    metadata: {},
+    output_type: "display_data"
+  }
+};
+
+<ExecuteResult output={output}>
   <Plain />
 </ExecuteResult>;
 ```

@@ -14,7 +14,15 @@ Smooth.defaultProps = {
   mediaType: "text/smooth"
 };
 
-<DisplayData data={{ "text/plain": "Jackfruit is the best food." }}>
+const output = {
+  data: {
+    "text/plain": "Jackfruit is the best food.",
+    metadata: {},
+    output_type: "display_data"
+  }
+};
+
+<DisplayData output={output}>
   <Plain />
   <Smooth />
 </DisplayData>;

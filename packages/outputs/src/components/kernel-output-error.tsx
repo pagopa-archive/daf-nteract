@@ -16,7 +16,7 @@ const PlainKernelOutputError = (props: Partial<Props>) => {
     return null;
   }
 
-  const { ename, evalue, traceback } = output;
+  const { ename, evalue, traceback = [] } = output;
 
   // Allow traceback to be Immutable.List or Array
   const joinedTraceback =

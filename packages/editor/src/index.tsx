@@ -249,7 +249,7 @@ export default class CodeMirrorEditor extends React.PureComponent<
     // Set up the initial options with both our defaults and all the ones we
     // allow to be passed in
     const options: FullEditorConfiguration = {
-      ...this.fullOptions,
+      ...this.fullOptions(),
       ...this.defaultOptions,
       mode: this.cleanMode()
     };

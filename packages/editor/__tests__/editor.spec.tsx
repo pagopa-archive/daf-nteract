@@ -141,10 +141,10 @@ describe("editor.hint CodeMirror callback", () => {
 
 describe("Editor", () => {
   it("handles cursor blinkery changes", () => {
-    const editorWrapper = mount(<Editor cursorBlinkRate={530} />);
+    const editorWrapper = mount(<Editor cursorBlinkRate={531} />);
     const instance = editorWrapper.instance();
     const cm = instance.cm;
-    expect(cm.options.cursorBlinkRate).toBe(530);
+    expect(cm.options.cursorBlinkRate).toBe(531);
     editorWrapper.setProps({ cursorBlinkRate: 0 });
     expect(cm.options.cursorBlinkRate).toBe(0);
   });
