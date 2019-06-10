@@ -47,7 +47,7 @@ and open your browser at [http://localhost:8888]. If you are asked the token pas
 
 ### Install for data analyst
 
-If you are a data scientist we have realeased  [pdnd-open-notebooks](https://github.com/teamdigitale/pdnd-open-notebooks) repository based on this work on nteract. It provides a ready to use datascience Docker with libraries for python, R and julia. 
+If you are a data scientist we have realeased  [pdnd-open-notebooks](https://github.com/teamdigitale/pdnd-open-notebooks) repository based on this work on nteract. It provides a ready to use datascience Docker with libraries for python, R and julia and a set of notebooks as a starting examples. 
 
 Otherwise, you can use this repo as your favorite tool for anlysing Italian public dataset you can follow these steps:
 
