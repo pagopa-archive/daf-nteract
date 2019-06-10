@@ -95,7 +95,7 @@ const datasetMetaSelector = createSelector(
 const selectedDatasetSelectors = { datasetSelector, datasetMetaSelector };
 
 // operations (TODO: needs refactor)
-const makeDatasetSnippet = ({ datasetURI, basicToken, bearerToken }): string =>
+const makeDatasetSnippet = ({ datasetURI, bearerToken }): string =>
   `url = "${BASE_API_URI}dataset-manager/v1/dataset/${encodeURIComponent(
     datasetURI
   )}?format=json"
@@ -108,7 +108,6 @@ data`;
 
 const makeDatasetSnippetByKernel = ({
   datasetURI,
-  basicToken,
   bearerToken,
   kernelName,
   metacatalog
@@ -131,10 +130,12 @@ val resp = Http("${BASE_API_URI}dataset-manager/v1/dataset/${encodeURIComponent(
 .headers(Seq("Authorization" -> ("Bearer YOU_MUST_BE_LOGGEDIN"),
 "content-Type" -> "application/json"))
 .asString
-val ${metacatalog.dcatapit.name}  = ujson.read(resp.body).asInstanceOf[ujson.Js.Arr]
-      `
-      } else if(kernelName == 'ir'){
-        return `options(repr.matrix.max.rows = 10)
+val ${
+      metacatalog.dcatapit.name
+    }  = ujson.read(resp.body).asInstanceOf[ujson.Js.Arr]
+      `;
+  } else if (kernelName == "ir") {
+    return `options(repr.matrix.max.rows = 10)
 library(httr)
 #install.packages("ggplot2")
 library(ggplot2)
@@ -145,9 +146,9 @@ data <- GET("${BASE_API_URI}dataset-manager/v1/dataset/${encodeURIComponent(
   add_headers(Authorization = "Bearer YOU_MUST_BE_LOGGEDIN"))
 content <- content(data)
 ${metacatalog.dcatapit.name} <- read.csv(text=content, header=TRUE, sep=",")
-${metacatalog.dcatapit.name}`
-      }else if(kernelName == 'julia-1.1'){
-        return `using Pkg
+${metacatalog.dcatapit.name}`;
+  } else if (kernelName == "julia-1.1") {
+    return `using Pkg
 Pkg.add("HTTP");
 Pkg.add("DataFrames");
 Pkg.add("CSV");
@@ -189,6 +190,7 @@ ${metacatalog.dcatapit.name}`;
     return "kernel not supported yet";
   }
 };
+
 /// epics
 const datasetEpic = (action$, state$) =>
   action$.pipe(
@@ -202,7 +204,7 @@ const datasetEpic = (action$, state$) =>
       (focusedCell, selectedDataset) => {
         const state = state$.value;
         const { contentRef, id } = focusedCell.payload;
-        const { basicToken, bearerToken } = { ...tokensSelector(state) };
+        const { bearerToken } = { ...tokensSelector(state) };
 
         const model = selectors.model(state, { contentRef });
         // Is not correct when switch kernel
@@ -217,9 +219,8 @@ const datasetEpic = (action$, state$) =>
           }).get("source", "") +
           "\n" +
           makeDatasetSnippetByKernel({
-            datasetURI: selectedDataset.payload.operational.logical_uri,
-            basicToken,
             bearerToken,
+            datasetURI: selectedDataset.payload.operational.logical_uri,
             kernelName: kernelSpec,
             metacatalog: selectedDataset.payload
           });

@@ -1,12 +1,6 @@
 import { fromJS, Map } from "immutable";
 import { of, interval } from "rxjs";
-import {
-  map,
-  take,
-  catchError,
-  concatMap,
-  tap
-} from "rxjs/operators";
+import { map, take, catchError, concatMap, tap } from "rxjs/operators";
 import { ajax } from "rxjs/ajax";
 import { ofType } from "redux-observable";
 import { createSelector } from "reselect";
@@ -34,7 +28,7 @@ const loggedUserTypes = {
 
 // reducer
 const loggedUserInitialState = Map({
-  data: Map({ bearerToken: "", basicToken: "", uid: "", roles: [] }),
+  data: Map({ bearerToken: "", uid: "", roles: [] }),
   meta: Map({ error: false, isLoading: false, hasLoaded: false })
 });
 
@@ -101,7 +95,7 @@ const usernameSelector = createSelector(
 
 const tokensSelector = createSelector(
   [loggedUserDataSelector],
-  ({ bearerToken, basicToken }) => ({ bearerToken, basicToken })
+  ({ bearerToken }) => ({ bearerToken })
 );
 
 const loggedUserMetaSelector = createSelector(
@@ -133,7 +127,7 @@ const loggedUserSelectors = {
 // epics
 const commonURL = "https://api.daf.teamdigitale.it/";
 
-const requestUserObservable = ({ bearerToken, basicToken, username }) =>
+const requestUserObservable = ({ bearerToken, username }) =>
   ajax
     .get(commonURL + "security-manager/v1/ipa/userbymail/" + username, {
       Accept: "application/json",
@@ -141,10 +135,9 @@ const requestUserObservable = ({ bearerToken, basicToken, username }) =>
       Authorization: "Bearer " + bearerToken
     })
     .pipe(
-      map(({ response }) => ({ bearerToken, basicToken, ...response })),
+      map(({ response }) => ({ bearerToken, ...response })),
       tap(() => {
         window.localStorage.setItem("bearerToken", bearerToken);
-        window.localStorage.setItem("basicToken", basicToken);
         window.localStorage.setItem("username", username);
       }),
       map(mappedResponse => fulfillLogin(mappedResponse)),
@@ -156,11 +149,10 @@ const loginEpic = (action$, state$) =>
     // bearerToken && validate ? fulfill : reset non working
     map(() => ({
       bearerToken: window.localStorage.getItem("bearerToken"),
-      basicToken: window.localStorage.getItem("basicToken"),
       username: window.localStorage.getItem("username")
     })),
-    concatMap(({ bearerToken, basicToken, username }) =>
-      bearerToken && basicToken && username
+    concatMap(({ bearerToken, username }) =>
+      bearerToken && username
         ? ajax
             .get(commonURL + "sso-manager/secured/test", {
               Accept: "application/json",
@@ -173,7 +165,6 @@ const loginEpic = (action$, state$) =>
                   ? []
                   : requestUserObservable({
                       bearerToken,
-                      basicToken,
                       username
                     }))
               ),
@@ -198,7 +189,7 @@ const requestLoginEpic = action$ => {
           map(({ response }) => response),
           catchError(error => of(rejectLogin())),
           concatMap(bearerToken =>
-            requestUserObservable({ bearerToken, basicToken, username })
+            requestUserObservable({ bearerToken, username })
           )
         );
     })
@@ -207,7 +198,6 @@ const requestLoginEpic = action$ => {
 
 const removeLocals = () => {
   window.localStorage.removeItem("bearerToken");
-  window.localStorage.removeItem("basicToken");
   window.localStorage.removeItem("username");
 };
 
