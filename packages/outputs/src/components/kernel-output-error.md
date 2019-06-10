@@ -28,15 +28,11 @@ const errorMessage = {
   ]
 };
 
-<KernelOutputError
-  ename={errorMessage.ename}
-  evalue={errorMessage.evalue}
-  traceback={errorMessage.traceback}
-/>;
+<KernelOutputError output={errorMessage} />;
 ```
 
 With no traceback, the `ename` and `evalue` is used. This is common in older versions of this output type.
 
 ```jsx
-<KernelOutputError ename="NameError" evalue="Yikes!" />
+<KernelOutputError output={{ ename: "NameError", evalue: "Yikes!" }} />
 ```

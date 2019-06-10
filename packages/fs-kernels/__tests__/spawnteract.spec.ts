@@ -16,6 +16,16 @@ describe("launch", () => {
   let spawnResult;
   let spawnResultNoCleanup;
   let kernelName;
+  beforeAll(() => {
+    // give CI some extra time for these launch kernel tests
+    jest.setTimeout(10000);
+  });
+
+  afterAll(() => {
+    // 5000 is the normal jest timeout limit
+    jest.setTimeout(5000);
+  });
+
   it("spawns a kernel", done => {
     findAll()
       .then(kernels => {

@@ -1,6 +1,6 @@
 {
   "name": "@nteract/connected-components",
-  "version": "6.2.1",
+  "version": "6.3.0",
   "description": "Connected components exported from @nteract/core",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -14,7 +14,7 @@
     "@nteract/commutable": "^7.1.2",
     "@nteract/core": "^10.5.0",
     "@nteract/types": "^4.2.1",
-    "rc-menu": "6.2.11",
+    "@blueprintjs/core": "^3.7.0",
     "react-redux": "^6.0.0",
     "redux": "^4.0.0",
     "styled-components": "^4.1.3"

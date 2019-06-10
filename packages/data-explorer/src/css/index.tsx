@@ -22,7 +22,7 @@ export default styled.div<ThemeProps>`
 
   .ReactTable.-striped .rt-tr.-even > div {
     color: ${props => (props.theme === "dark" ? "#bbb" : "#111")};
-    background-color: ${props => (props.theme === "dark" ? "#111" : "#bbb")};
+    background-color: ${props => (props.theme === "dark" ? "#111" : "#f7f7f7")};
   }
 
   .ReactTable.-highlight .rt-tbody .rt-tr:not(.-padRow):hover {
