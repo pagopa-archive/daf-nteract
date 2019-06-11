@@ -38,7 +38,7 @@ import * as selectors from "@nteract/selectors";
 import { AppState, ContentRef, PayloadMessage } from "@nteract/types";
 
 // TODO ale
-// import { tokensSelector } from "../../pdnd-nteract-packages/login/duck/loginDuck";
+import { tokensSelector } from "../../pdnd-nteract-packages/login/duck/loginDuck";
 
 const Immutable = require("immutable");
 
@@ -138,7 +138,7 @@ export function createExecuteCellStream(
 ): Observable<any> {
   const kernel = selectors.currentKernel(state);
 
-  // const { bearerToken } = { ...tokensSelector(state) };
+  const { bearerToken } = { ...tokensSelector(state) };
 
   const channels = kernel ? kernel.channels : null;
 
