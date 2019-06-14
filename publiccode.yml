@@ -44,6 +44,8 @@ localisation:
     - en
 it:
   countryExtensionVersion: '0.2'
+  riuso:
+    codiceIPA: pcm
 description:
   it:
     genericName: Jupyter notebook
