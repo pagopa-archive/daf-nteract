@@ -85,7 +85,6 @@ description:
     videos:
       - 'https://www.youtube.com/watch?v=nlZnYcz66YE'
   en:
-    localisedName: P
     genericName: Jupyter notebook
     shortDescription: >-
       Advanced data science on Italian open data using Jupyter notebooks: find,
