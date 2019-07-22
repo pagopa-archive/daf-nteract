@@ -21,7 +21,7 @@ export class StreamText extends React.PureComponent<Props> {
     const { text, name } = output;
 
     return (
-      <Ansi linkify={false} className={`nteract-display-area-${name}`}>
+      <Ansi linkify className={`nteract-display-area-${name}`}>
         {text}
       </Ansi>
     );

@@ -356,3 +356,24 @@ export function updateOutputMetadata(payload: {
     payload
   };
 }
+
+export function promptInputRequest(payload: {
+  id: CellId;
+  contentRef: ContentRef;
+  prompt: string;
+  password: boolean;
+}): actionTypes.PromptInputRequest {
+  return {
+    type: actionTypes.PROMPT_INPUT_REQUEST,
+    payload
+  };
+}
+
+export function sendInputReply(
+  payload: actionTypes.SendInputReply["payload"]
+): actionTypes.SendInputReply {
+  return {
+    type: actionTypes.SEND_INPUT_REPLY,
+    payload
+  };
+}

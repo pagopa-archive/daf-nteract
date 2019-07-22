@@ -1,7 +1,7 @@
-import { remultiline } from "../src/primitives";
+import { createFrozenMediaBundle, remultiline } from "../src";
 
 // In order to make jest output read well, show 🇳🇱 instead of newlines
-function flagNewlines(s: string) {
+function flagNewlines(s: string): string {
   // NOTE: This function can be thought of mentally as Netherlines
   return s.replace(/\n/g, "🇳🇱");
 }
@@ -21,6 +21,7 @@ describe("remultiline", () => {
     expect(
       remultiline("test\n\n\nthis\n\nout\n\n\n\n\n\nwhat").map(flagNewlines)
     ).toEqual(
+      // tslint:disable-next-line:max-line-length
       ["test\n", "\n", "\n", "this\n", "\n", "out\n", "\n", "\n", "\n", "\n", "\n", "what"].map(
         flagNewlines
       )
@@ -30,4 +31,36 @@ describe("remultiline", () => {
   it("keeps multiline arrays the same", () => {
     expect(remultiline(["test\n", "this"])).toEqual(["test\n", "this"]);
   });
+});
+
+describe("createFrozenMediaBundle", () => {
+  it("correctly handles JSON with a string root object", () => {
+      const mediaBundle = {
+        "application/vnd.nteract+json": "Don't treat me like an object!",
+      };
+
+      expect(createFrozenMediaBundle(mediaBundle)).toEqual(mediaBundle);
+    }
+  );
+
+  it("correctly handles JSON with an array root object", () => {
+      const mediaBundle = {
+        "application/vnd.nteract+json": ["1", "2", "3"],
+      };
+
+      expect(createFrozenMediaBundle(mediaBundle)).toEqual(mediaBundle);
+    }
+  );
+
+  it("correctly handles non-JSON with an array root object", () => {
+      const mediaBundle = {
+        "application/vnd.nteract+nothing": ["1", "2", "3"],
+      };
+      const expectedResult = {
+        "application/vnd.nteract+nothing": "123",
+      }
+
+      expect(createFrozenMediaBundle(mediaBundle)).toEqual(expectedResult);
+    }
+  );
 });

@@ -132,6 +132,9 @@ export const idsOfHiddenOutputs = createSelector(
 export const transientCellMap = (model: NotebookModel) =>
   model.transient.get("cellMap", Immutable.Map());
 
+export const cellPromptById = (model: NotebookModel, { id }: { id: CellId }) =>
+  model.cellPrompts.get(id);
+
 /**
  * Returns the CellIds of the code cells within a notebook.
  */

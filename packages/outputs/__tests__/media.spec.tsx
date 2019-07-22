@@ -125,6 +125,12 @@ describe("Plain", () => {
     const component = mount(<Media.Plain data={data} />);
     expect(toJson(component)).toMatchSnapshot();
   });
+  it("should render urls as links", () => {
+    const data = "Let's go to https://google.com today!";
+    const component = mount(<Media.Plain data={data} />);
+    expect(toJson(component)).toMatchSnapshot();
+    expect(component.find("a").prop("href")).toEqual("https://google.com");
+  });
 });
 
 describe("JavaScript", () => {

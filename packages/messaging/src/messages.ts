@@ -168,7 +168,7 @@ export function executeRequest(
       silent: false,
       store_history: true,
       user_expressions: {},
-      allow_stdin: false,
+      allow_stdin: true,
       stop_on_error: false,
       ...options
     },
@@ -383,4 +383,10 @@ export function shutdownRequest(
   content: { restart?: boolean } = { restart: false }
 ): JupyterMessage<"shutdown_request", { restart?: boolean }> {
   return message({ msg_type: "shutdown_request" }, content);
+}
+
+export function inputReply(content: {
+  value: string;
+}): JupyterMessage<"input_reply"> {
+  return message({ msg_type: "input_reply" }, content);
 }

@@ -78,6 +78,9 @@ describe("newNotebookEpic", () => {
     const responseActions = await newNotebookEpic(action$)
       .pipe(toArray())
       .toPromise();
+    const filepath = process.platform === "win32"
+      ? "\\home\\whatever\\Untitled.ipynb"
+      : "/home/whatever/Untitled.ipynb";
 
     expect(responseActions).toEqual([
       {
@@ -85,7 +88,7 @@ describe("newNotebookEpic", () => {
         payload: {
           contentRef: "cRef",
           kernelRef: "kRef",
-          filepath: "",
+          filepath: filepath,
           model: {
             type: "notebook",
             mimetype: "application/x-ipynb+json",
@@ -97,10 +100,7 @@ describe("newNotebookEpic", () => {
             ),
             writable: true,
             name: "Untitled.ipynb",
-            path:
-              process.platform === "win32"
-                ? "\\home\\whatever\\Untitled.ipynb"
-                : "/home/whatever/Untitled.ipynb",
+            path: filepath,
             created: expect.any(String),
             last_modified: expect.any(String)
           }

@@ -17,6 +17,7 @@ export default createGlobalStyle`
 	}
 .leaflet-container {
 	overflow: hidden;
+	z-index: 9;
 	}
 .leaflet-tile,
 .leaflet-marker-icon,

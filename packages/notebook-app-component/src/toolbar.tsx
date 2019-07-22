@@ -108,7 +108,7 @@ export const CellToolbarMask = styled.div.attrs<CellToolbarMaskProps>(
     }
   })
 )`
-  z-index: 9999;
+  z-index: 9;
   position: absolute;
   top: 0px;
   right: 0px;

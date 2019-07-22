@@ -1,6 +1,6 @@
 import * as Immutable from "immutable";
 import { ActionsObservable, StateObservable } from "redux-observable";
-import { Subject } from "rxjs";
+import { of, Subject } from "rxjs";
 import { toArray } from "rxjs/operators";
 
 import * as actions from "@nteract/actions";
@@ -127,6 +127,331 @@ describe("interruptKernelEpic", () => {
       {
         type: "INTERRUPT_KERNEL_SUCCESSFUL",
         payload: { kernelRef: "fake" }
+      }
+    ]);
+  });
+});
+
+describe("restartKernelEpic", () => {
+  test("does not execute restart if no kernelRef is passed", async () => {
+    const state$ = new StateObservable(new Subject<stateModule.AppState>(), {
+      core: stateModule.makeStateRecord({
+        kernelRef: "fake",
+        entities: stateModule.makeEntitiesRecord({
+          kernels: stateModule.makeKernelsRecord({
+            byRef: Immutable.Map({
+              fake: stateModule.makeRemoteKernelRecord({
+                type: "websocket",
+                channels: new Subject<any>(),
+                kernelSpecName: "fancy",
+                id: "0"
+              })
+            })
+          })
+        })
+      }),
+      app: stateModule.makeAppRecord({
+        host: stateModule.makeJupyterHostRecord({
+          type: "jupyter",
+          token: "eh",
+          basePath: "http://localhost:8888/"
+        }),
+        notificationSystem: { addNotification: jest.fn() }
+      }),
+      comms: stateModule.makeCommsRecord(),
+      config: Immutable.Map({})
+    });
+    const action$ = ActionsObservable.of(
+      actions.restartKernel({
+        kernelRef: null,
+        contentRef: "contentRef",
+        outputHandling: "None"
+      })
+    );
+
+    const responseActions = await coreEpics
+      .restartWebSocketKernelEpic(action$, state$)
+      .pipe(toArray())
+      .toPromise();
+
+    expect(responseActions).toEqual([
+      {
+        type: actions.RESTART_KERNEL_FAILED,
+        error: true,
+        payload: {
+          error: new Error("Can't execute restart without kernel ref."),
+          kernelRef: "none provided",
+          contentRef: "contentRef"
+        }
+      }
+    ]);
+  });
+  test("does not execute restart if host type is not Jupyter", async () => {
+    const state$ = new StateObservable(new Subject<stateModule.AppState>(), {
+      core: stateModule.makeStateRecord({
+        kernelRef: "fake",
+        entities: stateModule.makeEntitiesRecord({
+          kernels: stateModule.makeKernelsRecord({
+            byRef: Immutable.Map({
+              fake: stateModule.makeRemoteKernelRecord({
+                type: "websocket",
+                channels: new Subject<any>(),
+                kernelSpecName: "fancy",
+                id: "0"
+              })
+            })
+          })
+        })
+      }),
+      app: stateModule.makeAppRecord({
+        host: stateModule.makeLocalHostRecord({
+          type: "local"
+        }),
+        notificationSystem: { addNotification: jest.fn() }
+      }),
+      comms: stateModule.makeCommsRecord(),
+      config: Immutable.Map({})
+    });
+    const action$ = ActionsObservable.of(
+      actions.restartKernel({
+        kernelRef: "fake",
+        contentRef: "contentRef",
+        outputHandling: "None"
+      })
+    );
+
+    const responseActions = await coreEpics
+      .restartWebSocketKernelEpic(action$, state$)
+      .pipe(toArray())
+      .toPromise();
+
+    expect(responseActions).toEqual([
+      {
+        type: actions.RESTART_KERNEL_FAILED,
+        error: true,
+        payload: {
+          error: new Error("Can't restart a kernel with no Jupyter host."),
+          kernelRef: "fake",
+          contentRef: "contentRef"
+        }
+      }
+    ]);
+  });
+  test("does not execute restart if no kernel exists with kernelRef", async () => {
+    const state$ = new StateObservable(new Subject<stateModule.AppState>(), {
+      core: stateModule.makeStateRecord({
+        kernelRef: "fake",
+        entities: stateModule.makeEntitiesRecord({
+          kernels: stateModule.makeKernelsRecord({
+            byRef: Immutable.Map({
+              notFake: stateModule.makeRemoteKernelRecord({
+                type: "websocket",
+                channels: new Subject<any>(),
+                kernelSpecName: "fancy",
+                id: "0"
+              })
+            })
+          })
+        })
+      }),
+      app: stateModule.makeAppRecord({
+        host: stateModule.makeJupyterHostRecord({
+          type: "jupyter",
+          token: "eh",
+          basePath: "http://localhost:8888/"
+        }),
+        notificationSystem: { addNotification: jest.fn() }
+      }),
+      comms: stateModule.makeCommsRecord(),
+      config: Immutable.Map({})
+    });
+    const action$ = ActionsObservable.of(
+      actions.restartKernel({
+        kernelRef: "fake",
+        contentRef: "contentRef",
+        outputHandling: "None"
+      })
+    );
+
+    const responseActions = await coreEpics
+      .restartWebSocketKernelEpic(action$, state$)
+      .pipe(toArray())
+      .toPromise();
+
+    expect(responseActions).toEqual([
+      {
+        type: actions.RESTART_KERNEL_FAILED,
+        error: true,
+        payload: {
+          error: new Error("Can't restart a kernel that does not exist."),
+          kernelRef: "fake",
+          contentRef: "contentRef"
+        }
+      }
+    ]);
+  });
+  test("restarts kernel if given valid kernel ref", async () => {
+    const state$ = new StateObservable(new Subject<stateModule.AppState>(), {
+      core: stateModule.makeStateRecord({
+        kernelRef: "fake",
+        entities: stateModule.makeEntitiesRecord({
+          kernels: stateModule.makeKernelsRecord({
+            byRef: Immutable.Map({
+              fake: stateModule.makeRemoteKernelRecord({
+                type: "websocket",
+                channels: new Subject<any>(),
+                kernelSpecName: "fancy",
+                id: "0"
+              })
+            })
+          })
+        })
+      }),
+      app: stateModule.makeAppRecord({
+        host: stateModule.makeJupyterHostRecord({
+          type: "jupyter",
+          token: "eh",
+          basePath: "http://localhost:8888/"
+        }),
+        notificationSystem: { addNotification: jest.fn() }
+      }),
+      comms: stateModule.makeCommsRecord(),
+      config: Immutable.Map({})
+    });
+    const action$ = ActionsObservable.of(
+      actions.restartKernel({
+        kernelRef: "fake",
+        contentRef: "contentRef",
+        outputHandling: "None"
+      })
+    );
+
+    const responseActions = await coreEpics
+      .restartWebSocketKernelEpic(action$, state$)
+      .pipe(toArray())
+      .toPromise();
+
+    expect(responseActions).toEqual([
+      {
+        type: actions.RESTART_KERNEL_SUCCESSFUL,
+        payload: {
+          kernelRef: "fake",
+          contentRef: "contentRef"
+        }
+      }
+    ]);
+  });
+  test("respects output handling for running all cells", async () => {
+    const state$ = new StateObservable(new Subject<stateModule.AppState>(), {
+      core: stateModule.makeStateRecord({
+        kernelRef: "fake",
+        entities: stateModule.makeEntitiesRecord({
+          kernels: stateModule.makeKernelsRecord({
+            byRef: Immutable.Map({
+              fake: stateModule.makeRemoteKernelRecord({
+                type: "websocket",
+                channels: new Subject<any>(),
+                kernelSpecName: "fancy",
+                id: "0"
+              })
+            })
+          })
+        })
+      }),
+      app: stateModule.makeAppRecord({
+        host: stateModule.makeJupyterHostRecord({
+          type: "jupyter",
+          token: "eh",
+          basePath: "http://localhost:8888/"
+        }),
+        notificationSystem: { addNotification: jest.fn() }
+      }),
+      comms: stateModule.makeCommsRecord(),
+      config: Immutable.Map({})
+    });
+    const action$ = ActionsObservable.of(
+      actions.restartKernel({
+        kernelRef: "fake",
+        contentRef: "contentRef",
+        outputHandling: "Run All"
+      })
+    );
+
+    const responseActions = await coreEpics
+      .restartWebSocketKernelEpic(action$, state$)
+      .pipe(toArray())
+      .toPromise();
+
+    expect(responseActions).toEqual([
+      {
+        type: actions.RESTART_KERNEL_SUCCESSFUL,
+        payload: {
+          kernelRef: "fake",
+          contentRef: "contentRef"
+        }
+      },
+      {
+        type: actions.EXECUTE_ALL_CELLS,
+        payload: {
+          contentRef: "contentRef"
+        }
+      }
+    ]);
+  });
+  test("respects output handling for clearing all cells", async () => {
+    const state$ = new StateObservable(new Subject<stateModule.AppState>(), {
+      core: stateModule.makeStateRecord({
+        kernelRef: "fake",
+        entities: stateModule.makeEntitiesRecord({
+          kernels: stateModule.makeKernelsRecord({
+            byRef: Immutable.Map({
+              fake: stateModule.makeRemoteKernelRecord({
+                type: "websocket",
+                channels: new Subject<any>(),
+                kernelSpecName: "fancy",
+                id: "0"
+              })
+            })
+          })
+        })
+      }),
+      app: stateModule.makeAppRecord({
+        host: stateModule.makeJupyterHostRecord({
+          type: "jupyter",
+          token: "eh",
+          basePath: "http://localhost:8888/"
+        }),
+        notificationSystem: { addNotification: jest.fn() }
+      }),
+      comms: stateModule.makeCommsRecord(),
+      config: Immutable.Map({})
+    });
+    const action$ = ActionsObservable.of(
+      actions.restartKernel({
+        kernelRef: "fake",
+        contentRef: "contentRef",
+        outputHandling: "Clear All"
+      })
+    );
+
+    const responseActions = await coreEpics
+      .restartWebSocketKernelEpic(action$, state$)
+      .pipe(toArray())
+      .toPromise();
+
+    expect(responseActions).toEqual([
+      {
+        type: actions.RESTART_KERNEL_SUCCESSFUL,
+        payload: {
+          kernelRef: "fake",
+          contentRef: "contentRef"
+        }
+      },
+      {
+        type: actions.CLEAR_ALL_OUTPUTS,
+        payload: {
+          contentRef: "contentRef"
+        }
       }
     ]);
   });

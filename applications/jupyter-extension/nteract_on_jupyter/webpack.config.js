@@ -21,7 +21,7 @@ if (isProd) {
 }
 
 module.exports = {
-  externals: ["canvas"],
+  externals: ["canvas", "fs"],
   mode: isProd ? "production" : "development",
   devtool: isProd ? "hidden-source-map" : "cheap-eval-source-map",
   entry: {

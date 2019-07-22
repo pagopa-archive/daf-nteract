@@ -22,6 +22,7 @@ import { createKernelRef } from "@nteract/types";
 import { AppState } from "@nteract/types";
 import { RemoteKernelProps } from "@nteract/types";
 
+import { AjaxResponse } from "rxjs/ajax";
 import { extractNewKernel } from "./kernel-lifecycle";
 
 export const launchWebSocketKernelEpic = (
@@ -318,6 +319,113 @@ export const killKernelEpic = (
               kernelRef: action.payload.kernelRef
             })
           )
+        )
+      );
+    })
+  );
+
+export const restartWebSocketKernelEpic = (
+  action$: ActionsObservable<actions.RestartKernel>,
+  state$: StateObservable<AppState>
+) =>
+  action$.pipe(
+    ofType(actions.RESTART_KERNEL),
+    concatMap((action: actions.RestartKernel) => {
+      const state = state$.value;
+
+      const { contentRef, kernelRef, outputHandling } = action.payload;
+
+      if (!kernelRef) {
+        return of(
+          actions.restartKernelFailed({
+            error: new Error("Can't execute restart without kernel ref."),
+            kernelRef: "none provided",
+            contentRef
+          })
+        );
+      }
+
+      const host = selectors.currentHost(state);
+      if (host.type !== "jupyter") {
+        return of(
+          actions.restartKernelFailed({
+            error: new Error("Can't restart a kernel with no Jupyter host."),
+            kernelRef,
+            contentRef
+          })
+        );
+      }
+
+      const serverConfig: ServerConfig = selectors.serverConfig(host);
+
+      const kernel = selectors.kernel(state, { kernelRef });
+      if (!kernel) {
+        return of(
+          actions.restartKernelFailed({
+            error: new Error("Can't restart a kernel that does not exist."),
+            kernelRef,
+            contentRef
+          })
+        );
+      }
+
+      if (kernel.type !== "websocket" || !kernel.id) {
+        return of(
+          actions.restartKernelFailed({
+            error: new Error("Can only restart Websocket kernels via API."),
+            kernelRef,
+            contentRef
+          })
+        );
+      }
+
+      const id = kernel.id;
+
+      return kernels.restart(serverConfig, id).pipe(
+        mergeMap<
+          AjaxResponse,
+          | actions.RestartKernelFailed
+          | actions.RestartKernelSuccessful
+          | actions.ExecuteAllCells
+          | actions.ClearAllOutputs
+        >((response: AjaxResponse) => {
+          if (response.status !== 200) {
+            return of(
+              actions.restartKernelFailed({
+                error: new Error("Unsuccessful kernel restart."),
+                kernelRef,
+                contentRef
+              })
+            );
+          } else {
+            if (outputHandling === "Run All") {
+              return of(
+                actions.restartKernelSuccessful({
+                  kernelRef,
+                  contentRef
+                }),
+                actions.executeAllCells({ contentRef })
+              );
+            } else if (outputHandling === "Clear All") {
+              return of(
+                actions.restartKernelSuccessful({
+                  kernelRef,
+                  contentRef
+                }),
+                actions.clearAllOutputs({ contentRef })
+              );
+            } else {
+              return of(
+                actions.restartKernelSuccessful({
+                  kernelRef,
+                  contentRef
+                })
+              );
+            }
+          }
+        }),
+        catchError(error =>
+          of(actions.restartKernelFailed({ error, kernelRef, contentRef }))
         )
       );
     })

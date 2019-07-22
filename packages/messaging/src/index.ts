@@ -178,4 +178,10 @@ export const kernelStatuses = () => (source: Observable<JupyterMessage>) =>
     map(entry => entry.content.execution_state)
   );
 
+export const inputRequests = () => (source: Observable<JupyterMessage>) =>
+  source.pipe(
+    ofMessageType("input_request"),
+    map(entry => entry.content)
+  );
+
 export * from "./messages";

@@ -87,6 +87,11 @@ export interface AskExitPayloadMessage {
   keepkernel: boolean;
 }
 
+export interface InputRequestMessage {
+  prompt: string;
+  password: boolean;
+}
+
 export type PayloadMessage =
   | PagePayloadMessage
   | SetNextInputPayloadMessage

@@ -870,6 +870,17 @@ function toggleOutputExpansion(
   );
 }
 
+function promptInputRequest(
+  state: NotebookModel,
+  action: actionTypes.PromptInputRequest
+): RecordOf<DocumentRecordProps> {
+  const { id, password, prompt } = action.payload;
+  return state.setIn(["cellPrompts", id], {
+    prompt,
+    password
+  });
+}
+
 // DEPRECATION WARNING: Below, the following action types are being deprecated: RemoveCell, CreateCellAfter and CreateCellBefore
 type DocumentAction =
   | actionTypes.ToggleTagInCell
@@ -909,7 +920,8 @@ type DocumentAction =
   | actionTypes.RestartKernel
   | actionTypes.ClearAllOutputs
   | actionTypes.SetInCell<any>
-  | actionTypes.UnhideAll;
+  | actionTypes.UnhideAll
+  | actionTypes.PromptInputRequest;
 
 const defaultDocument: NotebookModel = makeDocumentRecord({
   notebook: emptyNotebook
@@ -1004,6 +1016,8 @@ export function notebook(
       return toggleOutputExpansion(state, action);
     case actionTypes.UNHIDE_ALL:
       return unhideAll(state, action);
+    case actionTypes.PROMPT_INPUT_REQUEST:
+      return promptInputRequest(state, action);
     default:
       return state;
   }

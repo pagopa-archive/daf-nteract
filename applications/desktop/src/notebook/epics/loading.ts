@@ -210,9 +210,10 @@ export const newNotebookEpic = (
       }
 
       const timestamp = new Date();
+      const filepath = path.join(action.payload.cwd, "Untitled.ipynb");
 
       return actions.fetchContentFulfilled({
-        filepath: "",
+        filepath,
         model: {
           type: "notebook",
           mimetype: notebookMediaType,
@@ -221,7 +222,7 @@ export const newNotebookEpic = (
           content: toJS(notebook),
           writable: true,
           name: "Untitled.ipynb",
-          path: path.join(action.payload.cwd, "Untitled.ipynb"),
+          path: filepath,
           created: timestamp.toString(),
           last_modified: timestamp.toString()
         },

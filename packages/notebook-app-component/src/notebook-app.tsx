@@ -11,6 +11,7 @@ import {
   KernelOutputError,
   Media,
   Output,
+  PromptRequest,
   RichMedia,
   StreamText
 } from "@nteract/outputs";
@@ -24,7 +25,7 @@ import {
   Prompt,
   Source
 } from "@nteract/presentational-components";
-import { AppState, ContentRef, KernelRef } from "@nteract/types";
+import { AppState, ContentRef, InputRequestMessage } from "@nteract/types";
 import * as Immutable from "immutable";
 import * as React from "react";
 import { DragDropContext as dragDropContext } from "react-dnd";
@@ -43,6 +44,7 @@ import StatusBar from "./status-bar";
 import Toolbar, { CellToolbarMask } from "./toolbar";
 import TransformMedia from "./transform-media";
 
+import { CodeCell } from "@nteract/commutable/lib/v4";
 import styled from "styled-components";
 
 function getTheme(theme: string) {
@@ -83,6 +85,7 @@ interface AnyCellProps {
   executionCount: ExecutionCount;
   outputs: Immutable.List<any>;
   pager: Immutable.List<any>;
+  prompt?: InputRequestMessage;
   cellStatus: string;
   cellFocused: boolean; // not the ID of which is focused
   editorFocused: boolean;
@@ -107,6 +110,7 @@ interface AnyCellProps {
     metadata: JSONObject,
     mediaType: string
   ) => void;
+  sendInputReply: (value: string) => void;
 }
 
 const makeMapStateToCellProps = (
@@ -130,6 +134,7 @@ const makeMapStateToCellProps = (
 
     const cellType = cell.cell_type;
     const outputs = cell.get("outputs", emptyList);
+    const prompt = selectors.notebook.cellPromptById(model, { id });
 
     const sourceHidden =
       (cellType === "code" &&
@@ -168,6 +173,7 @@ const makeMapStateToCellProps = (
       outputHidden,
       outputs,
       pager,
+      prompt,
       source: cell.get("source", ""),
       sourceHidden,
       tags,
@@ -216,6 +222,8 @@ const makeMapDispatchToCellProps = (
       dispatch(actions.toggleOutputExpansion({ id, contentRef })),
     toggleParameterCell: () =>
       dispatch(actions.toggleParameterCell({ id, contentRef })),
+    sendInputReply: (value: string) =>
+      dispatch(actions.sendInputReply({ value })),
 
     updateOutputMetadata: (
       index: number,
@@ -272,12 +280,14 @@ class AnyCell extends React.PureComponent<AnyCellProps> {
       focusBelowCell,
       focusEditor,
       id,
+      prompt,
       tags,
       theme,
       selectCell,
       unfocusEditor,
       contentRef,
-      sourceHidden
+      sourceHidden,
+      sendInputReply
     } = this.props;
     const running = cellStatus === "busy";
     const queued = cellStatus === "queued";
@@ -339,6 +349,9 @@ class AnyCell extends React.PureComponent<AnyCellProps> {
                 </Output>
               ))}
             </Outputs>
+            {prompt && (
+              <PromptRequest {...prompt} submitPromptReply={sendInputReply} />
+            )}
           </React.Fragment>
         );
 
