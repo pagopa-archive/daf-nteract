@@ -20,7 +20,8 @@ const KERNEL_SPECS: Kernelspecs = {
       display_name: "Node.js (nteract)",
       language: "javascript",
       env: {
-        ELECTRON_RUN_AS_NODE: "1"
+        ELECTRON_RUN_AS_NODE: "1",
+        NODE_PATH: join(__dirname, "..", "node_modules")
       }
     }
   }

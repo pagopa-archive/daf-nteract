@@ -34,7 +34,6 @@ def load_jupyter_server_extension(nbapp):
     config.dev_mode = False
 
     # Check for core mode.
-    core_mode = ''
     if hasattr(nbapp, 'core_mode'):
         core_mode = nbapp.core_mode
 

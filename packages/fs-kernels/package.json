@@ -1,6 +1,6 @@
 {
   "name": "@nteract/fs-kernels",
-  "version": "2.0.9",
+  "version": "2.1.6",
   "description": "A manager for the filesystem aspects of Juyter kernels",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -19,8 +19,8 @@
     "url": "https://github.com/nteract/nteract/issues"
   },
   "dependencies": {
-    "@nteract/messaging": "^6.0.6",
-    "enchannel-zmq-backend": "^9.0.6",
+    "@nteract/messaging": "^6.1.6",
+    "enchannel-zmq-backend": "^9.1.6",
     "execa": "^1.0.0",
     "jsonfile": "^5.0.0",
     "mkdirp": "^0.5.1",

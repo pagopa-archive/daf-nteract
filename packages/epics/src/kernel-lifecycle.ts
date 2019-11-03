@@ -1,6 +1,3 @@
-/**
- * @module epics
- */
 import { ImmutableNotebook } from "@nteract/commutable";
 import {
   Channels,
@@ -20,6 +17,7 @@ import {
   mergeMap,
   switchMap,
   take,
+  takeUntil,
   timeout
 } from "rxjs/operators";
 
@@ -49,7 +47,8 @@ export const watchExecutionStateEpic = (
             kernelStatus: msg.content.execution_state,
             kernelRef: action.payload.kernelRef
           })
-        )
+        ),
+        takeUntil(action$.pipe(ofType(actions.KILL_KERNEL_SUCCESSFUL)))
       )
     )
   );
@@ -212,6 +211,10 @@ export const launchKernelWhenNotebookSetEpic = (
     })
   );
 
+/**
+ * Restarts a Jupyter kernel in the local scenario, where a restart requires
+ * killing the existing kernel process and starting an ew one.
+ */
 export const restartKernelEpic = (
   action$: ActionsObservable<actions.RestartKernel | actions.NewKernelAction>,
   state$: any,
@@ -221,7 +224,11 @@ export const restartKernelEpic = (
     ofType(actions.RESTART_KERNEL),
     concatMap((action: actions.RestartKernel | actions.NewKernelAction) => {
       const state = state$.value;
-      const oldKernelRef = action.payload.kernelRef;
+
+      const oldKernelRef = selectors.kernelRefByContentRef(state$.value, {
+        contentRef: action.payload.contentRef
+      });
+
       const notificationSystem = selectors.notificationSystem(state);
 
       if (!oldKernelRef) {
@@ -236,6 +243,10 @@ export const restartKernelEpic = (
       }
 
       const oldKernel = selectors.kernel(state, { kernelRef: oldKernelRef });
+
+      if (oldKernel && oldKernel.type === "websocket") {
+        return empty();
+      }
 
       if (!oldKernelRef || !oldKernel) {
         notificationSystem.addNotification({

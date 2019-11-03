@@ -1,6 +1,3 @@
-/**
- * @module types
- */
 import { RecordOf } from "immutable";
 import { List, Map, Record } from "immutable";
 

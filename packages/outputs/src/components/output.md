@@ -149,3 +149,55 @@ const outputs = [
   ))}
 </div>;
 ```
+
+If your app handles both `display_data` and `execute_result` output types in
+the same manner, you can pass an `output_type` array instead of a string.
+
+```jsx
+const Media = require("./media/");
+const { RichMedia } = require("./rich-media");
+const DisplayData = require("./display-data");
+
+// Our custom DisplayData/ExecuteResult component
+function CompositeOutput(props) {
+  const { output, children } = props;
+
+  return (
+    <RichMedia data={output.data} metadata={output.metadata}>
+      {children}
+    </RichMedia>
+  );
+}
+CompositeOutput.defaultProps = {
+  output: null,
+  output_type: ["display_data", "execute_result"]
+};
+
+const displayOutput = {
+  output_type: "display_data",
+  data: {
+    "text/html":
+      "<p>This is a <code>display_data</code> HTML output that <b>WILL</b> render</p>",
+    "text/plain": "This is some plain text that WILL NOT render"
+  }
+};
+
+const executeResultOutput = {
+  output_type: "execute_result",
+  data: {
+    "text/html":
+      "<p>This is an <code>execute_result</code> HTML output that <b>WILL</b> render</p>",
+    "text/plain": "This is some plain text that WILL NOT render"
+  }
+};
+
+// Try replacing `executeResultOutput` with `displayOutput`
+// both output_type will render as expected
+<Output output={executeResultOutput}>
+  <CompositeOutput>
+    <Media.Json />
+    <Media.HTML />
+    <Media.Plain />
+  </CompositeOutput>
+</Output>;
+```

@@ -1,32 +1,39 @@
-# `transform-widgets`
+# @nteract/jupyter-widgets
 
-Rich media type which will render Jupyter-Widgets in isolated iframes.
+**Note:** The implementation of @nteract/jupyter-widgets is currently in-progress. Please [follow this issue](https://github.com/nteract/nteract/issues/4573).
 
-`MIMETYPE = "application/vnd.jupyter.widget-view+json"`
+This package exposes a React component for rendering ipywidgets into a notebook application. It also exposes components for building custom widget renderers.
+
+## Installation
+
+```
+$ yarn add @nteract/jupyter-widgets
+```
+
+```
+$ npm install --save @nteract/jupyter-widgets
+```
 
 ## Usage
 
-### Within nteract
+```javascript
+import WidgetDisplay from "@nteract/jupyter-widgets";
 
-```jsx
-import { WidgetDisplay } from "@nteract/transform-widgets";
-
-...
-
-<WidgetDisplay data={{model_id: 'widget-model-guid'}}/>
+export default class MyNotebookApp extends ReactComponent {
+  render() {
+    return <WidgetDisplay data={{ model_id: "widget-model-guid" }} />;
+  }
+}
 ```
 
-### Outside of nteract
+## Documentation
 
-```jsx
-import { PureWidgetDisplay } from "@nteract/transform-widgets";
+We're working on adding more documentation for this component. Stay tuned by watching this repository!
 
-...
+## Support
 
-<PureWidgetDisplay 
-    data={{model_id: 'widget-model-guid'} 
-    currentKernel={remoteKernelPropsInstance}}/>
-```
+If you experience an issue while using this package or have a feature request, please file an issue on the [issue board](https://github.com/nteract/nteract/issues/new/choose) and add the `pkg:jupyter-widgets` label.
 
-See `RemoteKernelProps` of `nteract/packages/core/src/state/entities/kernels.js` 
-for a description of `remoteKernelPropsInstance`.
+## License
+
+[BSD-3-Clause](https://choosealicense.com/licenses/bsd-3-clause/)

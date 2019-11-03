@@ -1,12 +1,11 @@
-/**
- * @module epics
- */
 import {
   Channels,
   childOf,
   createExecuteRequest,
   ExecuteRequest,
   executionCounts,
+  inputReply,
+  inputRequests,
   JupyterMessage,
   kernelStatuses,
   MessageType,
@@ -35,7 +34,12 @@ import {
 import * as actions from "@nteract/actions";
 import { CellId, OnDiskOutput } from "@nteract/commutable";
 import * as selectors from "@nteract/selectors";
-import { AppState, ContentRef, PayloadMessage } from "@nteract/types";
+import {
+  AppState,
+  ContentRef,
+  InputRequestMessage,
+  PayloadMessage
+} from "@nteract/types";
 
 // TODO ale
 import { tokensSelector } from "../../pdnd-nteract-packages/login/duck/loginDuck";
@@ -110,6 +114,19 @@ export function executeCellStream(
     cellMessages.pipe(
       ofMessageType("clear_output") as any,
       mapTo(actions.clearOutputs({ id, contentRef }))
+    ),
+
+    // Prompt the user for input
+    cellMessages.pipe(
+      inputRequests() as any,
+      map((inputRequest: InputRequestMessage) => {
+        return actions.promptInputRequest({
+          id,
+          contentRef,
+          prompt: inputRequest.prompt,
+          password: inputRequest.password
+        });
+      })
     )
   );
 
@@ -136,7 +153,7 @@ export function createExecuteCellStream(
   id: string,
   contentRef: ContentRef
 ): Observable<any> {
-  const kernel = selectors.currentKernel(state);
+  const kernel = selectors.kernelByContentRef(state, { contentRef: contentRef });
 
   const { bearerToken } = { ...tokensSelector(state) };
 
@@ -360,6 +377,7 @@ export const updateDisplayEpic = (
             contentRef: action.payload.contentRef
           })
         ),
+        takeUntil(action$.pipe(ofType(actions.KILL_KERNEL_SUCCESSFUL))),
         catchError(error =>
           of(
             actions.updateDisplayFailed({
@@ -370,4 +388,23 @@ export const updateDisplayEpic = (
         )
       )
     )
+  );
+
+export const sendInputReplyEpic = (
+  action$: ActionsObservable<actions.SendInputReply>,
+  state$: StateObservable<AppState>
+) =>
+  action$.pipe(
+    ofType(actions.SEND_INPUT_REPLY),
+    switchMap((action: actions.SendInputReply) => {
+      const state = state$.value;
+      const kernel = selectors.kernelByContentRef(state, { contentRef: action.payload.contentRef });
+
+      if (kernel && kernel.type === "websocket") {
+        const reply = inputReply({ value: action.payload.value });
+        kernel.channels.next(reply);
+      }
+
+      return empty();
+    })
   );

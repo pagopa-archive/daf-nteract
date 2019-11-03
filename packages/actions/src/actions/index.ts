@@ -1,7 +1,3 @@
-/**
- * @module actions
- */
-
 // Vendor modules
 import {
   CellId,
@@ -12,7 +8,7 @@ import {
 import {
   ContentRef,
   HeaderDataProps,
-  HostId,
+  HostRecord,
   HostRef,
   KernelRef,
   LanguageInfoMetadata,
@@ -22,6 +18,7 @@ import {
 // Local modules
 import * as actionTypes from "../actionTypes";
 
+export * from "./bookstore";
 export * from "./cells";
 export * from "./contents";
 export * from "./hosts";
@@ -37,17 +34,7 @@ export const closeModal = () => ({
   type: actionTypes.CLOSE_MODAL
 });
 
-export const addHost = (payload: {
-  hostRef: HostRef;
-  host: {
-    id?: HostId | null;
-    type: "jupyter" | "local";
-    defaultKernelName: string;
-    token?: string | null;
-    serverUrl?: string;
-    crossDomain?: boolean | null;
-  };
-}) => ({
+export const addHost = (payload: { hostRef: HostRef; host: HostRecord }) => ({
   type: actionTypes.ADD_HOST,
   payload
 });
@@ -227,6 +214,7 @@ export function acceptPayloadMessage(payload: {
 
 export function updateDisplay(payload: {
   content: {
+    output_type: "update_display_data";
     data: MediaBundle;
     metadata: JSONObject;
     transient: { display_id: string };

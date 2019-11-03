@@ -853,6 +853,28 @@ describe("appendOutput", () => {
 });
 
 describe("updateDisplay", () => {
+  test("handles a non-existent keypath gracefully", () => {
+    const originalState = monocellDocument;
+
+    const id = originalState.getIn(["notebook", "cellOrder", 2]);
+
+    const action = actions.updateDisplay({
+      content: {
+        output_type: "update_display_data",
+        data: { "text/html": "🐱😼😹" },
+        metadata: {},
+        transient: { display_id: "1234" }
+      },
+      contentRef: undefined,
+    });
+
+    const state = reducers(originalState, action);
+
+    expect(state.getIn(["notebook", "cellMap", id, "outputs"])).toEqual(
+      Immutable.List([])
+    );
+  });
+
   test("updates all displays which use the keypath", () => {
     const originalState = monocellDocument;
 
@@ -875,6 +897,29 @@ describe("updateDisplay", () => {
           transient: { display_id: "1234" }
         }
       }),
+    ];
+
+    const state = actionArray.reduce(
+      (s, action) => reducers(s, action),
+      originalState
+    );
+
+    expect(state.getIn(["notebook", "cellMap", id, "outputs"])).toEqual(
+      Immutable.List([
+        makeDisplayData({
+          output_type: "display_data",
+          data: { "text/plain": "shennagins afoot" },
+          metadata: Immutable.Map({})
+        }),
+        makeExecuteResult({
+          output_type: "execute_result",
+          data: { "text/plain": "shennagins afoot" },
+          metadata: Immutable.Map({})
+        })
+      ])
+    );
+
+    const moreActionArray = [
       actions.updateDisplay({
         content: {
           output_type: "update_display_data",
@@ -884,12 +929,12 @@ describe("updateDisplay", () => {
       })
     ];
 
-    const state = actionArray.reduce(
+    const moreState = moreActionArray.reduce(
       (s, action) => reducers(s, action),
-      originalState
+      state
     );
 
-    expect(state.getIn(["notebook", "cellMap", id, "outputs"])).toEqual(
+    expect(moreState.getIn(["notebook", "cellMap", id, "outputs"])).toEqual(
       Immutable.List([
         makeDisplayData({
           output_type: "display_data",
@@ -1055,5 +1100,224 @@ describe("updateOutputMetadata", () => {
         metadata: Immutable.Map({ "test/mediatype": newOutputMetadata })
       })
     );
+  });
+});
+
+describe("unhideAll", () => {
+  const cellOrder = [ uuid(), uuid(), uuid(), uuid() ];
+  let initialState = Immutable.Map();
+
+  beforeEach(() => {
+    // Arrange
+    initialState = initialDocument
+      .set(
+        "notebook",
+        Immutable.fromJS({
+          cellOrder,
+          cellMap: {
+            [cellOrder[0]]: emptyCodeCell.setIn(["metadata", "outputHidden"], false),
+            [cellOrder[1]]: emptyCodeCell.setIn(["metadata", "outputHidden"], true),
+            [cellOrder[2]]: emptyCodeCell.setIn(["metadata", "inputHidden"], false),
+            [cellOrder[3]]: emptyCodeCell.setIn(["metadata", "inputHidden"], true)
+          }
+        })
+      );
+  });
+
+  test("should reveal all inputs", () => {
+    // Act
+    const actualState = reducers(
+      initialState,
+      actions.unhideAll({
+        inputHidden: false,
+        contentRef: undefined
+       })
+    );
+
+    // Assert: should unhide inputs and keep outputs' visibility unchanged
+    expect(
+      actualState
+        .getIn(["notebook", "cellMap"])
+        .map(cell => cell.getIn(["metadata", "inputHidden"]))
+        .toList()
+        .toArray()
+    ).not.toContain(true);
+
+    expect(
+      actualState
+        .getIn(["notebook", "cellMap"])
+        .map(cell => cell.getIn(["metadata", "outputHidden"]))
+        .toList()
+        .toArray()
+    ).toEqual([false,true,false,false]);
+  });
+
+  test("should hide all inputs", () => {
+    // Act
+    const actualState = reducers(
+      initialState,
+      actions.unhideAll({
+        inputHidden: true,
+        contentRef: undefined
+       })
+    );
+
+    // Assert: should hide inputs and keep outputs' visibility unchanged
+    expect(
+      actualState
+        .getIn(["notebook", "cellMap"])
+        .map(cell => cell.getIn(["metadata", "inputHidden"]))
+        .toList()
+        .toArray()
+    ).not.toContain(false);
+
+    expect(
+      actualState
+        .getIn(["notebook", "cellMap"])
+        .map(cell => cell.getIn(["metadata", "outputHidden"]))
+        .toList()
+        .toArray()
+    ).toEqual([false,true,false,false]);
+  });
+
+  test("should reveal all outputs", () => {
+    // Act
+    const actualState = reducers(
+      initialState,
+      actions.unhideAll({
+        outputHidden: false,
+        contentRef: undefined
+       })
+    );
+
+    // Assert: should unhide outputs and keep inputs' visibility unchanged
+    expect(
+      actualState
+        .getIn(["notebook", "cellMap"])
+        .map(cell => cell.getIn(["metadata", "outputHidden"]))
+        .toList()
+        .toArray()
+    ).not.toContain(true);
+
+    expect(
+      actualState
+        .getIn(["notebook", "cellMap"])
+        .map(cell => cell.getIn(["metadata", "inputHidden"]))
+        .toList()
+        .toArray()
+    ).toEqual([false,false,false,true]);
+  });
+
+  test("should hide all outputs", () => {
+    // Act
+    const actualState = reducers(
+      initialState,
+      actions.unhideAll({
+        outputHidden: true,
+        contentRef: undefined
+       })
+    );
+
+    // Assert: should hide outputs and keep inputs' visibility unchanged
+    expect(
+      actualState
+        .getIn(["notebook", "cellMap"])
+        .map(cell => cell.getIn(["metadata", "outputHidden"]))
+        .toList()
+        .toArray()
+    ).not.toContain(false);
+
+    expect(
+      actualState
+        .getIn(["notebook", "cellMap"])
+        .map(cell => cell.getIn(["metadata", "inputHidden"]))
+        .toList()
+        .toArray()
+    ).toEqual([false,false,false,true]);
+  });
+
+  test("should reveal all inputs and outputs", () => {
+    // Act
+    const actualState = reducers(
+      initialState,
+      actions.unhideAll({
+        inputHidden: false,
+        outputHidden: false,
+        contentRef: undefined
+       })
+    );
+
+    // Assert
+    expect(
+      actualState
+        .getIn(["notebook", "cellMap"])
+        .map(cell => cell.getIn(["metadata", "inputHidden"]))
+        .toList()
+        .toArray()
+    ).not.toContain(true);
+
+    expect(
+      actualState
+        .getIn(["notebook", "cellMap"])
+        .map(cell => cell.getIn(["metadata", "outputHidden"]))
+        .toList()
+        .toArray()
+    ).not.toContain(true);
+  });
+
+  test("should hide all inputs and outputs", () => {
+    // Act
+    const actualState = reducers(
+      initialState,
+      actions.unhideAll({
+        inputHidden: true,
+        outputHidden: true,
+        contentRef: undefined
+       })
+    );
+
+    // Assert
+    expect(
+      actualState
+        .getIn(["notebook", "cellMap"])
+        .map(cell => cell.getIn(["metadata", "inputHidden"]))
+        .toList()
+        .toArray()
+    ).not.toContain(false);
+
+    expect(
+      actualState
+        .getIn(["notebook", "cellMap"])
+        .map(cell => cell.getIn(["metadata", "outputHidden"]))
+        .toList()
+        .toArray()
+    ).not.toContain(false);
+  });
+
+  test("should no-op", () => {
+    // Act
+    const actualState = reducers(
+      initialState,
+      actions.unhideAll({
+        contentRef: undefined
+       })
+    );
+
+    // Assert: should keep all inputs' and outputs' visibility unchanged
+    expect(
+      actualState
+        .getIn(["notebook", "cellMap"])
+        .map(cell => cell.getIn(["metadata", "inputHidden"]))
+        .toList()
+        .toArray()
+    ).toEqual([false,false,false,true]);
+
+    expect(
+      actualState
+        .getIn(["notebook", "cellMap"])
+        .map(cell => cell.getIn(["metadata", "outputHidden"]))
+        .toList()
+        .toArray()
+    ).toEqual([false,true,false,false]);
   });
 });

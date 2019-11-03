@@ -1,6 +1,3 @@
-/**
- * @module enchannel-zmq-backend
- */
 import { Channels, JupyterMessage } from "@nteract/messaging";
 import * as moduleJMP from "jmp";
 import { fromEvent, merge, Observable, Subject, Subscriber } from "rxjs";
@@ -234,7 +231,9 @@ export const createMainChannelFromSockets = (
       Object.keys(sockets).forEach(name => {
         const socket = sockets[name];
         socket.removeAllListeners();
-        if (socket.close) socket.close();
+        if (socket.close) {
+          socket.close();
+        }
       })
   );
 

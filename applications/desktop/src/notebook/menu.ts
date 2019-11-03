@@ -236,7 +236,7 @@ export function dispatchPublishGist(
   // Create our oauth window
   const win = new remote.BrowserWindow({
     show: false,
-    webPreferences: { zoomFactor: 0.75 }
+    webPreferences: { zoomFactor: 0.75, nodeIntegration: true }
   });
 
   // TODO: This needs to be moved to an epic
@@ -343,7 +343,9 @@ export function dispatchInterruptKernel(
       return;
     }
 
-    store.dispatch(actions.interruptKernel({ kernelRef }));
+    store.dispatch(
+      actions.interruptKernel({ kernelRef, contentRef: ownProps.contentRef })
+    );
   }
 }
 
@@ -552,17 +554,20 @@ export function dispatchNewNotebook(
   ownProps: { contentRef: ContentRef },
   store: DesktopStore,
   event: Event,
+  filepath: string | null,
   kernelSpec: KernelSpec
 ) {
   // It's a brand new notebook so we create a kernelRef for it
   const kernelRef = createKernelRef();
 
   store.dispatch(
+    // if filepath is null
     // for desktop, we _can_ assume this has no path except for living in `cwd`
     // which I suppose _could_ be called `${cwd}/UntitledN.ipynb`
     // for jupyter extension, we _would_ call this `${cwd}/UntitledN.ipynb`
 
     actions.newNotebook({
+      filepath,
       kernelSpec,
       cwd: cwdKernelFallback(),
       kernelRef,

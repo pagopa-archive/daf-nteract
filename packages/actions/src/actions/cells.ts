@@ -1,6 +1,3 @@
-/**
- * @module actions
- */
 import { CellId, CellType } from "@nteract/commutable";
 import { ContentRef, KernelRef } from "@nteract/types";
 
@@ -199,11 +196,9 @@ export function updateCellExecutionCount(payload: {
   return setInCell({ ...payload, path: ["execution_count"] });
 }
 
-export function unhideAll(payload: {
-  outputHidden: boolean;
-  inputHidden: boolean;
-  contentRef: ContentRef;
-}): actionTypes.UnhideAll {
+export function unhideAll(
+  payload: actionTypes.UnhideAll["payload"]
+): actionTypes.UnhideAll {
   return {
     type: "UNHIDE_ALL",
     payload
@@ -353,6 +348,27 @@ export function updateOutputMetadata(payload: {
 }): actionTypes.UpdateOutputMetadata {
   return {
     type: actionTypes.UPDATE_OUTPUT_METADATA,
+    payload
+  };
+}
+
+export function promptInputRequest(payload: {
+  id: CellId;
+  contentRef: ContentRef;
+  prompt: string;
+  password: boolean;
+}): actionTypes.PromptInputRequest {
+  return {
+    type: actionTypes.PROMPT_INPUT_REQUEST,
+    payload
+  };
+}
+
+export function sendInputReply(
+  payload: actionTypes.SendInputReply["payload"]
+): actionTypes.SendInputReply {
+  return {
+    type: actionTypes.SEND_INPUT_REPLY,
     payload
   };
 }

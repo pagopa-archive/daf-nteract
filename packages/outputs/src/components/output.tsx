@@ -100,12 +100,16 @@ export class Output extends React.PureComponent<Props, State> {
         // Already have a selection
         return;
       }
-      if (
-        childElement.props &&
-        childElement.props.output_type &&
-        childElement.props.output_type === output_type
-      ) {
-        chosenOne = childElement;
+      if (childElement.props && childElement.props.output_type) {
+        const child_output_type: string[] = Array.isArray(
+          childElement.props.output_type
+        )
+          ? childElement.props.output_type
+          : [childElement.props.output_type];
+
+        chosenOne = child_output_type.includes(output_type)
+          ? childElement
+          : null;
         return;
       }
     });

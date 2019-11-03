@@ -332,7 +332,10 @@ exports[`DropdownMenu clicking dropdown content triggers the items callback and 
               <div
                 className="sc-htpNat juMQnP"
               >
-                <ul>
+                <ul
+                  aria-label="dropdown-content"
+                  role="listbox"
+                >
                   <li
                     className="alsoClickMe"
                     key=".0"

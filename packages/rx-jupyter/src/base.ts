@@ -1,21 +1,9 @@
-/**
- * @module rx-jupyter
- */
 /** tslint:disable:jsdoc-format */
 import Cookies from "js-cookie";
 import { AjaxRequest, AjaxResponse } from "rxjs/ajax";
+import { ServerConfig } from "@nteract/types";
 
 export const normalizeBaseURL = (url = "") => url.replace(/\/+$/, "");
-
-export interface ServerConfig {
-  endpoint?: string;
-  url?: string;
-  token?: string;
-  xsrfToken?: string;
-  crossDomain?: boolean;
-  ajaxOptions?: Partial<AjaxRequest>;
-  wsProtocol?: string | string[];
-}
 
 /**
  * Creates an AJAX request to connect to a given server. This function

@@ -1,6 +1,3 @@
-/**
- * @module fs-kernels
- */
 import { exec } from "child_process";
 import fs from "fs";
 import path from "path";
@@ -10,8 +7,8 @@ const readdir = promisify(fs.readdir);
 
 interface ParsedKernelSpecs {
   [name: string]: {
-    resource_dir: string,
-    spec: KernelSpec
+    resource_dir: string;
+    spec: KernelSpec;
   };
 }
 
@@ -46,7 +43,7 @@ async function mapToKernelResources(
       files: files.map(file => path.join(kernelSpec.resource_dir, file)),
       resource_dir: kernelSpec.resource_dir,
       spec: kernelSpec.spec
-    }
+    };
   }
 
   return resources;

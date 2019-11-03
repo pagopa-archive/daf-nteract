@@ -18,12 +18,12 @@ import "@nteract/styles/editor-overrides.css";
 import { CodeMirrorCSS, ShowHintCSS } from "@nteract/editor";
 
 import DataExplorer from "@nteract/data-explorer";
-import { WidgetDisplay } from "@nteract/jupyter-widgets";
+import WidgetDisplay from "@nteract/jupyter-widgets";
 import GeoJSONTransform from "@nteract/transform-geojson";
 import ModelDebug from "@nteract/transform-model-debug";
 import PlotlyTransform from "@nteract/transform-plotly";
 import VDOMDisplay from "@nteract/transform-vdom";
-import { Vega2, Vega3, VegaLite1, VegaLite2 } from "@nteract/transform-vega";
+import { Vega2, Vega3, Vega4, Vega5, VegaLite1, VegaLite2, VegaLite3 } from "@nteract/transform-vega";
 
 import { ipcRenderer as ipc, remote } from "electron";
 import { mathJaxPath } from "mathjax-electron";
@@ -86,8 +86,11 @@ const store = configureStore({
       transforms: makeTransformsRecord({
         displayOrder: Immutable.List([
           "application/vnd.jupyter.widget-view+json",
+          "application/vnd.vega.v5+json",
+          "application/vnd.vega.v4+json",
           "application/vnd.vega.v3+json",
           "application/vnd.vega.v2+json",
+          "application/vnd.vegalite.v3+json",
           "application/vnd.vegalite.v2+json",
           "application/vnd.vegalite.v1+json",
           "application/geo+json",
@@ -116,8 +119,11 @@ const store = configureStore({
           "application/vnd.jupyter.widget-view+json": WidgetDisplay,
           "application/vnd.vegalite.v1+json": VegaLite1,
           "application/vnd.vegalite.v2+json": VegaLite2,
+          "application/vnd.vegalite.v3+json": VegaLite3,
           "application/vnd.vega.v2+json": Vega2,
           "application/vnd.vega.v3+json": Vega3,
+          "application/vnd.vega.v4+json": Vega4,
+          "application/vnd.vega.v5+json": Vega5,
           "application/vdom.v1+json": VDOMDisplay,
           "application/json": Media.Json,
           "application/javascript": Media.JavaScript,

@@ -214,8 +214,9 @@ const byRef = (
           return state.set(
             fetchContentFulfilledAction.payload.contentRef,
             makeNotebookContentRecord({
-              created: fetchContentFulfilledAction.payload.created,
-              lastSaved: fetchContentFulfilledAction.payload.lastSaved,
+              created: fetchContentFulfilledAction.payload.model.created,
+              lastSaved:
+                fetchContentFulfilledAction.payload.model.last_modified,
               filepath: fetchContentFulfilledAction.payload.filepath,
               model: makeDocumentRecord({
                 notebook: immutableNotebook,
@@ -309,6 +310,7 @@ const byRef = (
     case actionTypes.TOGGLE_OUTPUT_EXPANSION:
     case actionTypes.TOGGLE_TAG_IN_CELL:
     case actionTypes.UPDATE_OUTPUT_METADATA:
+    case actionTypes.PROMPT_INPUT_REQUEST:
     case actionTypes.UNHIDE_ALL: {
       const cellAction = action as actionTypes.FocusCell;
       const path = [cellAction.payload.contentRef, "model"];

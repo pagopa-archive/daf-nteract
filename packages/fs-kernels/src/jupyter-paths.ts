@@ -1,6 +1,3 @@
-/**
- * @module fs-kernels
- */
 import { exec } from "child_process";
 import fs from "fs";
 import { homedir } from "os";
@@ -63,24 +60,22 @@ function guessSysPrefix(): string | null | undefined {
     bin = path.resolve(bin);
     const python: string = path.join(bin, "python");
 
-    return pathext.some(
-      (ext: string): boolean => {
-        const exe: string = python + ext;
-        if (accessCheck(exe)) {
-          // PREFIX/bin/python exists, return PREFIX
-          // following symlinks
-          if (process.platform === "win32") {
-            // Windows: Prefix\Python.exe
-            sysPrefixGuess = path.dirname(fs.realpathSync(exe));
-          } else {
-            // Everywhere else: prefix/bin/python
-            sysPrefixGuess = path.dirname(path.dirname(fs.realpathSync(exe)));
-          }
-          return true;
+    return pathext.some((ext: string): boolean => {
+      const exe: string = python + ext;
+      if (accessCheck(exe)) {
+        // PREFIX/bin/python exists, return PREFIX
+        // following symlinks
+        if (process.platform === "win32") {
+          // Windows: Prefix\Python.exe
+          sysPrefixGuess = path.dirname(fs.realpathSync(exe));
+        } else {
+          // Everywhere else: prefix/bin/python
+          sysPrefixGuess = path.dirname(path.dirname(fs.realpathSync(exe)));
         }
-        return false;
+        return true;
       }
-    );
+      return false;
+    });
   });
   if (sysPrefixGuess === undefined) {
     // store null as nothing found, but don't run again

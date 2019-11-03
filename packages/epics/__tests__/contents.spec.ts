@@ -160,7 +160,9 @@ describe("saveAs", () => {
           contents: makeContentsRecord({
             byRef: Immutable.Map<string, ContentRecord>().set(
               contentRef,
-              makeNotebookContentRecord({ filepath: "test.ipynb" })
+              makeNotebookContentRecord({
+                filepath: "a-different-filename.ipynb"
+              })
             )
           }),
           transforms: makeTransformsRecord({

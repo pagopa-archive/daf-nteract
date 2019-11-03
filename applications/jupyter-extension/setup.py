@@ -5,7 +5,6 @@ import setuptools
 import json
 import os
 
-version = '0.0.1-dev'
 name = "nteract_on_jupyter"
 
 here = os.path.realpath(os.path.dirname(__file__))

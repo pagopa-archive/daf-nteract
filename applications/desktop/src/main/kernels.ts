@@ -16,10 +16,16 @@ import { spawn } from "spawn-rx";
  */
 export function ipyKernelTryObservable(env: { prefix: string; name: string }) {
   const executable = path.join(env.prefix, "bin", "python");
-  return (spawn(executable, ["-m", "ipykernel", "--version"], {
-    split: true // When split is true the observable's return value is { source: 'stdout', text: '...' }
-  }) as Observable<{ source: "stdout" | "stderr"; text: string }>).pipe(
-    filter(x => x.source && x.source === "stdout"),
+  return spawn<{ source: any; text: any }>(
+    executable,
+    ["-m", "ipykernel", "--version"],
+    {
+      split: true // When split is true the observable's return value is { source: 'stdout', text: '...' }
+    }
+  ).pipe(
+    filter(
+      (x: { source: any; text: any }) => x.source && x.source === "stdout"
+    ),
     mapTo(env),
     catchError(() => empty())
   );
@@ -99,7 +105,7 @@ export function condaEnvsObservable(condaInfo$: Observable<CondaInfoJSON>) {
 }
 
 /**
- * createKernelSpecsFromEnvs generates a dictionary with the supported langauge
+ * createKernelSpecsFromEnvs generates a dictionary with the supported language
  * paths.
  */
 export function createKernelSpecsFromEnvs(

@@ -48,7 +48,7 @@ packages/*/yarn.lock
 styleguide
 
 # Ignore built TypeDocs
-nteract-packages/dist
+nteract-packages/public
 
 .idea/
 

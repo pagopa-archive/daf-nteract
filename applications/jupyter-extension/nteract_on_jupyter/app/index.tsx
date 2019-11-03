@@ -8,9 +8,11 @@ import "@blueprintjs/select/lib/css/blueprint-select.css";
 
 import "codemirror/addon/hint/show-hint.css";
 import "codemirror/lib/codemirror.css";
+
 import "@nteract/styles/app.css";
 import "@nteract/styles/editor-overrides.css";
 import "@nteract/styles/global-variables.css";
+
 import "react-table/react-table.css";
 import urljoin from "url-join";
 

@@ -1,6 +1,3 @@
-/**
- * @module types
- */
 import { ChildProcess } from "child_process";
 
 import * as Immutable from "immutable";
@@ -39,6 +36,23 @@ export const makeKernelNotStartedRecord = Immutable.Record<
   channels: new Subject(),
   info: null
 });
+
+export enum KernelStatus {
+  /** Kernel is currently executing code. */
+  Busy = "busy",
+  /** Kernel is currently not executing code. */
+  Idle = "idle",
+  /** Kernel process is being launched. */
+  Starting = "starting",
+  /** Kernel is being shut down. */
+  ShuttingDown = "shutting down",
+  /** Kernel is restarting. */
+  Restarting = "restarting",
+  /** Kernel's current execution process has been interrupted. */
+  Interrupted = "interrupted",
+  /** Kernel is not connected to current notebook. */
+  NotConnected = "not connected"
+}
 
 export interface LocalKernelProps {
   kernelSpecName?: string | null;

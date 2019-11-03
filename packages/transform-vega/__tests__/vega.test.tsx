@@ -1,14 +1,16 @@
-import { mount, shallow } from "enzyme";
-import React from "react";
+import { mount } from "enzyme";
+import * as React from "react";
 
-import { Vega2, Vega3, VegaEmbed, VegaLite1, VegaLite2 } from "../src/";
+import {
+  Vega2, Vega3, Vega4, Vega5,
+  VegaLite1, VegaLite2, VegaLite3,
+  VegaOptions,
+} from "../src/";
 
-const cars = require("../data/cars.json");
-
-const spec = {
+const vlSpec = {
   description: "A scatterplot showing horsepower and miles per gallons.",
   data: {
-    values: cars
+    values: require("../data/cars.json"),
   },
   mark: "point",
   encoding: {
@@ -18,80 +20,235 @@ const spec = {
     shape: { field: "Origin", type: "nominal" }
   }
 };
+const vgSpec = {
+  "width": 200,
+  "height": 200,
+  "padding": 5,
 
-describe("Vega2", () => {
-  it("renders VegaEmbed with embedMode vega", () => {
-    const wrapper = shallow(<Vega2 data={spec} />);
+  "data": [
+    {
+      "name": "source",
+      "values": require("../data/cars.json"),
+      "transform": [
+        {
+          "type": "filter",
+          // tslint:disable-next-line:max-line-length
+          "expr": "datum['Horsepower'] != null && datum['Miles_per_Gallon'] != null && datum['Acceleration'] != null"
+        }
+      ]
+    }
+  ],
 
-    expect(wrapper.name()).toEqual("VegaEmbed");
-    expect(wrapper.props().embedMode).toEqual("vega");
-    expect(wrapper.props().version).toEqual("vega2");
-  });
-});
+  "scales": [
+    {
+      "name": "x",
+      "type": "linear",
+      "round": true,
+      "nice": true,
+      "zero": true,
+      "domain": {"data": "source", "field": "Horsepower"},
+      "range": "width"
+    },
+    {
+      "name": "y",
+      "type": "linear",
+      "round": true,
+      "nice": true,
+      "zero": true,
+      "domain": {"data": "source", "field": "Miles_per_Gallon"},
+      "range": "height"
+    },
+    {
+      "name": "size",
+      "type": "linear",
+      "round": true,
+      "nice": false,
+      "zero": true,
+      "domain": {"data": "source", "field": "Acceleration"},
+      "range": [4,361]
+    }
+  ],
 
-describe("Vega3", () => {
-  it("renders VegaEmbed with embedMode vega", () => {
-    const wrapper = shallow(<Vega3 data={spec} />);
+  "axes": [
+    {
+      "scale": "x",
+      "grid": true,
+      "domain": false,
+      "orient": "bottom",
+      "tickCount": 5,
+      "title": "Horsepower"
+    },
+    {
+      "scale": "y",
+      "grid": true,
+      "domain": false,
+      "orient": "left",
+      "titlePadding": 5,
+      "title": "Miles_per_Gallon"
+    }
+  ],
 
-    expect(wrapper.name()).toEqual("VegaEmbed");
-    expect(wrapper.props().embedMode).toEqual("vega");
-    expect(wrapper.props().version).toEqual("vega3");
-  });
-});
+  "legends": [
+    {
+      "size": "size",
+      "title": "Acceleration",
+      "format": "s",
+      "encode": {
+        "symbols": {
+          "update": {
+            "strokeWidth": {"value": 2},
+            "opacity": {"value": 0.5},
+            "stroke": {"value": "#4682b4"},
+            "shape": {"value": "circle"}
+          }
+        }
+      }
+    }
+  ],
+
+  "marks": [
+    {
+      "name": "marks",
+      "type": "symbol",
+      "from": {"data": "source"},
+      "encode": {
+        "update": {
+          "x": {"scale": "x", "field": "Horsepower"},
+          "y": {"scale": "y", "field": "Miles_per_Gallon"},
+          "size": {"scale": "size", "field": "Acceleration"},
+          "shape": {"value": "circle"},
+          "strokeWidth": {"value": 2},
+          "opacity": {"value": 0.5},
+          "stroke": {"value": "#4682b4"},
+          "fill": {"value": "transparent"}
+        }
+      }
+    }
+  ]
+};
+
+const handleError = (error: Error) => { throw error };
+const options: VegaOptions = {renderer: "svg"};
 
 describe("VegaLite1", () => {
-  it("renders VegaEmbed with embedMode vega-lite", () => {
-    const wrapper = shallow(<VegaLite1 data={spec} />);
-
-    expect(wrapper.name()).toEqual("VegaEmbed");
-    expect(wrapper.props().embedMode).toEqual("vega-lite");
-    expect(wrapper.props().version).toEqual("vega2");
+  it("has the correct media type", () => {
+    expect(VegaLite1.MIMETYPE).toBe("application/vnd.vegalite.v1+json");
   });
+
+  // VegaLite1 still uses canvas to measure text, even in SVG mode, so can't
+  // check contents here :(
 });
 
 describe("VegaLite2", () => {
-  it("renders VegaEmbed with embedMode vega-lite", () => {
-    const wrapper = shallow(<VegaLite2 data={spec} />);
+  it("has the correct media type", () => {
+    expect(VegaLite2.MIMETYPE).toBe("application/vnd.vegalite.v2+json");
+  });
 
-    expect(wrapper.name()).toEqual("VegaEmbed");
-    expect(wrapper.props().embedMode).toEqual("vega-lite");
-    expect(wrapper.props().version).toEqual("vega3");
+  it("renders the spec as SVG properly", (done) => {
+    const handleResult = () => {
+      expect(wrapper.render()).toMatchSnapshot();
+      done();
+    };
+    const wrapper = mount(
+      <VegaLite2
+        data={vlSpec}
+        options={options}
+        onResult={handleResult}
+        onError={handleError}
+      />
+    );
   });
 });
 
-describe("VegaEmbed", () => {
-  it("embeds vega", () => {
-    const spy = jest.fn();
-    const wrapper = mount(
-      <VegaEmbed data={spec} embedMode="vega-lite" renderedCallback={spy} />
-    );
-
-    const element = wrapper.instance();
-
-    expect(element.shouldComponentUpdate({ data: "324" })).toEqual(true);
+describe("VegaLite3", () => {
+  it("has the correct media type", () => {
+    expect(VegaLite3.MIMETYPE).toBe("application/vnd.vegalite.v3+json");
   });
 
-  it("embeds vega and handles updates", () => {
-    const spy = jest.fn();
+  it("renders the spec as SVG properly", (done) => {
+    const handleResult = () => {
+      expect(wrapper.render()).toMatchSnapshot();
+      done();
+    };
     const wrapper = mount(
-      <VegaEmbed data={spec} embedMode="vega-lite" renderedCallback={spy} />
+      <VegaLite3
+        data={vlSpec}
+        options={options}
+        onResult={handleResult}
+        onError={handleError}
+      />
     );
-    wrapper.render();
+  });
+});
 
-    const spy2 = jest.fn();
+describe("Vega2", () => {
+  it("has the correct media type", () => {
+    expect(Vega2.MIMETYPE).toBe("application/vnd.vega.v2+json");
+  });
 
-    wrapper.setProps({
-      data: {
-        data: {
-          values: cars
-        },
-        mark: "circle",
-        encoding: {
-          x: { field: "Horsepower", type: "quantitative" },
-          y: { field: "Miles_per_Gallon", type: "quantitative" }
-        }
-      },
-      renderedCallback: spy2
-    });
+  // Vega2 still uses canvas to measure text, even in SVG mode, so can't
+  // check contents here :(
+});
+
+describe("Vega3", () => {
+  it("has the correct media type", () => {
+    expect(Vega3.MIMETYPE).toBe("application/vnd.vega.v3+json");
+  });
+
+  it("renders the spec as SVG properly", (done) => {
+    const handleResult = () => {
+      expect(wrapper.render()).toMatchSnapshot();
+      done();
+    };
+    const wrapper = mount(
+      <Vega3
+        data={vgSpec}
+        options={options}
+        onResult={handleResult}
+        onError={handleError}
+      />
+    );
+  });
+});
+
+describe("Vega4", () => {
+  it("has the correct media type", () => {
+    expect(Vega4.MIMETYPE).toBe("application/vnd.vega.v4+json");
+  });
+
+  it("renders the spec as SVG properly", (done) => {
+    const handleResult = () => {
+      expect(wrapper.render()).toMatchSnapshot();
+      done();
+    };
+    const wrapper = mount(
+      <Vega4
+        data={vgSpec}
+        options={options}
+        onResult={handleResult}
+        onError={handleError}
+      />
+    );
+  });
+});
+
+describe("Vega5", () => {
+  it("has the correct media type", () => {
+    expect(Vega5.MIMETYPE).toBe("application/vnd.vega.v5+json");
+  });
+
+  it("renders the spec as SVG properly", (done) => {
+    const handleResult = () => {
+      expect(wrapper.render()).toMatchSnapshot();
+      done();
+    };
+    const wrapper = mount(
+      <Vega5
+        data={vgSpec}
+        options={options}
+        onResult={handleResult}
+        onError={handleError}
+      />
+    );
   });
 });

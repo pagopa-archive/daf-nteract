@@ -38,11 +38,18 @@ module.exports = {
   output: {
     chunkFilename: isProd ? "[name]-[chunkhash].bundle.js" : "[name].bundle.js"
   },
+  node: {
+    fs: "empty"
+  },
   module: {
     rules: [
       {
         test: /\.css$/,
         use: ["style-loader", "css-loader"]
+      },
+      {
+        test: /\.(jpg|png|gif)$/,
+        use: "file-loader"
       },
       {
         test: /\.tsx?$/,

@@ -48,7 +48,8 @@ const kernels = {
   connect: () => new Subject(),
   interrupt: () =>
     // successful interrupt
-    of({ response: null, responseType: "json", status: 204 })
+    of({ response: null, responseType: "json", status: 204 }),
+  restart: () => of({ response: {}, status: 200 })
 };
 
 const kernelspecs = {

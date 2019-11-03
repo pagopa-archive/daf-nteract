@@ -8,7 +8,7 @@ interface Props {
 
 export const Plain = (props: Props) => (
   <pre>
-    <Ansi linkify={false}>{props.data}</Ansi>
+    <Ansi linkify>{props.data}</Ansi>
   </pre>
 );
 

@@ -1,6 +1,6 @@
 {
   "name": "nteract",
-  "version": "0.14.3",
+  "version": "0.17.2",
   "description": "Interactive literate coding notebook!",
   "main": "./lib/webpacked-main.js",
   "repository": "nteract/nteract",
@@ -30,7 +30,8 @@
     "start": "npm run spawn",
     "prespawn": "npm run install:app-deps",
     "spawn": "cross-env NODE_ENV=development electron .",
-    "spawn:debug": "cross-env DEBUG=true NODE_ENV=development electron .",
+    "prespawn:debug": "npm run install:app-deps",
+    "spawn:debug": "cross-env DEBUG=true ELECTRON_ENABLE_LOGGING=1 NODE_ENV=development electron .",
     "prebuild": "rimraf lib",
     "build": "webpack --config webpack.dev.js --progress --colors",
     "build:clean": "rimraf lib dist",
@@ -104,8 +105,7 @@
     ],
     "extraResources": [
       "bin"
-    ],
-    "npmSkipBuildFromSource": true
+    ]
   },
   "jest": {
     "setupFiles": [
@@ -120,6 +120,7 @@
     "nteract-assets": "^4.0.0"
   },
   "devDependencies": {
-    "electron": "3.1.9"
+    "electron": "5.0.12",
+    "file-loader": "^4.2.0"
   }
 }

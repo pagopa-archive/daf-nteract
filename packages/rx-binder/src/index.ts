@@ -1,6 +1,3 @@
-/**
- * @module rx-binder
- */
 import { Observable, Subscriber } from "rxjs";
 
 const mybinderURL = "https://mybinder.org";

@@ -1,6 +1,3 @@
-/**
- * @module commutable
- */
 // API Exports
 
 export * from "./primitives";

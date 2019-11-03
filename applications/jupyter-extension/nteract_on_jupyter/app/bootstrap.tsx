@@ -44,7 +44,7 @@ export async function main(
     token: config.token,
     origin: location.origin,
     basePath: config.baseUrl,
-    bookstoreEnabled: config.bookstore.enabled,
+    bookstoreEnabled: !!config.bookstore.version,
     showHeaderEditor: false
   });
 
@@ -82,8 +82,11 @@ export async function main(
         transforms: makeTransformsRecord({
           displayOrder: Immutable.List([
             "application/vnd.jupyter.widget-view+json",
+            "application/vnd.vega.v5+json",
+            "application/vnd.vega.v4+json",
             "application/vnd.vega.v3+json",
             "application/vnd.vega.v2+json",
+            "application/vnd.vegalite.v3+json",
             "application/vnd.vegalite.v2+json",
             "application/vnd.vegalite.v1+json",
             "application/geo+json",
@@ -112,8 +115,11 @@ export async function main(
             "application/vnd.jupyter.widget-view+json": NullTransform,
             "application/vnd.vegalite.v1+json": NullTransform,
             "application/vnd.vegalite.v2+json": NullTransform,
+            "application/vnd.vegalite.v3+json": NullTransform,
             "application/vnd.vega.v2+json": NullTransform,
             "application/vnd.vega.v3+json": NullTransform,
+            "application/vnd.vega.v4+json": NullTransform,
+            "application/vnd.vega.v5+json": NullTransform,
             "application/vdom.v1+json": TransformVDOM,
             "application/json": Media.Json,
             "application/javascript": Media.JavaScript,

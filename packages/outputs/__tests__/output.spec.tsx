@@ -140,3 +140,60 @@ describe("Full Outputs usage", () => {
     expect(chosen.text()).toEqual("This is some HTML that WILL render");
   });
 });
+
+describe("Output with an array of output_types", () => {
+  const displayOutput = {
+    output_type: "display_data",
+    data: {
+      "text/html": "<p>This is some HTML that <b>WILL</b> render</p>",
+      "text/plain": "This is some plain text that WILL NOT render"
+    },
+    metadata: {}
+  };
+
+  const executeResultOutput = Object.assign({}, displayOutput, {
+    output_type: "execute_result"
+  });
+
+  const someOtherOutput = {
+    output_type: "stream",
+    name: "stdout",
+    text: "hey"
+  };
+
+  function CompositeOutput(props) {
+    const { output, children } = props;
+
+    return (
+      <RichMedia data={output.data} metadata={output.metadata}>
+        {children}
+      </RichMedia>
+    );
+  }
+  CompositeOutput.defaultProps = {
+    output: null,
+    output_type: ["display_data", "execute_result"]
+  };
+
+  function Usage(props) {
+    return (
+      <Output output={props.output}>
+        <CompositeOutput>
+          <Media.Json />
+          <Media.HTML />
+          <Media.Plain />
+        </CompositeOutput>
+      </Output>
+    );
+  }
+
+  it("should render if any output_type matches", () => {
+    const wrapperDisplay = mount(<Usage output={displayOutput} />);
+    const wrapperExecuteResult = mount(<Usage output={executeResultOutput} />);
+    const wrapperOtherOutput = mount(<Usage output={someOtherOutput} />);
+
+    expect(wrapperDisplay.find(Media.HTML).exists()).toEqual(true);
+    expect(wrapperExecuteResult.find(Media.HTML).exists()).toEqual(true);
+    expect(wrapperOtherOutput.html()).toEqual(null);
+  });
+});

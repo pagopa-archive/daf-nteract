@@ -1,6 +1,3 @@
-/**
- * @module types
- */
 import * as Immutable from "immutable";
 
 import { MediaBundle } from "@nteract/commutable";
@@ -85,6 +82,11 @@ export interface EditPayloadMessage {
 export interface AskExitPayloadMessage {
   source: "ask_exit";
   keepkernel: boolean;
+}
+
+export interface InputRequestMessage {
+  prompt: string;
+  password: boolean;
 }
 
 export type PayloadMessage =

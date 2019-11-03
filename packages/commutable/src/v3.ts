@@ -1,6 +1,3 @@
-/**
- * @module commutable
- */
 import {
   fromJS as immutableFromJS,
   List as ImmutableList,

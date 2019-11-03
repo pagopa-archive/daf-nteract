@@ -1,11 +1,9 @@
-/**
- * @module rx-jupyter
- */
 import { Observable } from "rxjs";
 import { ajax, AjaxResponse } from "rxjs/ajax";
 import urljoin from "url-join";
 
-import { createAJAXSettings, normalizeBaseURL, ServerConfig } from "./base";
+import { ServerConfig } from "@nteract/types";
+import { createAJAXSettings, normalizeBaseURL } from "./base";
 
 const formURI = (path: string) => urljoin("/api/terminals/", path);
 

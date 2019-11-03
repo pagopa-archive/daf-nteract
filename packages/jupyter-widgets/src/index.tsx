@@ -1,94 +1,48 @@
 import * as React from "react";
-import { Subject } from "rxjs";
+import { connect } from "react-redux";
+import { selectors, AppState } from "@nteract/core";
 
-// import { OuterShim } from "./outer-shim";
+import Manager from "./manager";
+import { WidgetModel } from "@jupyter-widgets/base";
+
+interface JupyterWidgetData {
+  model_id: string;
+  version_major: number;
+  version_minor: number;
+}
 
 interface Props {
-  data: { model_id: string };
-  channels: Subject<any>;
+  data: JupyterWidgetData;
+  model: WidgetModel;
 }
 
 /**
- * Component used to render a widget view.
- *
- * Given a kernel and widget model id, this component will render a widget
- * view for the widget model. The widget view and widget models are isolated to
- * a cross domain iframe. Since they have access to the kernel, they are capable
- * of communicating directly with the kernel instance which makes them atypical.
- *
- * Even though it may appear to be pure, since it doesn't have react state, this
- * component's iframe maintains it's own state in communication with the kernel.
+ * The WidgetDisplay takes a model_id, which is returned by the
+ * display_data payload that is returned from the execution of a
+ * cell containing an ipywidget. This model_id is used to retrieve
+ * the initial model for the widget from the comms state in the
+ * core state model.
  */
-export class WidgetDisplay extends React.Component<Partial<Props>> {
+export class WidgetDisplay extends React.Component<Props> {
   static MIMETYPE = "application/vnd.jupyter.widget-view+json";
 
-  // TODO: Uncomment this and related code in a follow-up PR.
-  // The outer shim is responsable for managing the rendered cross domain
-  // iframe, communicating with it, and relaying information to and from the
-  // kernel.
-  // private shim: OuterShim;
-
-  // A reference to the div which we can inject the cross domain widget iframe.
-  private container = React.createRef<HTMLDivElement>();
-
-  /** @override */
-  componentDidMount() {
-    if (!this.container.current) {
-      return;
-    }
-
-    // When the component has mounted, inject the widget iframe.
-    // const view = this.shim.getView();
-    // this.container.current.appendChild(view);
-  }
-
-  /** @override */
-  componentWillUnmount() {
-    // if (this.shim) {
-    //   this.shim.dispose();
-    //   delete this.shim;
-    // }
-  }
-
-  /** @override */
-  shouldComponentUpdate(nextProps: Props): boolean {
-    // Only update if the model_id or kernel_id have changed.
-    if (
-      this.props.data &&
-      nextProps.data.model_id !== this.props.data.model_id
-    ) {
-      return true;
-    }
-
-    // If the channels have changed, we need to make sure that we connect the
-    // shim to the new channels.
-    if (nextProps.channels !== this.props.channels) {
-      return true;
-    }
-
-    return false;
-  }
-
-  /** @override */
   render() {
-    this.createOrUpdateShim();
-
     return (
-      <pre>
-        Jupyter-Widgets are not yet supported in nteract.
-        <div ref={this.container} />
-      </pre>
+      <Manager model={this.props.model} model_id={this.props.data.model_id} />
     );
   }
-
-  /**
-   * Creates or updates the existing shim to the current model id and kernel.
-   */
-  private createOrUpdateShim() {
-    // if (!this.shim) {
-    //   this.shim = new OuterShim();
-    // }
-    // this.shim.setCommMsgsSubject(this.props.channels);
-    // this.shim.setModelId(this.props.data.model_id);
-  }
 }
+
+const mapStateToProps = (state: AppState, props: Props) => {
+  const {
+    data: { model_id }
+  } = props;
+  return {
+    model: selectors.modelById(state, { commId: model_id })
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  null
+)(WidgetDisplay);

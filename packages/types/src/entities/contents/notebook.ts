@@ -1,11 +1,3 @@
-/**
- * @module types
- */
-
-/**
- * Description
- */
-
 // Vendor modules
 import {
   CellId,
@@ -17,7 +9,7 @@ import { NotebookV4 } from "@nteract/commutable/lib/v4";
 import * as Immutable from "immutable";
 
 // Local modules
-import { KernelRef } from "../..";
+import { InputRequestMessage, KernelRef } from "../..";
 
 // The data model that `nteract/bookstore` accepts. For more info, see:
 // https://jupyter-notebook.readthedocs.io/en/stable/extending/contents.html#data-model
@@ -70,6 +62,7 @@ export interface DocumentRecordProps {
   // right now it's keypaths and then it looks like it's able to handle any per
   // cell transient data that will be deleted when the kernel is restarted
   cellPagers: any;
+  cellPrompts: Immutable.Map<CellId, InputRequestMessage>;
   editorFocused?: CellId | null;
   cellFocused?: CellId | null;
   copied: ImmutableCell | null;
@@ -84,6 +77,7 @@ export const makeDocumentRecord = Immutable.Record<DocumentRecordProps>({
     keyPathsForDisplays: Immutable.Map()
   }),
   cellPagers: Immutable.Map(),
+  cellPrompts: Immutable.Map(),
   editorFocused: null,
   cellFocused: null,
   copied: null,

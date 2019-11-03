@@ -1,6 +1,3 @@
-/**
- * @module enchannel-zmq-backend
- */
 import { EventEmitter } from "events";
 
 class Socket extends EventEmitter {

@@ -24,13 +24,13 @@ module.exports = {
     };
     const name = path.basename(componentPath, ".tsx");
     const dir = path.dirname(componentPath);
-    const package = dir.match(new RegExp("packages/(.*)/src"));
+    const package = dir.match(new RegExp("packages[\\\\/](.*)[\\\\/]src"));
     return `import { ${toPascalCase(name)} } from '@nteract/${package[1]}';`;
   },
   sections: [
     {
       name: "Introduction",
-      content: "doc/components.md"
+      content: "styleguide-components/intro.md"
     },
     {
       name: "@nteract/presentational-components",

@@ -189,7 +189,7 @@ const makeMapStateToProps = (initialState: AppState) => {
   let cachedAvailableKernels = Immutable.List();
 
   // To know whether we need to cache a new value
-  let previousKernelspecs = initialState.core.entities.kernelspecs;
+  const previousKernelspecs = initialState.core.entities.kernelspecs;
 
   const mapStateToProps = (state: AppState) => {
     if (previousKernelspecs !== state.core.entities.kernelspecs) {

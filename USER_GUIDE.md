@@ -18,6 +18,8 @@ A new notebook can be created by accessing the menu,
          ⮑  <Language Kernel> (e.g. Python 3, R, Julia etc.)
 ```
 
+Or from the command line, run `nteract notebook.ipynb`
+
 ### Opening a Notebook
 
 There are several ways to open a notebook in nteract:
@@ -125,6 +127,8 @@ Examples:
 Open multiple notebooks: `nteract notebook1.ipynb notebook2.ipynb`
 
 Open new notebook with specific kernel: `nteract --kernel javascript`
+
+Open new notebook with specific filename: `nteract mynotebook.ipynb`
 
 ## Environment Variables
 

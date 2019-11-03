@@ -1073,9 +1073,9 @@ exports[`HTML renders direct HTML 1`] = `
           "$$typeof": Symbol(react.forward_ref),
           "attrs": Array [],
           "componentStyle": ComponentStyle {
-            "componentId": "sc-bxivhb",
+            "componentId": "sc-ifAKCX",
             "isStatic": true,
-            "lastClassName": "dCqVSe",
+            "lastClassName": "fhkDtF",
             "rules": Array [
               "
   ",
@@ -1205,7 +1205,7 @@ exports[`HTML renders direct HTML 1`] = `
           "displayName": "styled.div",
           "foldedComponentIds": Array [],
           "render": [Function],
-          "styledComponentId": "sc-bxivhb",
+          "styledComponentId": "sc-ifAKCX",
           "target": "div",
           "toString": [Function],
           "warnTooManyClasses": [Function],
@@ -1215,7 +1215,7 @@ exports[`HTML renders direct HTML 1`] = `
       forwardedRef={[Function]}
     >
       <div
-        className="sc-bxivhb dCqVSe"
+        className="sc-ifAKCX fhkDtF"
         dangerouslySetInnerHTML={
           Object {
             "__html": "<b>cats are best</b>",
@@ -1250,9 +1250,9 @@ exports[`HTML updates the underlying HTML when data changes 1`] = `
           "$$typeof": Symbol(react.forward_ref),
           "attrs": Array [],
           "componentStyle": ComponentStyle {
-            "componentId": "sc-bxivhb",
+            "componentId": "sc-ifAKCX",
             "isStatic": true,
-            "lastClassName": "dCqVSe",
+            "lastClassName": "fhkDtF",
             "rules": Array [
               "
   ",
@@ -1382,7 +1382,7 @@ exports[`HTML updates the underlying HTML when data changes 1`] = `
           "displayName": "styled.div",
           "foldedComponentIds": Array [],
           "render": [Function],
-          "styledComponentId": "sc-bxivhb",
+          "styledComponentId": "sc-ifAKCX",
           "target": "div",
           "toString": [Function],
           "warnTooManyClasses": [Function],
@@ -1392,7 +1392,7 @@ exports[`HTML updates the underlying HTML when data changes 1`] = `
       forwardedRef={[Function]}
     >
       <div
-        className="sc-bxivhb dCqVSe"
+        className="sc-ifAKCX fhkDtF"
         dangerouslySetInnerHTML={
           Object {
             "__html": "<b>squirrels are pretty great, too</b>",
@@ -1454,6 +1454,7 @@ exports[`Markdown Should render markdown 1`] = `
       rawSourcePos={false}
       renderers={
         Object {
+          "code": [Function],
           "inlineMath": [Function],
           "math": [Function],
         }
@@ -1493,7 +1494,7 @@ exports[`Plain Should render markdown 1`] = `
 >
   <pre>
     <Ansi
-      linkify={false}
+      linkify={true}
     >
       <code>
         <span
@@ -1501,7 +1502,97 @@ exports[`Plain Should render markdown 1`] = `
           key="0"
           style={Object {}}
         >
-          The text in Spain is mainly plain
+          The
+           
+          text
+           
+          in
+           
+          Spain
+           
+          is
+           
+          mainly
+           
+          plain
+        </span>
+      </code>
+    </Ansi>
+  </pre>
+</Plaintext>
+`;
+
+exports[`Plain should render urls as links 1`] = `
+<Plaintext
+  data="Let's go to https://google.com today!"
+  mediaType="text/plain"
+>
+  <pre>
+    <Ansi
+      linkify={true}
+    >
+      <code>
+        <span
+          className={null}
+          key="0"
+          style={Object {}}
+        >
+          Let's
+           
+          go
+           
+          to
+           
+          <a
+            href="https://google.com"
+            key="6"
+            target="_blank"
+          >
+            https://google.com
+          </a>
+           
+          today!
+        </span>
+      </code>
+    </Ansi>
+  </pre>
+</Plaintext>
+`;
+
+exports[`Plain should render urls on a separate line as links 1`] = `
+<Plaintext
+  data="Let's go to
+https://google.com
+today!"
+  mediaType="text/plain"
+>
+  <pre>
+    <Ansi
+      linkify={true}
+    >
+      <code>
+        <span
+          className={null}
+          key="0"
+          style={Object {}}
+        >
+          Let's
+           
+          go
+           
+          to
+          
+
+          <a
+            href="https://google.com"
+            key="6"
+            target="_blank"
+          >
+            https://google.com
+          </a>
+          
+
+          today!
         </span>
       </code>
     </Ansi>

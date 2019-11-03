@@ -7,6 +7,9 @@ import {
   convertOutputMessageToNotebookFormat,
   createExecuteRequest,
   createMessage,
+  createCommMessage,
+  createCommOpenMessage,
+  createCommCloseMessage,
   executionCounts,
   JupyterMessage,
   kernelStatuses,
@@ -44,6 +47,66 @@ describe("createExecuteRequest", () => {
 
     expect(executeRequest.content.code).toEqual(code);
     expect(executeRequest.header.msg_type).toEqual("execute_request");
+  });
+});
+
+describe("createCommMessage", () => {
+  test("creates a comm_msg", () => {
+    const commMessage = createCommMessage("0000", { hey: "is for horses" });
+
+    expect(commMessage.content.data).toEqual({ hey: "is for horses" });
+    expect(commMessage.content.comm_id).toBe("0000");
+    expect(commMessage.header.msg_type).toBe("comm_msg");
+  });
+});
+
+describe("createCommOpenMessage", () => {
+  test("creates a comm_open", () => {
+    const commMessage = createCommOpenMessage(
+      "0001",
+      "myTarget",
+      {
+        hey: "is for horses"
+      },
+      "targetModule"
+    );
+
+    expect(commMessage.content).toEqual({
+      comm_id: "0001",
+      target_name: "myTarget",
+      data: { hey: "is for horses" },
+      target_module: "targetModule"
+    });
+  });
+  test("can specify a target_module", () => {
+    const commMessage = createCommOpenMessage(
+      "0001",
+      "myTarget",
+      { hey: "is for horses" },
+      "Dr. Pepper"
+    );
+
+    expect(commMessage.content).toEqual({
+      comm_id: "0001",
+      target_name: "myTarget",
+      data: { hey: "is for horses" },
+      target_module: "Dr. Pepper"
+    });
+  });
+});
+
+describe("createCommCloseMessage", () => {
+  test("creates a comm_msg", () => {
+    const parent_header = { id: "23" };
+
+    const commMessage = createCommCloseMessage(parent_header, "0000", {
+      hey: "is for horses"
+    });
+
+    expect(commMessage.content.data).toEqual({ hey: "is for horses" });
+    expect(commMessage.content.comm_id).toBe("0000");
+    expect(commMessage.header.msg_type).toBe("comm_close");
+    expect(commMessage.parent_header).toEqual(parent_header);
   });
 });
 
@@ -274,6 +337,32 @@ describe("executionCounts", () => {
       displayData({ data: { "text/plain": "hoo" } }),
       executeInput({
         code: "",
+        execution_count: 1
+      }),
+      status("idle")
+    )
+      .pipe(
+        executionCounts(),
+        toArray()
+      )
+      .toPromise()
+      .then(arr => {
+        expect(arr).toEqual([0, 1]);
+      });
+  });
+  it("extracts all execution counts from a session", () => {
+    return of(
+      status("starting"),
+      status("idle"),
+      status("busy"),
+      executeReply({
+        status: "idle",
+        execution_count: 0
+      }),
+      displayData({ data: { "text/plain": "woo" } }),
+      displayData({ data: { "text/plain": "hoo" } }),
+      executeReply({
+        status: "idle",
         execution_count: 1
       }),
       status("idle")

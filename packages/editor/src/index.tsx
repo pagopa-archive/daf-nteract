@@ -1,5 +1,5 @@
+import { MediaBundle } from "@nteract/commutable";
 import { Channels } from "@nteract/messaging";
-import { Media, RichMedia } from "@nteract/outputs";
 import CodeMirror, {
   Doc,
   Editor,
@@ -42,31 +42,12 @@ import { codeComplete, pick } from "./jupyter/complete";
 import { tool } from "./jupyter/tooltip";
 
 import { InitialTextArea } from "./components/initial-text-area";
+import { Tooltip } from "./components/tooltip";
 
 import CodeMirrorCSS from "./vendored/codemirror";
 import ShowHintCSS from "./vendored/show-hint";
 
 export { CodeMirrorCSS, ShowHintCSS };
-
-import styled, { StyledComponent } from "styled-components";
-
-const TipButton: StyledComponent<"button", never> = styled.button`
-  float: right;
-  display: inline-block;
-  position: absolute;
-  top: 0px;
-  right: 0px;
-  font-size: 11.5px;
-`;
-
-const Tip: StyledComponent<"div", never> = styled.div`
-  padding: 20px 20px 50px 20px;
-  margin: 30px 20px 50px 20px;
-  box-shadow: 2px 2px 50px rgba(0, 0, 0, 0.2);
-  white-space: pre-wrap;
-  background-color: var(--theme-app-bg);
-  z-index: 9999999;
-`;
 
 function normalizeLineEndings(str: string): string {
   if (!str) {
@@ -74,7 +55,6 @@ function normalizeLineEndings(str: string): string {
   }
   return str.replace(/\r\n|\r/g, "\n");
 }
-
 export interface EditorKeyEvent {
   editor: Editor;
   ev: KeyboardEvent;
@@ -100,8 +80,8 @@ export type CodeMirrorEditorProps = {
 } & Partial<FullEditorConfiguration>;
 
 interface CodeMirrorEditorState {
-  isFocused: boolean;
-  tipElement?: any;
+  bundle: MediaBundle | null;
+  cursorCoords: { top: number; left: number; bottom: number } | null;
 }
 
 interface CodeCompletionEvent {
@@ -142,6 +122,7 @@ export default class CodeMirrorEditor extends React.PureComponent<
   textareaRef: React.RefObject<HTMLTextAreaElement> = React.createRef<
     HTMLTextAreaElement
   >();
+  tooltipNode: HTMLDivElement | null = null;
 
   constructor(props: CodeMirrorEditorProps) {
     super(props);
@@ -150,7 +131,10 @@ export default class CodeMirrorEditor extends React.PureComponent<
     this.tips = this.tips.bind(this);
     this.deleteTip = this.deleteTip.bind(this);
     this.debounceNextCompletionRequest = true;
-    this.state = { isFocused: true, tipElement: null };
+    this.state = {
+      bundle: null,
+      cursorCoords: null
+    };
 
     this.fullOptions = this.fullOptions.bind(this);
     this.cleanMode = this.cleanMode.bind(this);
@@ -168,7 +152,8 @@ export default class CodeMirrorEditor extends React.PureComponent<
       Down: this.goLineDownOrEmit,
       "Shift-Tab": (editor: Editor) => editor.execCommand("indentLess"),
       Tab: this.executeTab,
-      Up: this.goLineUpOrEmit
+      Up: this.goLineUpOrEmit,
+      Esc: this.deleteTip
     };
 
     const hintOptions = {
@@ -246,6 +231,18 @@ export default class CodeMirrorEditor extends React.PureComponent<
 
     const { completion, editorFocused, focusAbove, focusBelow } = this.props;
 
+    // ensure a single tooltip holder exists on document.body
+    const tipHolder = document.getElementsByClassName(
+      "tip-holder"
+    )[0] as HTMLDivElement;
+    if (!tipHolder) {
+      this.tooltipNode = document.createElement("div");
+      this.tooltipNode.classList.add("tip-holder");
+      document.body.appendChild(this.tooltipNode);
+    } else {
+      this.tooltipNode = tipHolder;
+    }
+
     // Set up the initial options with both our defaults and all the ones we
     // allow to be passed in
     const options: FullEditorConfiguration = {
@@ -263,8 +260,16 @@ export default class CodeMirrorEditor extends React.PureComponent<
       this.cm.focus();
     }
 
-    this.cm.on("topBoundary", focusAbove!);
-    this.cm.on("bottomBoundary", focusBelow!);
+    this.cm.on("topBoundary", (editor: Editor) => {
+      this.deleteTip();
+      focusAbove && focusAbove(editor);
+    });
+    this.cm.on("bottomBoundary", (editor: Editor) => {
+      this.deleteTip();
+      focusBelow && focusBelow(editor);
+    });
+
+    this.cm.on("cursorActivity", this.handleCursorChange);
 
     this.cm.on("focus", this.focusChanged.bind(this, true));
     this.cm.on("blur", this.focusChanged.bind(this, false));
@@ -415,9 +420,6 @@ export default class CodeMirrorEditor extends React.PureComponent<
   }
 
   focusChanged(focused: boolean): void {
-    this.setState({
-      isFocused: focused
-    });
     if (this.props.onFocusChange) {
       this.props.onFocusChange(focused);
     }
@@ -439,45 +441,25 @@ export default class CodeMirrorEditor extends React.PureComponent<
   }
 
   deleteTip(): void {
-    this.setState({ tipElement: null });
+    this.setState({ bundle: null });
   }
+
+  handleCursorChange = (editor: Editor) => {
+    const cursorCoords = editor.cursorCoords();
+    this.setState({ cursorCoords });
+  };
 
   tips(editor: Editor & Doc): void {
     const { tip, channels } = this.props;
 
+    if (this.state.bundle) {
+      return this.deleteTip();
+    }
+
     if (tip) {
       tool(channels!, editor).subscribe((resp: { [dict: string]: any }) => {
-        const bundle = resp.dict;
-
-        if (Object.keys(bundle).length === 0) {
-          return;
-        }
-
-        const node: HTMLElement = document.getElementsByClassName(
-          "tip-holder"
-        )[0] as HTMLElement;
-
-        const expanded: { expanded: boolean } = { expanded: true };
-        const tipElement: React.ReactPortal = ReactDOM.createPortal(
-          <Tip className="CodeMirror-hint">
-            <RichMedia data={bundle} metadata={{ expanded }}>
-              <Media.Plain />
-            </RichMedia>
-            <TipButton onClick={this.deleteTip}>{"\u2715"}</TipButton>
-          </Tip>,
-          node
-        );
-
-        this.setState({ tipElement });
-
-        editor.addWidget({ line: editor.getCursor().line, ch: 0 }, node, true);
-
-        const body: HTMLElement = document.body;
-        if (node != null && body != null) {
-          const pos: ClientRect | DOMRect = node.getBoundingClientRect();
-          body.appendChild(node);
-          node.style.top = `${pos.top}px`;
-        }
+        const bundle = Object.keys(resp.dict).length > 0 ? resp.dict : null;
+        this.setState({ bundle });
       });
     }
   }
@@ -523,17 +505,25 @@ export default class CodeMirrorEditor extends React.PureComponent<
   }
 
   render(): JSX.Element {
+    const { bundle, cursorCoords } = this.state;
+    const tooltipNode = this.tooltipNode;
     return (
       <React.Fragment>
         {/* Global CodeMirror CSS packaged up by styled-components */}
-
-        <div className="tip-holder" />
         <InitialTextArea
           ref={this.textareaRef}
           defaultValue={this.props.value}
         />
-        {/* CodeMirror will inject a div right below the TextArea above */}
-        {this.state.tipElement}
+        {tooltipNode
+          ? ReactDOM.createPortal(
+              <Tooltip
+                bundle={bundle}
+                cursorCoords={cursorCoords}
+                deleteTip={this.deleteTip}
+              />,
+              tooltipNode
+            )
+          : null}
       </React.Fragment>
     );
   }

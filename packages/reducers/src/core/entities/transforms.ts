@@ -6,7 +6,7 @@ import { Action, Reducer } from "redux";
 import { combineReducers } from "redux-immutable";
 
 const byId = (
-  state = Map() as Map<string, React.ComponentClass>,
+  state = Map<string, React.ComponentClass>(),
   action: Action
 ): Map<string, React.ComponentClass> => {
   let typedAction;

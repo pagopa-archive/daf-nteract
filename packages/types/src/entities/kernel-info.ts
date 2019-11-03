@@ -1,6 +1,3 @@
-/**
- * @module types
- */
 import { JSONType } from "@nteract/commutable";
 import * as Immutable from "immutable";
 

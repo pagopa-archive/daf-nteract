@@ -1,6 +1,3 @@
-/**
- * @module commutable
- */
 import * as Immutable from "immutable";
 import uuid from "uuid/v4";
 
@@ -28,15 +25,18 @@ export type ImmutableJSONType =
   | ImmutableJSONMap
   | ImmutableJSONList;
 
-// Can't (easily) write circularly referenced types so this'll have to do for now
+// Can't (easily) write circularly referenced types so this'll have to do for
+// now
 export type ImmutableJSONMap = Immutable.Map<string, any>;
 export type ImmutableJSONList = Immutable.List<any>;
 
+// tslint:disable:max-line-length
 /**
  * Media Bundles as they exist on disk from the notebook format
  * See https://nbformat.readthedocs.io/en/latest/format_description.html#display-data for docs
  * and https://github.com/jupyter/nbformat/blob/master/nbformat/v4/nbformat.v4.schema.json for the schema
  */
+// tslint:enable:max-line-length
 export interface OnDiskMediaBundle {
   "text/plain"?: MultiLineString;
   "text/html"?: MultiLineString;
@@ -48,8 +48,8 @@ export interface OnDiskMediaBundle {
   "image/gif"?: MultiLineString;
   "image/svg+xml"?: MultiLineString;
 
-  // The JSON mimetype has some corner cases because of the protocol / format assuming the values
-  // in a media bundle are either:
+  // The JSON mimetype has some corner cases because of the protocol / format
+  // assuming the values in a media bundle are either:
   //
   //   * A string; which would be deserialized
   //   * An array; which would have to be assumed to be a multiline string
@@ -63,8 +63,11 @@ export interface OnDiskMediaBundle {
   "application/x-nteract-model-debug+json"?: {};
   "application/vnd.vega.v2+json"?: {};
   "application/vnd.vega.v3+json"?: {};
+  "application/vnd.vega.v4+json"?: {};
+  "application/vnd.vega.v5+json"?: {};
   "application/vnd.vegalite.v1+json"?: {};
   "application/vnd.vegalite.v2+json"?: {};
+  "application/vnd.vegalite.v3+json"?: {};
 
   [key: string]: string | string[] | {} | undefined;
 }
@@ -90,14 +93,18 @@ export interface MediaBundle {
   "application/x-nteract-model-debug+json"?: { [key: string]: any };
   "application/vnd.vega.v2+json"?: { [key: string]: any };
   "application/vnd.vega.v3+json"?: { [key: string]: any };
+  "application/vnd.vega.v4+json"?: { [key: string]: any };
+  "application/vnd.vega.v5+json"?: { [key: string]: any };
   "application/vnd.vegalite.v1+json"?: { [key: string]: any };
   "application/vnd.vegalite.v2+json"?: { [key: string]: any };
+  "application/vnd.vegalite.v3+json"?: { [key: string]: any };
   // Other media types can also come in that we don't recognize
   [key: string]: string | string[] | {} | undefined;
 }
 
 /**
- * Turn nbformat multiline strings (arrays of strings for simplifying diffs) into strings
+ * Turn nbformat multiline strings (arrays of strings for simplifying diffs)
+ * into strings
  */
 export function demultiline(s: string | string[]): string {
   if (Array.isArray(s)) {
@@ -107,8 +114,8 @@ export function demultiline(s: string | string[]): string {
 }
 
 /**
- * Split string into a list of strings delimited by newlines; useful for on-disk git comparisons;
- * and is the expectation for jupyter notebooks on disk
+ * Split string into a list of strings delimited by newlines; useful for on-disk
+ * git comparisons; and is the expectation for jupyter notebooks on disk
  */
 export function remultiline(s: string | string[]): string[] {
   if (Array.isArray(s)) {
@@ -126,6 +133,7 @@ function isJSONKey(key: string): boolean {
 // A type with all ownPropertyNames also readonly; works for all JSON types
 type DeepReadonly<T> = { readonly [P in keyof T]: DeepReadonly<T[P]> };
 
+// tslint:disable-next-line:max-line-length
 // Taken from https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/freeze
 export function deepFreeze<T>(object: T): DeepReadonly<T> {
   // Retrieve the property names defined on object
@@ -162,23 +170,33 @@ export function createFrozenMediaBundle(
   //   "text/plain": "Hey"
   // }
 
-  // Since we have to convert from one type to another that has conflicting types; we need to hand convert it in a way that
-  // flow is able to verify correctly. The way we do that is create a new object that we declare with the type we want;
-  // set the keys and values we need; then seal the object with Object.freeze
+  // Since we have to convert from one type to another that has conflicting
+  // types; we need to hand convert it in a way that flow is able to verify
+  // correctly.
+  // FIXME: Is above comment still valid with the move from flow to ts?
+  //
+  // The way we do that is create a new object that we declare with the type
+  // we want; set the keys and values we need; then seal the object with
+  // Object.freeze
   const bundle: MediaBundle = {};
 
   for (const key in mediaBundle) {
-    if (
-      !isJSONKey(key) &&
-      (typeof mediaBundle[key] === "string" || Array.isArray(mediaBundle[key]))
-    ) {
-      // Because it's a string; we can't mutate it anyways (and don't have to Object.freeze it)
+    if (typeof mediaBundle[key] === "string") {
+      // Strings are immutable and can be just taken as-is.
+      //
+      // N.B.: This is even true of strings sent directly as the JSON root
+      // object -- which Bokeh's output_notebook() is known to do -- so we
+      // have to check for them even in the JSON case, as deepFreeze will fail
+      // on strings.
+      bundle[key] = mediaBundle[key] as string;
+    } else if (!isJSONKey(key) && Array.isArray(mediaBundle[key])) {
       bundle[key] = demultiline(mediaBundle[key] as MultiLineString);
     } else {
-      // we now know it's an Object of some kind
+      // we now know it's an Object of some kind (or a JSON array)
       bundle[key] = deepFreeze(mediaBundle[key]!);
     }
   }
+
   return Object.freeze(bundle);
 }
 
@@ -187,7 +205,8 @@ export function createOnDiskMediaBundle(
 ): OnDiskMediaBundle {
   // Technically we could return just the mediaBundle as is
   // return mediaBundle;
-  // However for the sake of on-disk readability we write out remultilined versions of the array and string ones
+  // However for the sake of on-disk readability we write out remultilined
+  // versions of the array and string ones
 
   const freshBundle: OnDiskMediaBundle = {};
   for (const key in mediaBundle) {

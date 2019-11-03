@@ -35,7 +35,7 @@ docker run -p 8888:8888 teamdigitale/daf-nteract
 or from your local build
 
 ```
-git clone git@github.com:teamdigitale/nteract.git
+git clone git@github.com:teamdigitale/daf-nteract.git
 cd nteract
 docker build -t pdnd-nteract .
 docker run -p 8888:8888 pdnd-nteract
@@ -47,14 +47,14 @@ and open your browser at [http://localhost:8888]. If you are asked the token pas
 
 ### Install for data analyst
 
-If you are a data scientist we have realeased  [pdnd-open-notebooks](https://github.com/teamdigitale/pdnd-open-notebooks) repository based on this work on nteract. It provides a ready to use datascience Docker with libraries for python, R and julia and a set of notebooks as a starting examples. 
+If you are a data scientist we have realeased  [pdnd-open-notebooks](https://github.com/teamdigitale/pdnd-open-notebooks) repository based on this work on nteract. It provides a ready to use datascience Docker with libraries for python, R and julia. 
 
 Otherwise, you can use this repo as your favorite tool for anlysing Italian public dataset you can follow these steps:
 
 Requires [Node.js](https://docs.npmjs.com/getting-started/installing-node), [yarn](https://yarnpkg.com/lang/en/docs/install/), [lerna](https://lernajs.io/) python 3 and pip on python 3. The following steps are for MacOs only but can be adjusted for different operating systems.
 
 ```
-git clone git@github.com:teamdigitale/nteract.git
+git clone git@github.com:teamdigitale/daf-nteract.git
 cd nteract
 pip3 install jupyter requests pandas fbprophet
 npm install --global lerna
@@ -77,7 +77,7 @@ Requires [Node.js](https://docs.npmjs.com/getting-started/installing-node), [yar
 #### MacOS
 
 ```
-git clone git@github.com:teamdigitale/nteract.git
+git clone git@github.com:teamdigitale/daf-nteract.git
 cd nteract
 pip3 install jupyter requests pandas fbprophet
 brew install yarn
@@ -91,16 +91,16 @@ jupyter nteract --dev
 
 #### Ubuntu or Debian
 ```
-git clone git@github.com:teamdigitale/nteract.git
+git clone git@github.com:teamdigitale/daf-nteract.git
 cd nteract
 pip3 install jupyter requests pandas fbprophet
 
-YARN INSTALLATION
+# YARN INSTALLATION
 curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
 echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
 sudo apt-get update && sudo apt-get install yarn
 
-NODEJS INSTALLATION
+# NODEJS INSTALLATION
 curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
 sudo apt-get install -y nodejs
 

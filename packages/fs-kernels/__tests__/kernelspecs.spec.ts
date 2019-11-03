@@ -1,7 +1,7 @@
 import { findAll } from "../src/kernelspecs";
 
-describe("findAll", () => {
-  it.skip("retrieves a collection of kernel specs", done => {
+describe.skip("findAll", () => {
+  it("retrieves a collection of kernel specs", done => {
     return findAll().then(kernelspecs => {
       expect(kernelspecs).toHaveProperty("python3");
 

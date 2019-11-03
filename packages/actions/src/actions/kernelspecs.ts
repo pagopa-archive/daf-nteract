@@ -1,6 +1,3 @@
-/**
- * @module actions
- */
 import {
   ContentRef,
   HostRef,
