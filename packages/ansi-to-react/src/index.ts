@@ -87,11 +87,12 @@ function convertBundleIntoReact(
     );
   }
 
-  const words = bundle.content.split(" ").reduce(
+  const words = bundle.content.split(/(\s+)/).reduce(
     (words: React.ReactNode[], word: string, index: number) => {
-      // If this isn't the first word, re-add the space removed from split.
-      if (index !== 0) {
-        words.push(" ");
+      // If this is a separator, re-add the space removed from split.
+      if (index % 2 === 1) {
+        words.push(word);
+        return words;
       }
 
       // If  this isn't a link, just return the word as-is.

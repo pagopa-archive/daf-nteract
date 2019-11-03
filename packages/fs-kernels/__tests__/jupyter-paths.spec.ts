@@ -15,7 +15,7 @@ actual.config = actual.config.filter(fs.existsSync).map(path => {
   return path.toLowerCase();
 });
 
-describe("dataDirs", () => {
+describe.skip("dataDirs", () => {
   it("returns a promise that resolves to a list of directories that exist", done => {
     return jp.dataDirs({ withSysPrefix: true }).then(dirs => {
       dirs = dirs.map(dir => {
@@ -75,14 +75,14 @@ describe("dataDirs", () => {
   });
 });
 
-describe("runtimeDir", () => {
+describe.skip("runtimeDir", () => {
   it("returns the directory where runtime data is stored", async done => {
     expect(await jp.runtimeDir()).toEqual(actual.runtime[0]);
     done();
   });
 });
 
-describe("configDirs", () => {
+describe.skip("configDirs", () => {
   it("returns a promise that resolves to a list of directories that exist", done => {
     return jp.configDirs({ withSysPrefix: true }).then(dirs => {
       dirs = dirs.map(dir => {

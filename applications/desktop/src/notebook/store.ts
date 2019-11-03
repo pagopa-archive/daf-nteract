@@ -1,13 +1,31 @@
 import { middlewares as coreMiddlewares, reducers } from "@nteract/core";
 import { applyMiddleware, combineReducers, createStore, Store } from "redux";
-import { combineEpics, createEpicMiddleware } from "redux-observable";
+import {
+  combineEpics,
+  createEpicMiddleware,
+  ActionsObservable,
+  StateObservable
+} from "redux-observable";
+import { catchError } from "rxjs/operators";
 
 import { Actions } from "./actions";
 import epics from "./epics";
 import { handleDesktopNotebook } from "./reducers";
 import { DesktopNotebookAppState } from "./state";
+import { Observable } from "rxjs";
 
-const rootEpic = combineEpics(...epics);
+const rootEpic = (
+  action$: ActionsObservable<any>,
+  store$: StateObservable<any>,
+  dependencies: any
+) =>
+  combineEpics(...epics)(action$, store$, dependencies).pipe(
+    catchError((error: any, source: Observable<any>) => {
+      console.error(error);
+      return source;
+    })
+  );
+
 const epicMiddleware = createEpicMiddleware<
   Actions,
   Actions,

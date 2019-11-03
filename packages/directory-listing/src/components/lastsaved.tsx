@@ -1,5 +1,5 @@
 import * as React from "react";
-import TimeAgo, { Formatter, Unit, Suffix } from "react-timeago";
+import TimeAgo, { Formatter, Suffix, Unit } from "react-timeago";
 import styled from "styled-components";
 import { TimeAgoTD } from "../../../../packages/pdnd-nteract-packages/theme";
 

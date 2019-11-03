@@ -44,7 +44,7 @@ export async function main(
     token: config.token,
     origin: location.origin,
     basePath: config.baseUrl,
-    bookstoreEnabled: config.bookstore.enabled,
+    bookstoreEnabled: !!config.bookstore.version,
     showHeaderEditor: false
   });
 

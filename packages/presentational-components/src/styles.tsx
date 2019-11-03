@@ -193,23 +193,23 @@ const GlobalCSSVariables = createGlobalStyle`
 const DarkTheme = createGlobalStyle`
 :root {
   --theme-app-bg: #2b2b2b;
-  --theme-app-fg: var(--nt-color-midnight-lightest);
-  --theme-app-border: var(--nt-color-midnight-light);
+  --theme-app-fg: var(--nt-color-alabaster-lightest);
+  --theme-app-border: var(--nt-color-alabaster-light);
 
   --theme-primary-bg: var(--nt-color-midnight);
   --theme-primary-bg-hover: var(--nt-color-midnight);
   --theme-primary-bg-focus: var(--nt-color-midnight-light);
 
-  --theme-primary-fg: var(--nt-color-midnight-light);
-  --theme-primary-fg-hover: var(--nt-color-midnight-lighter);
+  --theme-primary-fg: var(--nt-color-alabaster-light);
+  --theme-primary-fg-hover: var(--nt-color-alabaster-lighter);
   --theme-primary-fg-focus: var(--theme-app-fg);
 
   --theme-secondary-bg: var(--theme-primary-bg);
   --theme-secondary-bg-hover: var(--theme-primary-bg-hover);
   --theme-secondary-bg-focus: var(--theme-primary-bg-focus);
 
-  --theme-secondary-fg: var(--nt-color-midnight-light);
-  --theme-secondary-fg-hover: var(--nt-color-midnight-lighter);
+  --theme-secondary-fg: var(--nt-color-alabaster-light);
+  --theme-secondary-fg-hover: var(--nt-color-alabaster-lighter);
   --theme-secondary-fg-focus: var(--theme-primary-fg);
 
   --theme-primary-shadow-hover: 1px  1px 3px rgba(255, 255, 255, 0.12), -1px -1px 3px rgba(255, 255, 255, 0.12);

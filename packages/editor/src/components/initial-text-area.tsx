@@ -11,7 +11,10 @@ export const TextArea: StyledComponent<
   any,
   { autoComplete: "off" },
   "autoComplete"
-> = styled.textarea.attrs({ autoComplete: "off" })`
+> = styled.textarea.attrs({
+  autoComplete: "off",
+  ariaLabel: "codemirror-textarea"
+})`
   font-family: "Dank Mono", dm, "Source Code Pro", "Monaco", monospace;
   font-size: 14px;
   line-height: 20px;

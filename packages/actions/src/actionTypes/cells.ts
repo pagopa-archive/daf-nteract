@@ -1,6 +1,3 @@
-/**
- * @module actions
- */
 import { CellId, CellType, JSONObject } from "@nteract/commutable";
 import { ContentRef } from "@nteract/types";
 
@@ -114,8 +111,8 @@ export const UNHIDE_ALL = "UNHIDE_ALL";
 export interface UnhideAll {
   type: "UNHIDE_ALL";
   payload: {
-    inputHidden: boolean;
-    outputHidden: boolean;
+    inputHidden?: boolean;
+    outputHidden?: boolean;
     contentRef: ContentRef;
   };
 }
@@ -274,5 +271,6 @@ export interface SendInputReply {
   type: "SEND_INPUT_REPLY";
   payload: {
     value: string;
+    contentRef: ContentRef;
   };
 }

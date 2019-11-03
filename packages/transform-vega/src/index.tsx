@@ -22,7 +22,11 @@ export const Vega = (mediaType: VegaMediaType) => {
       errorHandler={onError}
     />;
 
+  embed.defaultProps = {
+    mediaType
+  };
   embed.MIMETYPE = mediaType;
+  
   return embed;
 };
 

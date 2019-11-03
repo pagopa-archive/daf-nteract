@@ -1,11 +1,3 @@
-/**
- * @module types
- */
-
-/**
- * Description
- */
-
 // Vendor modules
 import {
   CellId,

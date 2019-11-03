@@ -2,6 +2,7 @@ import { binder } from "rx-binder";
 import { kernels } from "rx-jupyter";
 import { of } from "rxjs";
 import { catchError, filter, map, tap } from "rxjs/operators";
+import { ServerConfig as BaseServerConfig } from "@nteract/types";
 
 // NOTE: The old flow type for BinderKey was an opaque type so that you couldn't use _any_ string,
 // it had to use our special Binder key type from this module.
@@ -17,9 +18,7 @@ interface BinderOptions {
   binderURL?: string;
 }
 
-export interface ServerConfig {
-  endpoint: string;
-  token: string;
+export interface ServerConfig extends BaseServerConfig {
   // Assume always cross domain
   crossDomain: true;
 }

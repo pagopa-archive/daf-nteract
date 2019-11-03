@@ -2,9 +2,9 @@ import * as React from "react";
 
 interface Props {
   data: string;
-  mediaType: "application/x-nteract-model-debug+json";
   models: { [modelID: string]: object };
-  modelID: string;
+  modelID?: string;
+  mediaType?: "application/x-nteract-model-debug+json";
 }
 
 const mediaType = "application/x-nteract-model-debug+json";

@@ -5,6 +5,7 @@ import {
   AppState,
   ContentRef,
   HostRecord,
+  KernelRef,
   KernelspecsByRefRecordProps,
   KernelspecsRef
 } from "@nteract/types";
@@ -13,7 +14,7 @@ import { connect } from "react-redux";
 
 // Local modules
 import { MODAL_TYPES } from "../modal-controller";
-import PureNotebookMenu from "./PureNotebookMenu"
+import PureNotebookMenu from "./PureNotebookMenu";
 
 function makeMapStateToProps(
   initialState: AppState,
@@ -135,8 +136,10 @@ function makeMapDispatchToProps(
       ),
     killKernel: (payload: { restarting: boolean; kernelRef?: string | null }) =>
       dispatch(actions.killKernel(payload)),
-    interruptKernel: (payload: { kernelRef?: string | null }) =>
-      dispatch(actions.interruptKernel(payload))
+    interruptKernel: (payload: {
+      kernelRef?: KernelRef | null;
+      contentRef?: ContentRef | null;
+    }) => dispatch(actions.interruptKernel(payload))
   });
   return mapDispatchToProps;
 }

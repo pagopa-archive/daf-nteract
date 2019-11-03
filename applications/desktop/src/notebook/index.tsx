@@ -18,7 +18,7 @@ import "@nteract/styles/editor-overrides.css";
 import { CodeMirrorCSS, ShowHintCSS } from "@nteract/editor";
 
 import DataExplorer from "@nteract/data-explorer";
-import { WidgetDisplay } from "@nteract/jupyter-widgets";
+import WidgetDisplay from "@nteract/jupyter-widgets";
 import GeoJSONTransform from "@nteract/transform-geojson";
 import ModelDebug from "@nteract/transform-model-debug";
 import PlotlyTransform from "@nteract/transform-plotly";

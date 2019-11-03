@@ -12,7 +12,7 @@ function cleanup(connectionFile) {
   }
 }
 
-describe("launch", () => {
+describe.skip("launch", () => {
   let spawnResult;
   let spawnResultNoCleanup;
   let kernelName;

@@ -32,7 +32,7 @@ opaque type Id = string;
 opaque type Ref = string;
 ```
 
-Which can also help us enforce we are using the right ids and refs amongst disparate entities:
+Which can also help us ensure we are using the right ids and refs amongst disparate entities:
 
 ```js
 opaque type KernelId = Id;

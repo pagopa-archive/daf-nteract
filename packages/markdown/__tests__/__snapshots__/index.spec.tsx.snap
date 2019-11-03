@@ -30,6 +30,7 @@ height between texels.
     rawSourcePos={false}
     renderers={
       Object {
+        "code": [Function],
         "inlineMath": [Function],
         "math": [Function],
       }

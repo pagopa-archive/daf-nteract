@@ -1,6 +1,3 @@
-/**
- * @module types
- */
 import { ChildProcess } from "child_process";
 
 import * as Immutable from "immutable";

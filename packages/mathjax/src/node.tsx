@@ -28,7 +28,7 @@ class MathJaxNode_ extends React.Component<Props & MathJaxContextValue> {
    * Render the math once the node is mounted
    */
   componentDidMount() {
-    this.typeset();
+    setTimeout(() => this.typeset(), 0);
   }
 
   /**

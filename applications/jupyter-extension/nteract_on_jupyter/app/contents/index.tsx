@@ -194,7 +194,7 @@ const makeMapStateToProps: any = (
       } = metadata;
 
       // Updates
-      showHeaderEditor = content!.showHeaderEditor;
+      showHeaderEditor = content.showHeaderEditor;
       headerData = Object.assign({}, headerData, {
         authors,
         description,

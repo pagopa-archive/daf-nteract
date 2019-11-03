@@ -1,6 +1,3 @@
-/**
- * @module commutable
- */
 import { ImmutableOutput } from "./outputs";
 
 import { ExecutionCount } from "./primitives";

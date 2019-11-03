@@ -14,7 +14,7 @@ $ npm install --save @nteract/transform-vega
 
 ## Usage
 
-The example below shows how we can can use this package to render a scatterplot.
+The example below shows how we can use this package to render a scatterplot.
 
 ```javascript
 import { Vega3 } from "@nteract/transform-vega";

@@ -1,5 +1,5 @@
-import React from "react";
 import { mount, shallow } from "enzyme";
+import React from "react";
 import renderer from "react-test-renderer";
 
 import { PureNotebookMenu } from "../src/notebook-menu";
@@ -222,7 +222,7 @@ describe("PureNotebookMenu", () => {
       interruptKernelItem.simulate("click", eventMock);
       expect(props.interruptKernel).toHaveBeenCalledTimes(1);
       expect(props.interruptKernel).toHaveBeenCalledWith({
-        kernelRef: props.currentKernelRef
+        contentRef: props.currentContentRef
       });
 
       const restartKernelItem = wrapper.find({ text: RESTART_KERNEL });
@@ -232,7 +232,6 @@ describe("PureNotebookMenu", () => {
       expect(props.restartKernel).toHaveBeenCalledWith({
         outputHandling: "None",
         contentRef: props.currentContentRef,
-        kernelRef: props.currentKernelRef
       });
 
       const restartKernelAndClearOutputsItem = wrapper.find({
@@ -243,7 +242,6 @@ describe("PureNotebookMenu", () => {
       expect(props.restartKernelAndClearOutputs).toHaveBeenCalledTimes(1);
       expect(props.restartKernelAndClearOutputs).toHaveBeenCalledWith({
         contentRef: props.currentContentRef,
-        kernelRef: props.currentKernelRef
       });
 
       const restartKernelAndRunAllOutputsItem = wrapper.find({
@@ -254,7 +252,6 @@ describe("PureNotebookMenu", () => {
       expect(props.restartKernelAndRunAllOutputs).toHaveBeenCalledTimes(1);
       expect(props.restartKernelAndRunAllOutputs).toHaveBeenCalledWith({
         contentRef: props.currentContentRef,
-        kernelRef: props.currentKernelRef
       });
 
       const killKernelItem = wrapper.find({ text: KILL_KERNEL });
@@ -263,6 +260,7 @@ describe("PureNotebookMenu", () => {
       expect(props.killKernel).toHaveBeenCalledTimes(1);
       expect(props.killKernel).toHaveBeenCalledWith({
         kernelRef: props.currentKernelRef,
+        contentRef: props.currentContentRef,
         restarting: false
       });
     });

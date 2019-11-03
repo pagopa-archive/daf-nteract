@@ -131,6 +131,12 @@ describe("Plain", () => {
     expect(toJson(component)).toMatchSnapshot();
     expect(component.find("a").prop("href")).toEqual("https://google.com");
   });
+  it("should render urls on a separate line as links", () => {
+    const data = "Let's go to\nhttps://google.com\ntoday!";
+    const component = mount(<Media.Plain data={data} />);
+    expect(toJson(component)).toMatchSnapshot();
+    expect(component.find("a").prop("href")).toEqual("https://google.com");
+  });
 });
 
 describe("JavaScript", () => {

@@ -1,6 +1,3 @@
-/**
- * @module types
- */
 import * as Immutable from "immutable";
 
 import { ContentsRecordProps, makeContentsRecord } from "./contents";

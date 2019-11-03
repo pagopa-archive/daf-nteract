@@ -1,12 +1,10 @@
-/**
- * @module rx-jupyter
- */
 import { Notebook } from "@nteract/commutable";
 import querystring from "querystring";
 import { Observable } from "rxjs";
-import { ajax, AjaxRequest, AjaxResponse } from "rxjs/ajax";
+import { ajax, AjaxResponse } from "rxjs/ajax";
 import urljoin from "url-join";
-import { createAJAXSettings, JupyterAjaxResponse, ServerConfig } from "./base";
+import { ServerConfig } from "@nteract/types";
+import { createAJAXSettings, JupyterAjaxResponse } from "./base";
 
 const formURI = (path: string) => urljoin("/api/contents/", path);
 

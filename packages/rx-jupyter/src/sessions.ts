@@ -1,9 +1,7 @@
-/**
- * @module rx-jupyter
- */
 import { Observable } from "rxjs";
 import { ajax, AjaxResponse } from "rxjs/ajax";
-import { createAJAXSettings, ServerConfig } from "./base";
+import { ServerConfig } from "@nteract/types";
+import { createAJAXSettings } from "./base";
 
 /**
  * Creates an AjaxObservable for listing available sessions.

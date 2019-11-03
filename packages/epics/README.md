@@ -20,10 +20,8 @@ The example below shows how we can use the `watchExecutionStateEpic` to monitor 
 import { watchExecutionStateEpic } from "@nteract/epics";
 
 export default () => {
-  /**
-   * Create a Observable for the successful launch of a
-   * kernel.
-   */
+  // Create a Observable for the successful launch of a
+  // kernel.
   const action$ = ActionsObservable.of({
       type: actionTypes.LAUNCH_KERNEL_SUCCESSFUL,
       payload: {
@@ -35,10 +33,8 @@ export default () => {
         }
       }
     });
-    /**
-     * Monitor the Observable and update the
-     * state of the kernel on our client appropriately.
-     */
+    // Monitor the Observable and update the
+    // state of the kernel on our client appropriately.
     const obs = watchExecutionStateEpic(action$);
     obs.pipe(toArray()).subscribe(
       actions => {

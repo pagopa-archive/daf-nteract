@@ -1,6 +1,3 @@
-/**
- * @module actions
- */
 import {
   ContentRef,
   KernelInfo,
@@ -93,10 +90,7 @@ export function kernelRawStderr(payload: {
   };
 }
 
-export function killKernel(payload: {
-  restarting: boolean;
-  kernelRef?: KernelRef | null;
-}): actionTypes.KillKernelAction {
+export function killKernel(payload: actionTypes.KillKernelAction["payload"]): actionTypes.KillKernelAction {
   return {
     type: actionTypes.KILL_KERNEL,
     payload
@@ -123,9 +117,9 @@ export function killKernelSuccessful(payload: {
   };
 }
 
-export function interruptKernel(payload: {
-  kernelRef?: KernelRef | null;
-}): actionTypes.InterruptKernel {
+export function interruptKernel(
+  payload: actionTypes.InterruptKernel["payload"]
+): actionTypes.InterruptKernel {
   return {
     type: actionTypes.INTERRUPT_KERNEL,
     payload
@@ -152,11 +146,7 @@ export function interruptKernelFailed(payload: {
   };
 }
 
-export function restartKernel(payload: {
-  outputHandling: actionTypes.RestartKernelOutputHandling;
-  kernelRef?: KernelRef | null;
-  contentRef: ContentRef;
-}): actionTypes.RestartKernel {
+export function restartKernel(payload: actionTypes.RestartKernel["payload"]): actionTypes.RestartKernel {
   return {
     type: actionTypes.RESTART_KERNEL,
     payload

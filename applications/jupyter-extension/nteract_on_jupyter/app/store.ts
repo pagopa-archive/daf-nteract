@@ -5,11 +5,13 @@ import {
   reducers
 } from "@nteract/core";
 import { applyMiddleware, combineReducers, compose, createStore } from "redux";
-import { combineEpics, createEpicMiddleware, Epic } from "redux-observable";
+import { combineEpics, createEpicMiddleware, Epic, ActionsObservable, StateObservable } from "redux-observable";
 import {
   pdndReducers,
   pdndEpics
 } from "../../../../packages/pdnd-nteract-packages/ducks";
+import { Observable } from "rxjs";
+import { catchError } from "rxjs/operators";
 
 const composeEnhancers =
   (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
@@ -23,7 +25,22 @@ const rootReducer = combineReducers({
 });
 
 export default function configureStore(initialState: Partial<AppState>) {
-  const rootEpic = combineEpics<Epic>(...coreEpics.allEpics, ...pdndEpics);
+  const rootEpic = (
+    action$: ActionsObservable<any>,
+    store$: StateObservable<any>,
+    dependencies: any
+  ) =>
+    combineEpics<Epic>(...coreEpics.allEpics, ...pdndEpics)(
+      action$,
+      store$,
+      dependencies
+    ).pipe(
+      catchError((error: any, source: Observable<any>) => {
+        console.error(error);
+        return source;
+      })
+    );
+    
   const epicMiddleware = createEpicMiddleware();
   const middlewares = [
     epicMiddleware,

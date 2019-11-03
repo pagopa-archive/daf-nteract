@@ -1,7 +1,3 @@
-/**
- * @module commutable
- */
-
 // Due to the on-disk format needing to be written out in an explicit order,
 // we disable ordering for this file
 // tslint:disable:object-literal-sort-keys.

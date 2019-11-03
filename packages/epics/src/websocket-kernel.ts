@@ -1,10 +1,7 @@
-/**
- * @module epics
- */
 import { kernelInfoRequest } from "@nteract/messaging";
 import { ofType } from "redux-observable";
 import { ActionsObservable, StateObservable } from "redux-observable";
-import { kernels, ServerConfig, sessions } from "rx-jupyter";
+import { kernels, sessions } from "rx-jupyter";
 import { empty, of } from "rxjs";
 import {
   catchError,
@@ -20,7 +17,11 @@ import * as selectors from "@nteract/selectors";
 import { castToSessionId } from "@nteract/types";
 import { createKernelRef } from "@nteract/types";
 import { AppState } from "@nteract/types";
-import { RemoteKernelProps } from "@nteract/types";
+import {
+  KernelRecord,
+  RemoteKernelProps,
+  ServerConfig,
+} from "@nteract/types";
 
 import { AjaxResponse } from "rxjs/ajax";
 import { extractNewKernel } from "./kernel-lifecycle";
@@ -44,6 +45,7 @@ export const launchWebSocketKernelEpic = (
         return empty();
       }
       const serverConfig: ServerConfig = selectors.serverConfig(host);
+      const hostRef = selectors.hostRefByHostRecord(state, { host });
 
       const {
         payload: { kernelSpecName, cwd, kernelRef, contentRef }
@@ -83,7 +85,8 @@ export const launchWebSocketKernelEpic = (
               session.kernel.id,
               sessionId
             ),
-            kernelSpecName
+            kernelSpecName,
+            hostRef
           });
 
           kernel.channels.next(kernelInfoRequest());
@@ -221,7 +224,17 @@ export const interruptKernelEpic = (
       }
       const serverConfig: ServerConfig = selectors.serverConfig(host);
 
-      const kernel = selectors.currentKernel(state);
+      const { contentRef } = action.payload;
+
+      let kernel: KernelRecord | null | undefined;
+      if (contentRef) {
+        kernel = selectors.kernelByContentRef(state$.value, {
+          contentRef
+        });
+      } else {
+        kernel = selectors.currentKernel(state$.value);
+      }
+
       if (!kernel) {
         return of(
           actions.interruptKernelFailed({
@@ -231,10 +244,19 @@ export const interruptKernelEpic = (
         );
       }
 
-      if (kernel.type !== "websocket" || !kernel.id) {
+      if (kernel.type !== "websocket") {
         return of(
           actions.interruptKernelFailed({
             error: new Error("Invalid kernel type for interrupting"),
+            kernelRef: action.payload.kernelRef
+          })
+        );
+      }
+
+      if (!kernel.id) {
+        return of(
+          actions.interruptKernelFailed({
+            error: new Error("Kernel does not have ID set"),
             kernelRef: action.payload.kernelRef
           })
         );
@@ -260,7 +282,6 @@ export const interruptKernelEpic = (
     })
   );
 
-// NB: This epic kills the *current* kernel. ZMQ killKernelEpic kills a *specified* kernel.
 export const killKernelEpic = (
   action$: ActionsObservable<actions.KillKernelAction>,
   state$: StateObservable<AppState>
@@ -282,7 +303,17 @@ export const killKernelEpic = (
       }
       const serverConfig: ServerConfig = selectors.serverConfig(host);
 
-      const kernel = selectors.currentKernel(state);
+      const { contentRef, kernelRef } = action.payload;
+
+      let kernel: KernelRecord | null | undefined;
+      if (contentRef) {
+        kernel = selectors.kernelByContentRef(state, { contentRef });
+      } else if (kernelRef) {
+        kernel = selectors.kernel(state, { kernelRef });
+      } else {
+        kernel = selectors.currentKernel(state);
+      }
+
       if (!kernel) {
         return of(
           actions.killKernelFailed({
@@ -292,7 +323,18 @@ export const killKernelEpic = (
         );
       }
 
-      if (kernel.type !== "websocket" || !kernel.id || !kernel.sessionId) {
+      if (kernel.type !== "websocket") {
+        return of(
+          actions.killKernelFailed({
+            error: new Error(
+              "websocket kernel epic can only kill websocket kernels with an id"
+            ),
+            kernelRef: action.payload.kernelRef
+          })
+        );
+      }
+
+      if (!kernel.id || !kernel.sessionId) {
         return of(
           actions.killKernelFailed({
             error: new Error(
@@ -333,8 +375,14 @@ export const restartWebSocketKernelEpic = (
     concatMap((action: actions.RestartKernel) => {
       const state = state$.value;
 
-      const { contentRef, kernelRef, outputHandling } = action.payload;
+      const { contentRef, outputHandling } = action.payload;
+      const kernelRef =
+        selectors.kernelRefByContentRef(state, { contentRef }) ||
+        action.payload.kernelRef;
 
+      /**
+       * If there is still no KernelRef, then throw an error.
+       */
       if (!kernelRef) {
         return of(
           actions.restartKernelFailed({

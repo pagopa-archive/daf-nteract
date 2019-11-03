@@ -1,7 +1,4 @@
 /**
- * @module fs-kernels
- */
-/**
  * This module contains methods that allow you to launch ("spawn") Jupyter
  * kernels.  You can spawn kernels either by name, by a `kernelSpec` or
  * by a `kernelSpec` and its connection information.

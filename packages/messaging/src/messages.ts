@@ -1,12 +1,12 @@
-/**
- * @module messaging
- */
 import uuid from "uuid/v4";
 import {
+  BasicOutputMessageContent,
   ExecuteRequest,
   JupyterMessage,
   JupyterMessageHeader,
-  MessageType
+  MessageType,
+  UpdateDisplayData,
+  UpdateDisplayDataContent
 } from "./types";
 
 export type Channel = "shell" | "iopub" | "stdin";
@@ -114,7 +114,7 @@ function createHeader<MT extends MessageType>(
     version: "5.2",
     msg_type,
 
-    // These fields get overriden by enchannel implementations, we supply them
+    // These fields get overridden by enchannel implementations, we supply them
     // as a fallback here
     username: "nteract",
     session: uuid()
@@ -183,7 +183,7 @@ export function executeRequest(
  * Creates a display_data message.
  *
  * ref: http://jupyter-client.readthedocs.io/en/stable/messaging.html#display-data
- * > displayData({username: 'rgbkrk', session: '123'}, {data: {'text/html': '<b>sup</b>'}})
+ * > displayData({username: 'rgbkrk', session: '123'}, {data: {'text/html': '<b>sup</b>'}}, "display_data")
  * { header:
  *    { msg_id: '24e95ce7-73d5-4c5f-9ef0-ff8547779690',
  *      date: 2017-10-23T22:57:58.704Z,
@@ -198,14 +198,29 @@ export function executeRequest(
  *      metadata: {},
  *      transient: {} } }
  */
+
+// Overload 1: with second parameter
+export function displayData<
+  C extends BasicOutputMessageContent,
+  T extends MessageType
+>(content: C, msg_type: T): JupyterMessage<T, C>;
+
+// Overload 2: without second parameter (required to get TS to behave)
+export function displayData<C extends BasicOutputMessageContent>(
+  content: C,
+  msg_type?: undefined
+): JupyterMessage<"display_data", C>;
+
+// The actual displayData function; generics should infer correctly, based on
+// the overloads above.
 export function displayData(
-  content: {
-    data?: object;
-    metadata?: object;
-    transient?: object;
-  },
-  msg_type: MessageType = "display_data"
-): JupyterMessage<MessageType, any> {
+  content: BasicOutputMessageContent,
+  msg_type?: MessageType
+): JupyterMessage {
+  if (msg_type === undefined) {
+    msg_type = "display_data";
+  }
+
   return message(
     {
       msg_type
@@ -224,17 +239,11 @@ export function displayData(
  *
  * http://jupyter-client.readthedocs.io/en/stable/messaging.html#update-display-data
  */
-export function updateDisplayData(content: {
-  data?: object;
-  metadata?: object;
-  transient?: object;
-}): JupyterMessage<MessageType, any> {
+export function updateDisplayData(
+  content: UpdateDisplayDataContent
+): UpdateDisplayData {
   // TODO: Enforce the transient display_id here?
-  const m: JupyterMessage<MessageType, any> = displayData(
-    content,
-    "update_display_data"
-  );
-  return m;
+  return displayData(content, "update_display_data");
 }
 
 /**
