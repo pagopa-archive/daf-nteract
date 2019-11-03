@@ -214,8 +214,9 @@ const byRef = (
           return state.set(
             fetchContentFulfilledAction.payload.contentRef,
             makeNotebookContentRecord({
-              created: fetchContentFulfilledAction.payload.created,
-              lastSaved: fetchContentFulfilledAction.payload.lastSaved,
+              created: fetchContentFulfilledAction.payload.model.created,
+              lastSaved:
+                fetchContentFulfilledAction.payload.model.last_modified,
               filepath: fetchContentFulfilledAction.payload.filepath,
               model: makeDocumentRecord({
                 notebook: immutableNotebook,

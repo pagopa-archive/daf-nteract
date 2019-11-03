@@ -1,6 +1,3 @@
-/**
- * @module fs-kernels
- */
 import { ExecaChildProcess } from "execa";
 import pidusage from "pidusage";
 

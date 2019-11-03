@@ -66,7 +66,7 @@ Set the value of `build.target.linux` in `applications/desktop/package.json`
 ar xv nteract_0.0.15_amd64.deb
 ```
 
-This will create two arcives, `data.tar.xz`, and `control.tar.gz`. The data
+This will create two archives, `data.tar.xz`, and `control.tar.gz`. The data
 archive specifies what files will be install where. The control archive
 contains package metadata that is used by package managers such as `dpkg` and
 `apt-get`.

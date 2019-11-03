@@ -71,7 +71,7 @@ pip install -e .
 jupyter serverextension enable nteract_on_jupyter
 ```
 
-### 3. Build JS assests and run a Jupyter server with hot reloading
+### 3. Build JS assets and run a Jupyter server with hot reloading
 
 First we need to run the webpack server to live reload javascript and html assets. Anywhere in the nteract repository, run
 

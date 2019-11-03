@@ -1,7 +1,7 @@
+import { MediaBundle } from "@nteract/commutable";
+import { Media, RichMedia } from "@nteract/outputs";
 import * as React from "react";
 import styled, { StyledComponent } from "styled-components";
-import { Media, RichMedia } from "@nteract/outputs";
-import { MediaBundle } from "@nteract/commutable";
 
 const TipButton: StyledComponent<"button", never> = styled.button`
   float: right;
@@ -11,7 +11,7 @@ const TipButton: StyledComponent<"button", never> = styled.button`
   top: 0px;
 `;
 
-type CursorCoords = { top: number; left: number; bottom?: number };
+interface CursorCoords { top: number; left: number; bottom?: number }
 
 interface TipProps {
   cursorCoords: CursorCoords;

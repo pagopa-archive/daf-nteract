@@ -44,7 +44,6 @@ import StatusBar from "./status-bar";
 import Toolbar, { CellToolbarMask } from "./toolbar";
 import TransformMedia from "./transform-media";
 
-import { CodeCell } from "@nteract/commutable/lib/v4";
 import styled from "styled-components";
 
 function getTheme(theme: string) {
@@ -223,7 +222,7 @@ const makeMapDispatchToCellProps = (
     toggleParameterCell: () =>
       dispatch(actions.toggleParameterCell({ id, contentRef })),
     sendInputReply: (value: string) =>
-      dispatch(actions.sendInputReply({ value })),
+      dispatch(actions.sendInputReply({ value, contentRef })),
 
     updateOutputMetadata: (
       index: number,
@@ -439,6 +438,8 @@ interface NotebookStateProps {
   cellOrder: Immutable.List<any>;
   theme: string;
   contentRef: ContentRef;
+  focusedCell: CellId | null | undefined;
+  cellMap: Immutable.Map<CellId, any>;
 }
 
 interface NotebookDispatchProps {
@@ -492,7 +493,9 @@ const makeMapStateToProps = (
       return {
         cellOrder: Immutable.List(),
         contentRef,
-        theme
+        theme,
+        focusedCell: null,
+        cellMap: Immutable.Map()
       };
     }
 
@@ -502,19 +505,22 @@ const makeMapStateToProps = (
       );
     }
 
+    const focusedCell = selectors.notebook.cellFocused(model);
+    const cellMap = selectors.notebook.cellMap(model);
+
     return {
       cellOrder: model.notebook.cellOrder,
       contentRef,
-      theme
+      theme,
+      focusedCell,
+      cellMap
     };
   };
   return mapStateToProps;
 };
 
 const Cells = styled.div`
-  padding-top: var(--nt-spacing-m, 10px);
-  padding-left: var(--nt-spacing-m, 10px);
-  padding-right: var(--nt-spacing-m, 10px);
+  padding: var(--nt-spacing-m, 10px);
 `;
 
 const mapDispatchToProps = (dispatch: Dispatch): NotebookDispatchProps => ({
@@ -573,7 +579,10 @@ export class NotebookApp extends React.PureComponent<NotebookProps> {
       executeFocusedCell,
       focusNextCell,
       focusNextCellEditor,
-      contentRef
+      contentRef,
+      cellOrder,
+      focusedCell,
+      cellMap
     } = this.props;
 
     let ctrlKeyPressed = e.ctrlKey;
@@ -595,9 +604,22 @@ export class NotebookApp extends React.PureComponent<NotebookProps> {
     executeFocusedCell({ contentRef });
 
     if (e.shiftKey) {
-      // Couldn't focusNextCell just do focusing of both?
+      /** Get the next cell and check if it is a markdown cell. */
+      const focusedCellIndex = cellOrder.indexOf(focusedCell);
+      const nextCellId = cellOrder.get(focusedCellIndex + 1);
+      const nextCell = cellMap.get(nextCellId);
+
+      /** Always focus the next cell. */
       focusNextCell({ id: undefined, createCellIfUndefined: true, contentRef });
-      focusNextCellEditor({ id: undefined, contentRef });
+
+      /** Only focus the next editor if it is a code cell or a cell
+       * created at the bottom of the notebook. */
+      if (
+        nextCell === undefined ||
+        (nextCell && nextCell.get("cell_type") === "code")
+      ) {
+        focusNextCellEditor({ id: focusedCell || undefined, contentRef });
+      }
     }
   }
 

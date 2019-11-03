@@ -48,7 +48,7 @@ const OutputWrapper = styled.div.attrs<OutputWrapperProps>(props => ({
   }
 
   & code {
-    font-family: "Source Code Pro";
+    font-family: "Source Code Pro", monospace;
     white-space: pre-wrap;
     font-size: 14px;
   }

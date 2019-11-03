@@ -1,6 +1,3 @@
-/**
- * @module epics
- */
 import {
   Channels,
   childOf,
@@ -30,7 +27,6 @@ import {
   mergeMap,
   share,
   switchMap,
-  take,
   takeUntil,
   tap
 } from "rxjs/operators";
@@ -157,7 +153,7 @@ export function createExecuteCellStream(
   id: string,
   contentRef: ContentRef
 ): Observable<any> {
-  const kernel = selectors.currentKernel(state);
+  const kernel = selectors.kernelByContentRef(state, { contentRef: contentRef });
 
   const { bearerToken } = { ...tokensSelector(state) };
 
@@ -402,7 +398,7 @@ export const sendInputReplyEpic = (
     ofType(actions.SEND_INPUT_REPLY),
     switchMap((action: actions.SendInputReply) => {
       const state = state$.value;
-      const kernel = selectors.currentKernel(state);
+      const kernel = selectors.kernelByContentRef(state, { contentRef: action.payload.contentRef });
 
       if (kernel && kernel.type === "websocket") {
         const reply = inputReply({ value: action.payload.value });

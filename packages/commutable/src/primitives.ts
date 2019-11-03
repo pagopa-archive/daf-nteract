@@ -1,6 +1,3 @@
-/**
- * @module commutable
- */
 import * as Immutable from "immutable";
 import uuid from "uuid/v4";
 
@@ -192,8 +189,7 @@ export function createFrozenMediaBundle(
       // have to check for them even in the JSON case, as deepFreeze will fail
       // on strings.
       bundle[key] = mediaBundle[key] as string;
-    }
-    else if (!isJSONKey(key) && Array.isArray(mediaBundle[key])) {
+    } else if (!isJSONKey(key) && Array.isArray(mediaBundle[key])) {
       bundle[key] = demultiline(mediaBundle[key] as MultiLineString);
     } else {
       // we now know it's an Object of some kind (or a JSON array)

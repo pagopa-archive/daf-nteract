@@ -1,6 +1,6 @@
 import * as selectors from "@nteract/selectors";
 import { AppState, ContentRef, KernelRef } from "@nteract/types";
-import distanceInWordsToNow from "date-fns/distance_in_words_to_now";
+import { formatDistanceToNow } from "date-fns";
 import React from "react";
 import { connect } from "react-redux";
 
@@ -36,7 +36,7 @@ export const Bar = styled.div`
   background: var(--status-bar);
   z-index: 99;
   @media print {
-     display: none;
+    display: none;
   }
 `;
 
@@ -58,7 +58,9 @@ export class StatusBar extends React.Component<Props> {
       <Bar>
         <RightStatus>
           {this.props.lastSaved ? (
-            <p> Last saved {distanceInWordsToNow(this.props.lastSaved)} </p>
+            <p>
+              Last saved {formatDistanceToNow(new Date(this.props.lastSaved))}
+            </p>
           ) : (
             <p> Not saved yet </p>
           )}
@@ -112,7 +114,7 @@ const makeMapStateToProps = (
       kernelSpecDisplayName = "no kernel";
     } else if (kernel != null && kernel.kernelSpecName != null) {
       kernelSpecDisplayName = kernel.kernelSpecName;
-    } else if (content !== undefined && content.type === "notebook") {
+    } else if (content && content.type === "notebook") {
       kernelSpecDisplayName =
         selectors.notebook.displayName(content.model) || " ";
     }

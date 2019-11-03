@@ -49,6 +49,7 @@ const epics = [
   coreEpics.commListenEpic,
   coreEpics.executeAllCellsEpic,
   coreEpics.updateContentEpic,
+  coreEpics.autoSaveCurrentContentEpic,
 
   launchKernelWhenNotebookSetEpic,
   watchSpawn,

@@ -210,7 +210,11 @@ export const newNotebookEpic = (
       }
 
       const timestamp = new Date();
-      const filepath = path.join(action.payload.cwd, "Untitled.ipynb");
+      const filepath =
+        (
+          action.payload.filepath !== null &&
+          path.resolve(action.payload.filepath)
+        ) || path.join(action.payload.cwd, "Untitled.ipynb");
 
       return actions.fetchContentFulfilled({
         filepath,
@@ -221,7 +225,7 @@ export const newNotebookEpic = (
           // Back to JS, only to immutableify it inside of the reducer
           content: toJS(notebook),
           writable: true,
-          name: "Untitled.ipynb",
+          name: path.basename(filepath),
           path: filepath,
           created: timestamp.toString(),
           last_modified: timestamp.toString()

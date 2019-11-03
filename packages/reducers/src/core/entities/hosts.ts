@@ -11,7 +11,7 @@ import { Action, Reducer } from "redux";
 import { combineReducers } from "redux-immutable";
 
 const byRef = (
-  state = Map() as Map<string, HostRecord>,
+  state = Map<string, HostRecord>(),
   action: Action
 ): Map<string, HostRecord> => {
   let typedAction;

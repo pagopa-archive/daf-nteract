@@ -7,10 +7,8 @@ import { combineReducers } from "redux-immutable";
 // Local modules
 import { entities } from "./entities";
 
-// TODO: This is temporary until we have sessions in place. Ideally, we point to
-// a document, which knows about its session and that session knows about its
-// kernel. For now, we need to keep a reference to the currently targeted kernel
-// around.
+// TODO: This can be removed once the work to rely on deriving KernelRefs
+// ContentRefs is complete.
 const kernelRef = (state = "", action: Action) => {
   let typedAction;
   switch (action.type) {

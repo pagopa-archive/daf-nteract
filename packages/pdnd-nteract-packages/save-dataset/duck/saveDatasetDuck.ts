@@ -6,7 +6,7 @@ import { createSelector } from "reselect";
 import { Map as ImmutableMap, List as ImmutableList, fromJS } from "immutable";
 
 import { FOCUS_CELL, updateCellSource } from "@nteract/actions/src";
-import { cellById as cellByIdSelector } from "@nteract/selectors/src/notebook";
+import { cellById as cellByIdSelector } from "@nteract/selectors/src/core/contents/notebook";
 import { model as modelSelector } from "@nteract/selectors/src";
 import {
   loggedUserDataSelector,

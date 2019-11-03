@@ -1,6 +1,3 @@
-/**
- * @module types
- */
 import * as Immutable from "immutable";
 
 export interface EmptyModelRecordProps {

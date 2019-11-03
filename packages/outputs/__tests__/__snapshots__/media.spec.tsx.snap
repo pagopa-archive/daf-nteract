@@ -1454,6 +1454,7 @@ exports[`Markdown Should render markdown 1`] = `
       rawSourcePos={false}
       renderers={
         Object {
+          "code": [Function],
           "inlineMath": [Function],
           "math": [Function],
         }
@@ -1544,12 +1545,53 @@ exports[`Plain should render urls as links 1`] = `
            
           <a
             href="https://google.com"
-            key="3"
+            key="6"
             target="_blank"
           >
             https://google.com
           </a>
            
+          today!
+        </span>
+      </code>
+    </Ansi>
+  </pre>
+</Plaintext>
+`;
+
+exports[`Plain should render urls on a separate line as links 1`] = `
+<Plaintext
+  data="Let's go to
+https://google.com
+today!"
+  mediaType="text/plain"
+>
+  <pre>
+    <Ansi
+      linkify={true}
+    >
+      <code>
+        <span
+          className={null}
+          key="0"
+          style={Object {}}
+        >
+          Let's
+           
+          go
+           
+          to
+          
+
+          <a
+            href="https://google.com"
+            key="6"
+            target="_blank"
+          >
+            https://google.com
+          </a>
+          
+
           today!
         </span>
       </code>

@@ -1,18 +1,18 @@
 {
   "name": "@nteract/core",
-  "version": "10.6.0",
+  "version": "10.8.3",
   "description": "core modules and components for nteract apps",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "nteractDesktop": "src/index.ts",
   "scripts": {},
   "dependencies": {
-    "@nteract/actions": "^2.7.0",
-    "@nteract/commutable": "^7.1.2",
-    "@nteract/epics": "^2.5.0",
-    "@nteract/reducers": "^2.6.0",
-    "@nteract/selectors": "^2.3.0",
-    "@nteract/types": "^4.3.0",
+    "@nteract/actions": "^2.8.3",
+    "@nteract/commutable": "^7.1.4",
+    "@nteract/epics": "^2.7.3",
+    "@nteract/reducers": "^2.7.3",
+    "@nteract/selectors": "^2.4.3",
+    "@nteract/types": "^4.4.0",
     "redux-logger": "^3.0.6"
   },
   "peerDependencies": {

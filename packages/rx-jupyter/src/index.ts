@@ -1,11 +1,6 @@
-/**
- * @module rx-jupyter
- */
 import { ajax, AjaxResponse } from "rxjs/ajax";
-import { createAJAXSettings, ServerConfig as _ServerConfig } from "./base";
-
-// Workaround an issue with re-exporting an interface by type aliasing it
-export type ServerConfig = _ServerConfig;
+import { ServerConfig } from "@nteract/types";
+import { createAJAXSettings } from "./base";
 
 import { Observable } from "rxjs";
 import * as bookstore from "./bookstore";

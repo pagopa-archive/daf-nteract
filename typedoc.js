@@ -1,10 +1,10 @@
 module.exports = {
   name: "nteract",
   mode: "modules",
-  out: "nteract-packages/dist",
+  out: "nteract-packages/public",
   theme: "default",
   ignoreCompilerErrors: "true",
-  preserveConstEnums: "true",
+  preserveConstEnums: "false",
   exclude: [
     "*.spec.ts",
     "*.test.ts",
@@ -16,5 +16,9 @@ module.exports = {
   externalPattern: "**/node_modules/**",
   excludeExternals: "true",
   stripInternal: "false",
-  tsconfig: "tsconfig.base.json"
+  tsconfig: "tsconfig.base.json",
+  target: "es6",
+  module: "commonjs",
+  "external-modulemap": ".*/packages/([\\w\\-_]+)/",
+  readme: "packages/README.md"
 };

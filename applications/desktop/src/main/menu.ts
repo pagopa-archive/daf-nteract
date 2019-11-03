@@ -208,7 +208,7 @@ export function loadFullMenu(store = global.store) {
   const newNotebookItems = sortBy(kernelSpecs, "spec.display_name").map(
     kernel => ({
       label: kernel.spec.display_name,
-      click: () => launchNewNotebook(kernel)
+      click: () => launchNewNotebook(null, kernel)
     })
   );
 
@@ -651,7 +651,7 @@ export function loadTrayMenu(store = global.store) {
   const newNotebookItems = sortBy(kernelSpecs, "spec.display_name").map(
     kernel => ({
       label: kernel.spec.display_name,
-      click: () => launchNewNotebook(kernel)
+      click: () => launchNewNotebook(null, kernel)
     })
   );
 

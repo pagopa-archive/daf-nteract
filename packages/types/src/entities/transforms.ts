@@ -1,6 +1,3 @@
-/**
- * @module types
- */
 import Immutable from "immutable";
 
 export interface TransformsRecordProps {

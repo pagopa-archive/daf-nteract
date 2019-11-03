@@ -10,7 +10,14 @@ describe("ModelDebug", () => {
     );
 
     const instance = modelDebugWrapper.instance();
-    expect(instance.shouldComponentUpdate()).toBeTruthy();
+
+    // shouldComponentUpdate is tested twice
+    // First time is for an informative Jest message
+    expect(instance.shouldComponentUpdate !== undefined);
+    // Second time is for typescript compiler to pass
+    if (instance.shouldComponentUpdate !== undefined) {
+      expect(instance.shouldComponentUpdate({}, {}, {})).toBeTruthy();
+    }
 
     expect(
       modelDebugWrapper.contains(

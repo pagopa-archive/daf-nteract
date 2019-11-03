@@ -1,6 +1,3 @@
-/**
- * @module epics
- */
 // Vendor modules
 import * as actions from "@nteract/actions";
 import { toJS } from "@nteract/commutable";
@@ -11,12 +8,13 @@ import {
   DirectoryContentRecordProps,
   DummyContentRecordProps,
   FileContentRecordProps,
-  NotebookContentRecordProps
+  NotebookContentRecordProps,
+  ServerConfig
 } from "@nteract/types";
 import { RecordOf } from "immutable";
 import { ofType } from "redux-observable";
 import { ActionsObservable, StateObservable } from "redux-observable";
-import { bookstore, contents, ServerConfig } from "rx-jupyter";
+import { bookstore, contents } from "rx-jupyter";
 import { IContent } from "rx-jupyter/lib/contents";
 import { empty, Observable, of } from "rxjs";
 import { AjaxResponse } from "rxjs/ajax";
@@ -123,7 +121,7 @@ export function publishToBookstore(
                 path: content.filepath,
                 type: content.type,
                 created:
-                  content && content.created && content.created!.toString(),
+                  content && content.created && content.created.toString(),
                 last_modified: "",
                 content: notebook,
                 mimetype: content.mimetype,

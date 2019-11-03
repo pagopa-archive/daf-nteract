@@ -150,7 +150,7 @@ export class DropdownContent extends React.PureComponent<{
   render() {
     return (
       <DropdownContentDiv>
-        <ul>
+        <ul role="listbox" aria-label="dropdown-content">
           {React.Children.map(this.props.children, child => {
             const childElement = child as React.ReactElement<any>;
             return React.cloneElement(childElement, {

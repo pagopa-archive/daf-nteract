@@ -416,7 +416,8 @@ describe("dispatchInterruptKernel", () => {
       expect(store.dispatch).toHaveBeenCalledWith({
         type: actions.INTERRUPT_KERNEL,
         payload: {
-          kernelRef: "k1"
+          kernelRef: "k1",
+          contentRef: "123"
         }
       });
     } else {
@@ -697,10 +698,34 @@ describe("dispatchNewNotebook", () => {
       contentRef: "123"
     };
 
-    menu.dispatchNewNotebook(props, store, {}, { spec: "hokey" });
+    menu.dispatchNewNotebook(props, store, {}, null, { spec: "hokey" });
     expect(store.dispatch).toHaveBeenCalledWith({
       type: "NEW_NOTEBOOK",
       payload: {
+        filepath: null,
+        kernelSpec: { spec: "hokey" },
+        cwd: process.cwd(),
+        kernelRef: expect.any(String),
+        contentRef: "123"
+      }
+    });
+  });
+});
+
+describe("dispatchNewNotebookNamed", () => {
+  test("dispatches a NEW_NOTEBOOK action with name", () => {
+    const store = {
+      dispatch: jest.fn()
+    };
+    const props = {
+      contentRef: "123"
+    };
+
+    menu.dispatchNewNotebook(props, store, {}, "some.ipynb", { spec: "hokey" });
+    expect(store.dispatch).toHaveBeenCalledWith({
+      type: "NEW_NOTEBOOK",
+      payload: {
+        filepath: "some.ipynb",
         kernelSpec: { spec: "hokey" },
         cwd: process.cwd(),
         kernelRef: expect.any(String),

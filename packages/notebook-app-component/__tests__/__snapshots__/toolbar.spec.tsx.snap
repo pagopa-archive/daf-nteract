@@ -15,19 +15,19 @@ exports[`Toolbar View should be able to render a toolbar 1`] = `
           "componentStyle": ComponentStyle {
             "componentId": "sc-ifAKCX",
             "isStatic": false,
-            "lastClassName": "jlbNeh",
+            "lastClassName": "iXeJZQ",
             "rules": Array [
               "
   z-index: 9;
-  position: absolute;
-  top: 0px;
-  right: 0px;
+  position: sticky; /* keep visible with large code cells that need scrolling */
+  float: right;
+  top: 0;
+  right: 0;
   height: 34px;
-
-  /* Set the left padding to 50px to give users extra room to move their
-              mouse to the toolbar without causing the cell to go out of focus and thus
-              hide the toolbar before they get there. */
-  padding: 0px 0px 0px 50px;
+  margin: 0 0 0 -100%; /* allow code cell to completely overlap (underlap?) */
+  padding: 0 0 0 50px; /* give users extra room to move their mouse to the
+                          toolbar without causing the cell to go out of
+                          focus/hide the toolbar before they get there */
 ",
             ],
           },
@@ -44,7 +44,7 @@ exports[`Toolbar View should be able to render a toolbar 1`] = `
       forwardedRef={null}
     >
       <div
-        className="sc-ifAKCX jlbNeh"
+        className="sc-ifAKCX iXeJZQ"
         style={
           Object {
             "display": "none",
@@ -60,7 +60,7 @@ exports[`Toolbar View should be able to render a toolbar 1`] = `
                 "componentStyle": ComponentStyle {
                   "componentId": "sc-bxivhb",
                   "isStatic": true,
-                  "lastClassName": "igjdMy",
+                  "lastClassName": "grkuc",
                   "rules": Array [
                     "
   background-color: var(--theme-cell-toolbar-bg);
@@ -76,7 +76,7 @@ exports[`Toolbar View should be able to render a toolbar 1`] = `
   }
 
   @media print {
-    display: none ;
+    display: none;
   }
 
   button {
@@ -129,7 +129,7 @@ exports[`Toolbar View should be able to render a toolbar 1`] = `
             forwardedRef={null}
           >
             <div
-              className="sc-bxivhb igjdMy"
+              className="sc-bxivhb grkuc"
             >
               <button
                 className="executeButton"
@@ -362,19 +362,19 @@ exports[`Toolbar View should be able to render a toolbar 2`] = `
           "componentStyle": ComponentStyle {
             "componentId": "sc-ifAKCX",
             "isStatic": false,
-            "lastClassName": "jlbNeh",
+            "lastClassName": "iXeJZQ",
             "rules": Array [
               "
   z-index: 9;
-  position: absolute;
-  top: 0px;
-  right: 0px;
+  position: sticky; /* keep visible with large code cells that need scrolling */
+  float: right;
+  top: 0;
+  right: 0;
   height: 34px;
-
-  /* Set the left padding to 50px to give users extra room to move their
-              mouse to the toolbar without causing the cell to go out of focus and thus
-              hide the toolbar before they get there. */
-  padding: 0px 0px 0px 50px;
+  margin: 0 0 0 -100%; /* allow code cell to completely overlap (underlap?) */
+  padding: 0 0 0 50px; /* give users extra room to move their mouse to the
+                          toolbar without causing the cell to go out of
+                          focus/hide the toolbar before they get there */
 ",
             ],
           },
@@ -391,7 +391,7 @@ exports[`Toolbar View should be able to render a toolbar 2`] = `
       forwardedRef={null}
     >
       <div
-        className="sc-ifAKCX jlbNeh"
+        className="sc-ifAKCX iXeJZQ"
         style={
           Object {
             "display": "none",
@@ -407,7 +407,7 @@ exports[`Toolbar View should be able to render a toolbar 2`] = `
                 "componentStyle": ComponentStyle {
                   "componentId": "sc-bxivhb",
                   "isStatic": true,
-                  "lastClassName": "igjdMy",
+                  "lastClassName": "grkuc",
                   "rules": Array [
                     "
   background-color: var(--theme-cell-toolbar-bg);
@@ -423,7 +423,7 @@ exports[`Toolbar View should be able to render a toolbar 2`] = `
   }
 
   @media print {
-    display: none ;
+    display: none;
   }
 
   button {
@@ -476,7 +476,7 @@ exports[`Toolbar View should be able to render a toolbar 2`] = `
             forwardedRef={null}
           >
             <div
-              className="sc-bxivhb igjdMy"
+              className="sc-bxivhb grkuc"
             >
               <button
                 className="executeButton"
@@ -705,7 +705,10 @@ exports[`Toolbar View should be able to render a toolbar 2`] = `
                             <div
                               className="sc-htpNat juMQnP"
                             >
-                              <ul>
+                              <ul
+                                aria-label="dropdown-content"
+                                role="listbox"
+                              >
                                 <li
                                   aria-selected="false"
                                   className="clearOutput"

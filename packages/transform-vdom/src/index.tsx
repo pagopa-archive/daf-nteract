@@ -3,8 +3,8 @@ import * as React from "react";
 
 import {
   Attributes,
-  SerializedEvent,
   objectToReactElement,
+  SerializedEvent,
   VDOMEl
 } from "./object-to-react";
 

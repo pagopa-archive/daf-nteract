@@ -1,14 +1,11 @@
-/**
- * @module rx-jupyter
- */
 import { Subject, Subscriber } from "rxjs";
 import { ajax } from "rxjs/ajax";
-import { delay, retryWhen, share, tap } from "rxjs/operators";
 import { webSocket } from "rxjs/webSocket";
 import urljoin from "url-join";
 import URLSearchParams from "url-search-params";
-import { createAJAXSettings, ServerConfig } from "./base";
+import { createAJAXSettings } from "./base";
 
+import { ServerConfig } from "@nteract/types";
 import { JupyterMessage } from "@nteract/messaging";
 
 /**
@@ -73,7 +70,7 @@ export const kill = (serverConfig: ServerConfig, id: string) =>
  * Creates an AjaxObservable for interrupting a kernel.
  *
  * @param serverConfig The server configuration
- * @param id The id of the kernel to interupt
+ * @param id The id of the kernel to interrupt
  *
  * @returns An Observable with the request response
  */
@@ -152,35 +149,6 @@ export const connect = (
     url: formWebSocketURL(serverConfig, kernelID, sessionID),
     protocol: serverConfig.wsProtocol
   });
-
-  wsSubject.pipe(
-    retryWhen(error$ => {
-      // Keep track of how many times we've already re-tried
-      let counter = 0;
-      const maxRetries = 100;
-
-      return error$.pipe(
-        tap(e => {
-          counter++;
-          // This will only retry on error when it's a close event that is not
-          // from a .complete() of the websocket subject
-          if (counter > maxRetries || e instanceof Event === false) {
-            console.error(
-              `bubbling up Error on websocket after retrying ${counter} times out of ${maxRetries}`,
-              e
-            );
-            throw e;
-          } else {
-            // We'll retry at this point
-            console.log("attempting to retry kernel connection after error", e);
-          }
-        }),
-        delay(1000)
-      );
-    }),
-    // The websocket subject is multicast and we need the retryWhen logic to retain that property
-    share()
-  );
 
   // Create a subject that does some of the handling inline for the session
   // and ensuring it's serialized

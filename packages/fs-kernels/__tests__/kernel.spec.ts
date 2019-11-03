@@ -3,7 +3,7 @@ import { Kernel, launchKernel } from "../src/kernel";
 
 jest.unmock("process");
 
-describe("Kernel", () => {
+describe.skip("Kernel", () => {
   it("can launch a kernel given a name", async done => {
     const kernel = await launchKernel("python3");
     expect(kernel.process).toBeDefined();

@@ -1,10 +1,40 @@
-:warning: This package is under construction and will change interfaces on you. If you want to use it, you need to get involved in contributing to it as it's core to the desktop app and all web apps that are part of the nteract monorepo :warning:
+# @nteract/core
 
-## Intention
+This package is a package the encapsulates and exports the packages defined in `@nteract/actions`, `@nteract/reducers`, `@nteract/epics`, `@nteract/types`, and `@nteract/selectors`.
 
-We want to have a set of basic functionality and UI components that we can share
-across multiple apps.
+## Installation
 
-Right now it's a bit messy since there are some old unused bits as well as
-some desktop-specific pieces. We'll get to work on making a maintainable suite
-that we're happy to work with across web, jupyter serverextension, and desktop.
+```
+$ yarn add @nteract/core
+```
+
+```
+$ npm install --save @nteract/core
+```
+
+## Usage
+
+The example below shows how we can use the functions within this package to set the `isSaving` property on a notebook state. Note that this is the same example code for the @nteract/reducers package, but we are able to use a single dependency on the `@nteract/core` package to deliver the functionality instead of relying on different dependencies.
+
+```javascript
+import { state, reducers, actions } from "@nteract/core";
+
+export default () => {
+  const originalState = state.makeAppRecord({
+    isSaving: true
+  });
+  reducers.core.app(originalState, actions.saveFulfilled({}));
+};
+```
+
+## Documentation
+
+We're working on adding more documentation for this component. Stay tuned by watching this repository!
+
+## Support
+
+If you experience an issue while using this package or have a feature request, please file an issue on the [issue board](https://github.com/nteract/nteract/issues/new/choose) and add the `pkg:core` label.
+
+## License
+
+[BSD-3-Clause](https://choosealicense.com/licenses/bsd-3-clause/)

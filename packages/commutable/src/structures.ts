@@ -1,6 +1,3 @@
-/**
- * @module commutable
- */
 import uuid from "uuid/v4";
 
 import { CellId, createCellId } from "./primitives";

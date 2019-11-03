@@ -1,6 +1,6 @@
 import * as Immutable from "immutable";
 import { ActionsObservable, StateObservable } from "redux-observable";
-import { of, Subject } from "rxjs";
+import { Subject } from "rxjs";
 import { toArray } from "rxjs/operators";
 
 import * as actions from "@nteract/actions";
@@ -12,6 +12,7 @@ describe("launchWebSocketKernelEpic", () => {
   test("launches remote kernels", async () => {
     const contentRef = "fakeContentRef";
     const kernelRef = "fake";
+    const hostRef = "fakeHostRef";
     const value = {
       app: stateModule.makeAppRecord({
         host: stateModule.makeJupyterHostRecord({
@@ -38,6 +39,15 @@ describe("launchWebSocketKernelEpic", () => {
                 channels: new Subject<any>(),
                 kernelSpecName: "fancy",
                 id: "0"
+              })
+            })
+          }),
+          hosts: stateModule.makeHostsRecord({
+            byRef: Immutable.Map({
+              [hostRef]: stateModule.makeJupyterHostRecord({
+                type: "jupyter",
+                token: "eh",
+                basePath: "http://localhost:8888/"
               })
             })
           })
@@ -73,6 +83,7 @@ describe("launchWebSocketKernelEpic", () => {
           kernel: {
             info: null,
             sessionId: "1",
+            hostRef,
             type: "websocket",
             channels: expect.any(Subject),
             kernelSpecName: "fancy",
@@ -86,7 +97,7 @@ describe("launchWebSocketKernelEpic", () => {
 });
 
 describe("interruptKernelEpic", () => {
-  test("", async () => {
+  test("can interrupt a kernel when given a kernel ref", async () => {
     const state$ = new StateObservable(new Subject<stateModule.AppState>(), {
       core: stateModule.makeStateRecord({
         kernelRef: "fake",
@@ -127,6 +138,58 @@ describe("interruptKernelEpic", () => {
       {
         type: "INTERRUPT_KERNEL_SUCCESSFUL",
         payload: { kernelRef: "fake" }
+      }
+    ]);
+  });
+  test("can interrupt a kernel when given a content ref", async () => {
+    const state$ = new StateObservable(new Subject<stateModule.AppState>(), {
+      core: stateModule.makeStateRecord({
+        entities: stateModule.makeEntitiesRecord({
+          kernels: stateModule.makeKernelsRecord({
+            byRef: Immutable.Map({
+              fakeKernelRef: stateModule.makeRemoteKernelRecord({
+                type: "websocket",
+                channels: new Subject<any>(),
+                kernelSpecName: "fancy",
+                id: "0"
+              })
+            })
+          }),
+          contents: stateModule.makeContentsRecord({
+            byRef: Immutable.Map({
+              contentRef: stateModule.makeNotebookContentRecord({
+                model: stateModule.makeDocumentRecord({
+                  kernelRef: "fakeKernelRef"
+                })
+              })
+            })
+          })
+        })
+      }),
+      app: stateModule.makeAppRecord({
+        host: stateModule.makeJupyterHostRecord({
+          type: "jupyter",
+          token: "eh",
+          basePath: "http://localhost:8888/"
+        }),
+        notificationSystem: { addNotification: jest.fn() }
+      }),
+      comms: stateModule.makeCommsRecord(),
+      config: Immutable.Map({})
+    });
+    const action$ = ActionsObservable.of(
+      actions.interruptKernel({ contentRef: "contentRef" })
+    );
+
+    const responseActions = await coreEpics
+      .interruptKernelEpic(action$, state$)
+      .pipe(toArray())
+      .toPromise();
+
+    expect(responseActions).toEqual([
+      {
+        type: "INTERRUPT_KERNEL_SUCCESSFUL",
+        payload: { kernelRef: undefined }
       }
     ]);
   });

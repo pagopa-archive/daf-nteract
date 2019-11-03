@@ -1,6 +1,3 @@
-/**
- * @module epics
- */
 import { commListenEpic } from "./comm";
 import {
   autoSaveCurrentContentEpic,

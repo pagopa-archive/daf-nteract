@@ -1,5 +1,6 @@
 from subprocess import Popen
 import time
+import os
 
 from notebook.notebookapp import NotebookApp, flags
 from traitlets import Unicode, Bool
@@ -68,7 +69,10 @@ class NteractApp(NotebookApp):
                 self.log.warn(msg)
                 load_jupyter_server_extension(self)
             with cmd_in_new_dir(PACKAGE_DIR):
-                p = Popen(webpack_hot["command"])
+                if os.name == "nt":
+                    p = Popen(webpack_hot["command"], shell=True)
+                else:
+                    p = Popen(webpack_hot["command"])
                 self.log.info('waiting for the hot webpack server to start')
                 # Wait a little bit to allow the initial command to run
                 # NOTE: It would be better if we could run this on a thread and

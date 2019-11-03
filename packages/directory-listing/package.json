@@ -1,6 +1,6 @@
 {
   "name": "@nteract/directory-listing",
-  "version": "2.0.4",
+  "version": "2.0.6",
   "description": "a directory listing component that can be used across nteract ecosystem (and beyond?)",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",

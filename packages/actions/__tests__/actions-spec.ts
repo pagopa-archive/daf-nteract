@@ -74,6 +74,50 @@ describe("unhideAll", () => {
         contentRef
       }
     });
+
+    expect(
+      actions.unhideAll({ outputHidden: true, inputHidden: true, contentRef })
+    ).toEqual({
+      type: actionTypes.UNHIDE_ALL,
+      payload: {
+        outputHidden: true,
+        inputHidden: true,
+        contentRef
+      }
+    });
+
+    expect(
+      actions.unhideAll({ outputHidden: false, contentRef })
+    ).toEqual({
+      type: actionTypes.UNHIDE_ALL,
+      payload: {
+        outputHidden: false,
+        inputHidden: undefined,
+        contentRef
+      }
+    });
+
+    expect(
+      actions.unhideAll({ inputHidden: false, contentRef })
+    ).toEqual({
+      type: actionTypes.UNHIDE_ALL,
+      payload: {
+        outputHidden: undefined,
+        inputHidden: false,
+        contentRef
+      }
+    });
+
+    expect(
+      actions.unhideAll({ contentRef })
+    ).toEqual({
+      type: actionTypes.UNHIDE_ALL,
+      payload: {
+        outputHidden: undefined,
+        inputHidden: undefined,
+        contentRef
+      }
+    });
   });
 });
 

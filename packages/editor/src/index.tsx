@@ -1,5 +1,5 @@
-import { Channels } from "@nteract/messaging";
 import { MediaBundle } from "@nteract/commutable";
+import { Channels } from "@nteract/messaging";
 import CodeMirror, {
   Doc,
   Editor,
@@ -82,7 +82,6 @@ export type CodeMirrorEditorProps = {
 interface CodeMirrorEditorState {
   bundle: MediaBundle | null;
   cursorCoords: { top: number; left: number; bottom: number } | null;
-  isFocused: boolean;
 }
 
 interface CodeCompletionEvent {
@@ -134,8 +133,7 @@ export default class CodeMirrorEditor extends React.PureComponent<
     this.debounceNextCompletionRequest = true;
     this.state = {
       bundle: null,
-      cursorCoords: null,
-      isFocused: true
+      cursorCoords: null
     };
 
     this.fullOptions = this.fullOptions.bind(this);
@@ -422,9 +420,6 @@ export default class CodeMirrorEditor extends React.PureComponent<
   }
 
   focusChanged(focused: boolean): void {
-    this.setState({
-      isFocused: focused
-    });
     if (this.props.onFocusChange) {
       this.props.onFocusChange(focused);
     }

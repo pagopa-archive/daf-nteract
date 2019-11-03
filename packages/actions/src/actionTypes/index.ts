@@ -1,7 +1,3 @@
-/**
- * @module actions
- */
-
 // Vendor modules
 import {
   CellId,
@@ -20,9 +16,9 @@ import { HostRecord } from "@nteract/types";
 import { LanguageInfoMetadata } from "@nteract/types";
 import { System as NotificationSystem } from "react-notification-system";
 
+export * from "./bookstore";
 export * from "./cells";
 export * from "./contents";
-export * from "./hosts";
 export * from "./kernels";
 export * from "./kernelspecs";
 
@@ -93,6 +89,7 @@ export interface UpdateDisplay {
   type: "UPDATE_DISPLAY";
   payload: {
     content: {
+      output_type: "update_display_data";
       data: MediaBundle;
       metadata: JSONObject;
       transient: { display_id: string };

@@ -1,6 +1,3 @@
-/**
- * @module types
- */
 import * as Immutable from "immutable";
 import { AjaxRequest } from "rxjs/ajax";
 
@@ -9,13 +6,16 @@ import { HostRef } from "../refs";
 
 export interface Bookstore {
   version: string;
-  enabled: boolean;
 }
 
 export interface ServerConfig {
   endpoint: string;
-  crossDomain: boolean | null | undefined;
-  token: string | null | undefined;
+  url?: string;
+  crossDomain?: boolean;
+  token?: string;
+  xsrfToken?: string;
+  ajaxOptions?: Partial<AjaxRequest>;
+  wsProtocol?: string | string[];
 }
 
 export interface EmptyHost {

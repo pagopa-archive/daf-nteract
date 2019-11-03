@@ -52,9 +52,9 @@
   --nt-color-midnight-darker: hsl(0, 0%, 5%);
   --nt-color-midnight-dark: hsl(0, 0%, 10%);
   --nt-color-midnight: hsl(0, 0%, 15%);
-  --nt-color-midnight-light: hsl(0, 0%, 51%);
-  --nt-color-midnight-lighter: hsl(0, 0%, 75%);
-  --nt-color-midnight-lightest: hsl(0, 0%, 85%);
+  --nt-color-midnight-light: hsl(0, 0%, 21%);
+  --nt-color-midnight-lighter: hsl(0, 0%, 45%);
+  --nt-color-midnight-lightest: hsl(0, 0%, 55%);
   --nt-color-sky-darkest: var(--nt-color-sky-darker);
   --nt-color-sky-darker: var(--nt-color-sky-dark);
   --nt-color-sky-dark: hsl(208, 54%, 35%);
