@@ -29,7 +29,7 @@ From [dockerhub](https://hub.docker.com/r/teamdigitale/daf-nteract)
 
 ```
 docker pull teamdigitale/daf-nteract
-docker run -p 8888:8888 daf-nteract
+docker run -p 8888:8888 teamdigitale/daf-nteract
 ```
 
 or from your local build

@@ -7,7 +7,6 @@ releaseDate: '2019-05-31'
 name: PDND nteract
 url: 'https://github.com/teamdigitale/daf-nteract'
 isBasedOn: 'https://github.com/nteract/nteract'
-landingURL: 'https://github.com/teamdigitale/daf-nteract/blob/daf-develop/README.md'
 softwareVersion: v0.12.3.1
 developmentStatus: beta
 softwareType: standalone/web
@@ -45,6 +44,8 @@ localisation:
     - en
 it:
   countryExtensionVersion: '0.2'
+  riuso:
+    codiceIPA: pcm
 description:
   it:
     genericName: Jupyter notebook
@@ -76,15 +77,14 @@ description:
       - data analysis
     screenshots:
       - >-
-        https://raw.githubusercontent.com/teamdigitale/nteract/daf-develop/pdnd-tutorials/img/login.png
+        pdnd-tutorials/img/login.png
       - >-
-        https://raw.githubusercontent.com/teamdigitale/nteract/daf-develop/pdnd-tutorials/img/search.png
+        pdnd-tutorials/img/search.png
       - >-
-        https://raw.githubusercontent.com/teamdigitale/nteract/daf-develop/pdnd-tutorials/img/results.png
+        pdnd-tutorials/img/results.png
     videos:
       - 'https://www.youtube.com/watch?v=nlZnYcz66YE'
   en:
-    localisedName: P
     genericName: Jupyter notebook
     shortDescription: >-
       Advanced data science on Italian open data using Jupyter notebooks: find,
@@ -111,10 +111,10 @@ description:
       - data analysis
     screenshots:
       - >-
-        https://raw.githubusercontent.com/teamdigitale/nteract/daf-develop/pdnd-tutorials/img/login.png
+        pdnd-tutorials/img/login.png
       - >-
-        https://raw.githubusercontent.com/teamdigitale/nteract/daf-develop/pdnd-tutorials/img/search.png
+        pdnd-tutorials/img/search.png
       - >-
-        https://raw.githubusercontent.com/teamdigitale/nteract/daf-develop/pdnd-tutorials/img/results.png
+        pdnd-tutorials/img/results.png
     videos:
       - 'https://www.youtube.com/watch?v=nlZnYcz66YE'
