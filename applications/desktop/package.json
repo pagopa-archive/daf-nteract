@@ -120,7 +120,7 @@
     "nteract-assets": "^4.0.0"
   },
   "devDependencies": {
-    "electron": "5.0.12",
+    "electron": "11.5.0",
     "file-loader": "^4.2.0"
   }
 }
