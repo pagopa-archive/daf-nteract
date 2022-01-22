@@ -206,7 +206,7 @@
     "lodash": "^4.17.4",
     "lodash-webpack-plugin": "^0.11.4",
     "mkdirp": "^0.5.1",
-    "node-fetch": "2.6.0",
+    "node-fetch": "3.1.1",
     "portfinder": "^1.0.20",
     "prettier": "1.18.2",
     "prop-types": "^15.6.2",
